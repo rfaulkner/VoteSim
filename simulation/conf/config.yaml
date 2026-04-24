@@ -4,3 +4,9 @@ llm:
   top_p: 1.0
 
 prompt: "What is the capital of France?"
+
+region:
+  description: "Southern Ontario Canada"
+  num_districts: 20
+  cache_path: "dataset/regions"
+
