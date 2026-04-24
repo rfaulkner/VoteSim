@@ -7,6 +7,7 @@ import os
 from omegaconf import DictConfig
 from pathfinder import assistant, gen, get_model, system, user
 from simulation.district_generator import Region, RegionGenerator
+from simulation.political_sampler import PoliticalQuestionSampler
 from simulation.prism_sampler import PrismSampler
 
 
@@ -108,14 +109,29 @@ def run_query(cfg: DictConfig):
       " your response. Do not say 'As an AI' or similar."
   )
 
+  # Determine the prompt: either sample a political question or use the static
+  # prompt from config.
+  pq_cfg = cfg.get("political_questions")
+  if pq_cfg:
+    pq_path = pq_cfg.get("path", "dataset/political_questions/political-questions.csv")
+    pq_topic = pq_cfg.get("topic", "social")
+    pq_sampler = PoliticalQuestionSampler(pq_path)
+    prompt_text = pq_sampler.sample_question_text(
+        topic=pq_topic, seed=seed
+    )
+    logging.info("Sampled political question [%s]: %s", pq_topic, prompt_text)
+  else:
+    prompt_text = cfg.prompt
+
   with system():
     lm += full_system_prompt
   with user():
-    lm += cfg.prompt
+    lm += prompt_text
   with assistant():
     lm += gen(max_tokens=2048, name="response")
 
   response = lm["response"]
 
+  logging.info("Prompt: %s", prompt_text)
   logging.info("Model Response:\n%s", response)
 
