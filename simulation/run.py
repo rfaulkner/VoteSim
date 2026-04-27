@@ -134,4 +134,3 @@ def run_query(cfg: DictConfig):
 
   logging.info("Prompt: %s", prompt_text)
   logging.info("Model Response:\n%s", response)
-

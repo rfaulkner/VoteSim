@@ -62,4 +62,3 @@ class PrismSampler:
           "examples": examples,
       })
     return results
-

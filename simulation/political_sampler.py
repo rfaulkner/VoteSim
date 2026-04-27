@@ -85,8 +85,9 @@ class PoliticalQuestionSampler:
     Raises:
       ValueError: If the specified topic is not found in the dataset.
     """
+    rng = random.Random()
     if seed is not None:
-      random.seed(seed)
+      rng.seed(seed)
 
     if topic is not None:
       topic_key = topic.lower()
@@ -99,7 +100,7 @@ class PoliticalQuestionSampler:
       pool = self.questions
 
     n = min(num_samples, len(pool))
-    return random.sample(pool, n)
+    return rng.sample(pool, n)
 
   def sample_question_text(
       self,
@@ -114,7 +115,12 @@ class PoliticalQuestionSampler:
 
     Returns:
       The question text string.
+
+    Raises:
+      IndexError: If no questions are found for the specified topic.
     """
     samples = self.sample(num_samples=1, topic=topic, seed=seed)
+    if not samples:
+      topic_msg = f" for topic '{topic}'" if topic else ""
+      raise IndexError(f"No questions available to sample{topic_msg}.")
     return samples[0]["question"]
-

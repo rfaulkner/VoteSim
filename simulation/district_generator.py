@@ -12,7 +12,6 @@ from pathfinder import gen
 from pathfinder import get_model
 from pathfinder import user
 
-
 DISTRICT_PROMPT = """You are a world-building assistant. Generate a realistic region inspired by {description}.
 
 The region has exactly {num_districts} districts. For each district, provide a JSON object with these fields:
@@ -42,8 +41,13 @@ No other text, just valid JSON."""
 class Region:
   """A generated region containing districts with varied characteristics."""
 
-  def __init__(self, region_name: str, districts: List[Dict[str, Any]],
-               description: str, seed: int):
+  def __init__(
+      self,
+      region_name: str,
+      districts: List[Dict[str, Any]],
+      description: str,
+      seed: int,
+  ):
     self.region_name = region_name
     self.districts = districts
     self.description = description
@@ -69,12 +73,16 @@ class Region:
     """Save region to a JSON file."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
-      json.dump({
-          "region_name": self.region_name,
-          "description": self.description,
-          "seed": self.seed,
-          "districts": self.districts,
-      }, f, indent=2)
+      json.dump(
+          {
+              "region_name": self.region_name,
+              "description": self.description,
+              "seed": self.seed,
+              "districts": self.districts,
+          },
+          f,
+          indent=2,
+      )
     logging.info("Saved region to %s", path)
 
   @classmethod
@@ -93,19 +101,25 @@ class Region:
 class RegionGenerator:
   """Uses an LLM to generate a region with realistic districts."""
 
-  def __init__(self, model_path: str, is_api: bool = False,
-               seed: int = 42, backend: str = "transformers"):
-    self.model = get_model(model_path, is_api=is_api, seed=seed,
-                           backend_name=backend)
+  def __init__(
+      self,
+      model_path: str,
+      is_api: bool = False,
+      seed: int = 42,
+      backend: str = "transformers",
+  ):
+    self.model = get_model(
+        model_path, is_api=is_api, seed=seed, backend_name=backend
+    )
     self.seed = seed
 
-  def generate(self,
-               description: str,
-               num_districts: int,
-               temperature: float = 0.7) -> Region:
+  def generate(
+      self, description: str, num_districts: int, temperature: float = 0.7
+  ) -> Region:
     """Generate a region with the specified number of districts."""
     prompt = DISTRICT_PROMPT.format(
-        description=description, num_districts=num_districts)
+        description=description, num_districts=num_districts
+    )
 
     lm = self.model
     with user():
@@ -118,7 +132,7 @@ class RegionGenerator:
     logging.info("Raw LLM output (first 500 chars): %.500s", raw)
 
     # Strip <think>...</think> blocks (e.g. Qwen3 chain-of-thought).
-    # Also handle unclosed <think> when the model runs out of tokens mid-thought.
+    # Also handle unclosed <think> when model runs out of tokens mid-thought.
     text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
 
     # Strip markdown fences if present
@@ -147,7 +161,9 @@ class RegionGenerator:
         description=description,
         seed=self.seed,
     )
-    logging.info("Generated region '%s' with %d districts.",
-                 region.region_name, len(region.districts))
+    logging.info(
+        "Generated region '%s' with %d districts.",
+        region.region_name,
+        len(region.districts),
+    )
     return region
-
