@@ -1,0 +1,44 @@
+{
+  "party_name": "Conservative Union Party",
+  "ideology": "conservative",
+  "core_values": [
+    "Fiscal responsibility and limited government",
+    "Traditional institutions and community values",
+    "Individual self-reliance and personal responsibility",
+    "Strong national defence",
+    "Free enterprise and market-driven solutions"
+  ],
+  "economic_policy": {
+    "taxation": "Lower marginal tax rates across all brackets; reduce corporate tax to attract investment; eliminate estate tax; simplify tax code.",
+    "spending_priorities": [
+      "National defence and veterans' services",
+      "Law enforcement and public safety",
+      "Infrastructure maintenance",
+      "Debt reduction"
+    ],
+    "trade": "Bilateral trade deals that prioritise national economic interests; enforce fair-trade provisions; protect domestic industries from unfair competition.",
+    "regulation": "Reduce regulatory burden on businesses; cost-benefit analysis for all new regulations; sunset clauses on major rules."
+  },
+  "social_policy": {
+    "healthcare": "Market-based healthcare with expanded health savings accounts; enable cross-state insurance competition; protect employer-sponsored coverage.",
+    "education": "School choice through vouchers and charter schools; local control of curriculum; merit-based teacher pay; vocational training expansion.",
+    "housing": "Reduce government intervention in housing markets; ease construction regulations to increase supply; promote homeownership through tax incentives.",
+    "civil_rights": "Protect religious liberty; uphold constitutional rights as written; oppose government mandates that infringe on conscience protections.",
+    "immigration": "Secure borders with physical and technological barriers; merit-based legal immigration; mandatory E-Verify; oppose amnesty programmes."
+  },
+  "governance": {
+    "decentralization": "Return power to state and local governments; block-grant federal programmes; reduce size of federal bureaucracy.",
+    "transparency": "Audit federal agencies for waste and duplication; publish government spending in real time; term limits for legislators.",
+    "electoral_reform": "Voter ID requirements; maintain single-member district elections; clean voter rolls; oppose federal election mandates."
+  },
+  "environment": {
+    "climate_action": "Technology-driven solutions over regulatory mandates; support carbon capture research; oppose economy-wide carbon taxes.",
+    "energy": "Energy independence through all-of-the-above strategy including oil, gas, nuclear, and renewables; streamline permitting for energy projects.",
+    "conservation": "State-led conservation partnerships; responsible resource management; support hunting and fishing heritage; oppose federal land grabs."
+  },
+  "security": {
+    "defense": "Peace through strength; maintain military superiority; modernise nuclear deterrent; honour commitments to allies.",
+    "law_enforcement": "Back the badge with funding and legal protections; mandatory minimum sentences for violent crimes; combat drug trafficking.",
+    "foreign_policy": "America-first diplomacy; rebuild alliances on burden-sharing basis; confront adversaries with credible deterrence; cautious about nation-building."
+  }
+}

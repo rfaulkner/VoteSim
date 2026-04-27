@@ -1,0 +1,44 @@
+{
+  "party_name": "Green Ecology Party",
+  "ideology": "green",
+  "core_values": [
+    "Ecological sustainability and planetary stewardship",
+    "Social justice and equity",
+    "Grassroots participatory democracy",
+    "Non-violence and conflict resolution",
+    "Community-based economics and local resilience"
+  ],
+  "economic_policy": {
+    "taxation": "Progressive carbon tax with revenue returned as citizen dividends; green tax shift from income to pollution and resource extraction; close corporate tax loopholes.",
+    "spending_priorities": [
+      "Renewable energy infrastructure",
+      "Ecological restoration and conservation",
+      "Sustainable agriculture transition",
+      "Community-owned cooperatives and local economies"
+    ],
+    "trade": "Localise economies where possible; trade agreements must include binding climate and biodiversity standards; oppose trade rules that override domestic environmental law.",
+    "regulation": "Precautionary principle for all new chemicals and technologies; mandatory environmental impact assessments; ban planned obsolescence; extended producer responsibility."
+  },
+  "social_policy": {
+    "healthcare": "Universal single-payer healthcare with emphasis on preventive and holistic medicine; ban harmful pesticides linked to chronic illness; fund mental health parity.",
+    "education": "Free public education with environmental literacy as a core subject; outdoor and experiential learning; fund ecological research; democratic school governance.",
+    "housing": "Green building standards for all new construction; retrofit existing housing for energy efficiency; community land trusts; end homelessness through housing-first policy.",
+    "civil_rights": "Intersectional environmental justice; Indigenous sovereignty and land rights; LGBTQ+ protections; rights of nature enshrined in law.",
+    "immigration": "Recognise climate refugees; humane immigration policy; address root causes of displacement through fair trade and climate aid."
+  },
+  "governance": {
+    "decentralization": "Bioregional governance; empower local and Indigenous communities in resource decisions; citizen assemblies on climate policy.",
+    "transparency": "Public access to all environmental monitoring data; ban corporate lobbying on environmental regulation; whistleblower protections.",
+    "electoral_reform": "Proportional representation; public campaign financing; lower voting age to 16; binding citizen referenda on major environmental issues."
+  },
+  "environment": {
+    "climate_action": "Declare climate emergency; net-zero by 2035; ban new fossil fuel projects immediately; legally binding emissions budgets aligned with 1.5°C.",
+    "energy": "100% renewable energy by 2035; ban nuclear new-build; community-owned solar and wind; phase out all fossil fuel subsidies immediately.",
+    "conservation": "Protect 30% of land and ocean by 2030; rewilding programmes; ban bottom trawling and deep-sea mining; pollinator protection plans."
+  },
+  "security": {
+    "defense": "Shift from military to human security; cut defence spending and redirect to climate adaptation; establish a civilian climate corps.",
+    "law_enforcement": "Restorative justice over punitive incarceration; community-based safety programmes; address environmental crime as a serious offence.",
+    "foreign_policy": "Climate diplomacy as the centrepiece of foreign policy; lead international biodiversity agreements; cancel debts of climate-vulnerable nations."
+  }
+}

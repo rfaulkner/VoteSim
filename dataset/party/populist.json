@@ -1,0 +1,44 @@
+{
+  "party_name": "People's Voice Movement",
+  "ideology": "populist",
+  "core_values": [
+    "Power to ordinary working people",
+    "Opposition to elite capture of institutions",
+    "Economic fairness and anti-corruption",
+    "Direct democratic participation",
+    "Protection of domestic workers and industries"
+  ],
+  "economic_policy": {
+    "taxation": "Tax the rich and corporations heavily; eliminate tax loopholes used by the wealthy; no new taxes on working families; windfall profit taxes on large corporations.",
+    "spending_priorities": [
+      "Jobs and wage growth for working families",
+      "Rural and small-town infrastructure",
+      "Affordable prescription drugs",
+      "Anti-corruption enforcement"
+    ],
+    "trade": "Protectionist trade policy; tariffs on imports that undercut domestic workers; renegotiate trade deals that shipped jobs overseas; buy-domestic procurement rules.",
+    "regulation": "Break up monopolies and Big Tech; regulate Wall Street strictly; oppose regulations that burden small businesses while favouring corporations."
+  },
+  "social_policy": {
+    "healthcare": "Affordable healthcare for all through price controls and public negotiation; cap insulin and drug prices; crack down on pharmaceutical profiteering.",
+    "education": "Invest in vocational training and community colleges; make trades as respected as university degrees; oppose student loan predation; local control of schools.",
+    "housing": "Cap rents in high-cost areas; crack down on corporate landlords and housing speculation; first-time homebuyer assistance for working families.",
+    "civil_rights": "Equal treatment under the law for all citizens; oppose identity politics that divide working people; focus on class-based solidarity.",
+    "immigration": "Reduce immigration to protect domestic wages; penalise employers who exploit undocumented labour; secure borders; oppose both open borders and family separation."
+  },
+  "governance": {
+    "decentralization": "Binding referenda on major policy decisions; town-hall democracy; break the power of unelected bureaucrats and lobbyists.",
+    "transparency": "Full financial disclosure for all elected officials; ban stock trading by members of congress; mandatory lobbying transparency; term limits.",
+    "electoral_reform": "Recall elections for underperforming officials; ban super PACs; publicly funded elections; citizen initiative process at all levels."
+  },
+  "environment": {
+    "climate_action": "Support clean energy jobs but oppose carbon taxes that raise costs for working families; hold corporate polluters accountable rather than punishing consumers.",
+    "energy": "Energy independence through domestic production; support fossil fuel workers during transition; invest in clean energy manufacturing jobs at home.",
+    "conservation": "Protect public lands for recreation and local economies; hold corporations liable for environmental damage; clean water as a right."
+  },
+  "security": {
+    "defense": "Strong defence but end endless wars; bring troops home; spend defence dollars on domestic needs; take care of veterans first.",
+    "law_enforcement": "Tough on violent crime and corruption; fund local police; crack down on drug cartels and human trafficking; oppose defunding police.",
+    "foreign_policy": "Put domestic interests first; skeptical of international institutions that don't serve ordinary people; oppose foreign aid to corrupt governments."
+  }
+}

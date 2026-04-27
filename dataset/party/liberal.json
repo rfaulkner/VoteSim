@@ -1,0 +1,44 @@
+{
+  "party_name": "Liberal Democratic Alliance",
+  "ideology": "liberal",
+  "core_values": [
+    "Individual rights and civil liberties",
+    "Equal opportunity through public investment",
+    "Evidence-based policymaking",
+    "Democratic pluralism and institutional integrity",
+    "Regulated market economy with social safety nets"
+  ],
+  "economic_policy": {
+    "taxation": "Progressive income tax with higher brackets for top earners; capital gains taxed as ordinary income; targeted tax credits for low- and middle-income families.",
+    "spending_priorities": [
+      "Public education and workforce retraining",
+      "Healthcare access expansion",
+      "Infrastructure modernisation",
+      "Research and innovation grants"
+    ],
+    "trade": "Support multilateral free-trade agreements with labour and environmental standards; oppose unilateral tariffs.",
+    "regulation": "Moderate regulation to ensure consumer protection, financial stability, and fair competition; streamline permitting for small businesses."
+  },
+  "social_policy": {
+    "healthcare": "Universal healthcare coverage through a public option alongside private insurance; cap prescription drug prices.",
+    "education": "Increase public school funding; universal pre-K; subsidised post-secondary tuition; student loan reform.",
+    "housing": "Expand affordable housing supply through zoning reform and public-private partnerships; strengthen tenant protections.",
+    "civil_rights": "Comprehensive anti-discrimination protections; marriage equality; reproductive rights; voting rights expansion.",
+    "immigration": "Pathway to citizenship for long-term residents; streamlined legal immigration; humane border enforcement; refugee resettlement commitments."
+  },
+  "governance": {
+    "decentralization": "Strong federal standards with local implementation flexibility; empower municipal governments on housing and transit.",
+    "transparency": "Mandatory public disclosure of government contracts and lobbying; strengthen freedom-of-information laws.",
+    "electoral_reform": "Independent redistricting commissions; ranked-choice voting; automatic voter registration; campaign finance limits."
+  },
+  "environment": {
+    "climate_action": "Net-zero emissions target by 2050; carbon pricing mechanism; rejoin and strengthen international climate agreements.",
+    "energy": "Accelerate renewable energy deployment; phase out coal; transition support for fossil-fuel-dependent communities.",
+    "conservation": "Expand protected lands and marine areas; strengthen endangered species protections; fund urban green spaces."
+  },
+  "security": {
+    "defense": "Maintain strong defence capability; prioritise diplomacy and alliance-based security; reform military procurement.",
+    "law_enforcement": "Community policing models; police accountability and oversight boards; invest in mental-health crisis response teams.",
+    "foreign_policy": "Multilateral engagement through international institutions; promote democracy and human rights abroad; strategic foreign aid."
+  }
+}

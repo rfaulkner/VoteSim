@@ -1,0 +1,44 @@
+{
+  "party_name": "National Sovereignty Party",
+  "ideology": "nationalist",
+  "core_values": [
+    "National sovereignty and self-determination",
+    "Preservation of cultural identity and heritage",
+    "Strong borders and immigration control",
+    "Economic self-sufficiency",
+    "Patriotic civic duty and national unity"
+  ],
+  "economic_policy": {
+    "taxation": "Lower taxes on domestic businesses; tariffs on foreign goods to protect national industry; tax incentives for companies that manufacture domestically; oppose international tax agreements that cede sovereignty.",
+    "spending_priorities": [
+      "Military and border security",
+      "Domestic manufacturing revival",
+      "Veterans' affairs and national service programmes",
+      "Critical infrastructure independence"
+    ],
+    "trade": "Economic nationalism; high tariffs on strategic imports; reshoring of supply chains; bilateral deals only; withdraw from multilateral trade organisations.",
+    "regulation": "Deregulate domestic industry to boost competitiveness; strict regulation of foreign investment in critical sectors; oppose international regulatory harmonisation."
+  },
+  "social_policy": {
+    "healthcare": "National healthcare for citizens; restrict access for non-citizens; domestic pharmaceutical production; oppose global health governance that overrides national policy.",
+    "education": "Promote national history, language, and civic values in curriculum; oppose multicultural education mandates; fund vocational and military-track programmes.",
+    "housing": "Citizens-first housing allocation; restrict foreign property ownership; incentivise homeownership as foundation of stable communities.",
+    "civil_rights": "Equality under national law; oppose international human rights bodies overriding domestic legislation; protect freedom of speech against foreign ideological influence.",
+    "immigration": "Dramatically reduce immigration; end birthright citizenship for children of non-citizens; immediate deportation of illegal entrants; cultural assimilation requirements for legal immigrants."
+  },
+  "governance": {
+    "decentralization": "Strong central government on matters of sovereignty, defence, and borders; local governance on community affairs; oppose supranational authority.",
+    "transparency": "Ban foreign funding of domestic political organisations; disclose all foreign lobbying; restrict dual citizens from holding sensitive government positions.",
+    "electoral_reform": "Strict voter ID with proof of citizenship; oppose mail-in voting expansion; mandatory civics test for voter registration; ban foreign observation of elections."
+  },
+  "environment": {
+    "climate_action": "National interests over international climate commitments; oppose binding international emissions targets; invest in domestic clean technology on national timeline.",
+    "energy": "Full energy independence; develop all domestic resources including fossil fuels and nuclear; strategic energy reserves; oppose energy dependence on foreign nations.",
+    "conservation": "Protect national landscapes as cultural heritage; national parks as symbols of identity; oppose foreign-funded environmental campaigns that restrict domestic resource use."
+  },
+  "security": {
+    "defense": "Military supremacy as non-negotiable; expand armed forces; modernise defence industry domestically; mandatory national service consideration.",
+    "law_enforcement": "Zero tolerance for organised crime and foreign criminal networks; expand border patrol; harsh penalties for treason and espionage; fund counter-terrorism.",
+    "foreign_policy": "Sovereignty-first diplomacy; withdraw from international organisations that constrain national action; bilateral alliances based on mutual interest; oppose humanitarian interventionism."
+  }
+}
