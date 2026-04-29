@@ -1,15 +1,26 @@
+mode: pipeline  # "pipeline" (full voting round) or "query" (single personalized query)
+
 llm:
-  path: Qwen/Qwen3-4B-Thinking-2507
-  temperature: 0.7
+  path: mistralai/Mistral-7B-Instruct-v0.2
+  temperature: 0.0
   top_p: 1.0
 
 prompt: "What is the capital of France?"
 
 region:
   description: "Southern Ontario Canada"
-  num_districts: 20
+  num_districts: 5
   cache_path: "dataset/regions"
+
+pipeline:
+  num_voters: 10
+  topic: "social"
+  parties:
+    - liberal
+    - conservative
+    - socialist
 
 political_questions:
   path: "dataset/political_questions/political-questions.csv"
   topic: "social"
+

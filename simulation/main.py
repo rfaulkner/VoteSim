@@ -1,21 +1,38 @@
-import hydra
-from omegaconf import DictConfig, OmegaConf
+"""Main entry point for the VoteSim simulation pipeline and personalized query functions.
+"""
+
 import logging
-import sys
 import os
+import sys
+
+import hydra
+import omegaconf
+from simulation.run import run_pipeline
+from simulation.run import run_query
+
 
 # Add the current directory to path to allow imports if run as script
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from run import run_query
 
 @hydra.main(version_base=None, config_path="conf", config_name="config")
-def main(cfg: DictConfig):
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    logging.info("Starting simple model query.")
-    logging.info("Config:\n%s", OmegaConf.to_yaml(cfg))
-    
+def main(cfg: omegaconf.DictConfig):
+  logging.basicConfig(
+      level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+  )
+  logging.info("Config:\n%s", omegaconf.OmegaConf.to_yaml(cfg))
+
+  mode = cfg.get("mode", "pipeline")
+  logging.info("Running in '%s' mode.", mode)
+
+  if mode == "query":
     run_query(cfg)
+  elif mode == "pipeline":
+    run_pipeline(cfg)
+  else:
+    raise ValueError(f"Unknown mode '{mode}'. Expected 'pipeline' or 'query'.")
+
 
 if __name__ == "__main__":
-    main()
+  main()
+

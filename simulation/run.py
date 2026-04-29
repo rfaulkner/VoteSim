@@ -7,8 +7,20 @@ import os
 from omegaconf import DictConfig
 from pathfinder import assistant, gen, get_model, system, user
 from simulation.district_generator import Region, RegionGenerator
+from simulation.pipeline import run_voting_round
 from simulation.political_sampler import PoliticalQuestionSampler
 from simulation.prism_sampler import PrismSampler
+
+DEFAULT_NUM_DISTRICTS = 3
+DEFAULT_NUM_VOTERS = 10
+DEFAULT_PRISM_DATASET_DIR = "dataset/prism"
+DEFAULT_POLITICAL_QUESTIONS_PATH = (
+    "dataset/political_questions/political-questions.csv"
+)
+DEFAULT_PARTY_DIR = "dataset/party"
+DEFAULT_SEED = 42
+DEFAULT_TEMPERATURE = 0.0
+DEFAULT_TOP_P = 1.0
 
 
 def run_query(cfg: DictConfig):
@@ -18,7 +30,7 @@ def run_query(cfg: DictConfig):
 
   dataset_dir = cfg.get(
       "dataset_dir",
-      "dataset/prism",
+      DEFAULT_PRISM_DATASET_DIR,
   )
   sampler = PrismSampler(dataset_dir)
 
@@ -36,7 +48,7 @@ def run_query(cfg: DictConfig):
   logging.info("Sampled Examples: %s", examples)
 
   is_api = cfg.llm.get("is_api", False)
-  seed = cfg.get("seed", 42)
+  seed = cfg.get("seed", DEFAULT_SEED)
   backend = cfg.llm.get("backend", "transformers")
 
   # Load or generate region
@@ -113,12 +125,12 @@ def run_query(cfg: DictConfig):
   # prompt from config.
   pq_cfg = cfg.get("political_questions")
   if pq_cfg:
-    pq_path = pq_cfg.get("path", "dataset/political_questions/political-questions.csv")
+    pq_path = pq_cfg.get(
+        "path", "dataset/political_questions/political-questions.csv"
+    )
     pq_topic = pq_cfg.get("topic", "social")
     pq_sampler = PoliticalQuestionSampler(pq_path)
-    prompt_text = pq_sampler.sample_question_text(
-        topic=pq_topic, seed=seed
-    )
+    prompt_text = pq_sampler.sample_question_text(topic=pq_topic, seed=seed)
     logging.info("Sampled political question [%s]: %s", pq_topic, prompt_text)
   else:
     prompt_text = cfg.prompt
@@ -134,3 +146,99 @@ def run_query(cfg: DictConfig):
 
   logging.info("Prompt: %s", prompt_text)
   logging.info("Model Response:\n%s", response)
+
+
+def run_pipeline(cfg: DictConfig):
+  """Run a full voting-round pipeline: voters respond → parties respond.
+
+  Reads configuration from ``cfg`` and delegates to
+  ``pipeline.run_voting_round``.  Logs the complete summary of voter
+  responses and party policy proposals.
+
+  Expected config keys (all have sensible defaults):
+    - ``seed``: int — master random seed.
+    - ``llm.path``: str — model path / name.
+    - ``llm.is_api``: bool — whether model is API-based.
+    - ``llm.backend``: str — LLM backend name.
+    - ``pipeline.k``: int — number of voters to sample.
+    - ``pipeline.temperature``: float — LLM temperature.
+    - ``pipeline.max_workers``: int — concurrency limit.
+    - ``pipeline.topic``: str — question topic filter.
+    - ``dataset_dir``: str — PRISM dataset path.
+    - ``political_questions.path``: str — CSV path.
+    - ``party_dir``: str — directory of party platform JSONs.
+    - ``region.description``: str — region description for generation.
+    - ``region.num_districts``: int — number of districts.
+    - ``region.cache_path``: str — where to cache region JSON.
+  
+  Args:
+    cfg: The configuration dictionary, typically loaded from ``config.yaml``.
+
+  Returns:
+    The ``VotingRoundResult`` object containing all results, including
+    sampled question, voter responses, and party responses.
+  """
+  logging.info("Starting voting-round pipeline.")
+
+  seed = cfg.get("seed", DEFAULT_SEED)
+  is_api = cfg.llm.get("is_api", False)
+  backend = cfg.llm.get("backend", "transformers")
+  model_path = cfg.llm.path
+
+  # Pipeline-specific settings.
+  pipe_cfg = cfg.get("pipeline", {})
+  num_voters = pipe_cfg.get("num_voters", DEFAULT_NUM_VOTERS)
+  temperature = cfg.llm.get("temperature", DEFAULT_TEMPERATURE)
+  max_workers = pipe_cfg.get("max_workers", None)
+  topic = pipe_cfg.get("topic", "social")
+  parties = pipe_cfg.get("parties", None)
+  if parties is not None:
+    parties = list(parties)
+
+  # Dataset paths.
+  prism_dir = cfg.get("dataset_dir", DEFAULT_PRISM_DATASET_DIR)
+  pq_cfg = cfg.get("political_questions", {})
+  pq_path = pq_cfg.get(
+      "path", DEFAULT_POLITICAL_QUESTIONS_PATH
+  )
+  party_dir = cfg.get("party_dir", DEFAULT_PARTY_DIR)
+
+  # Region settings (optional).
+  region_cfg = cfg.get("region")
+  region_description = None
+  num_districts = 5
+  region_cache_path = None
+  if region_cfg:
+    region_description = region_cfg.get("description")
+    num_districts = region_cfg.get("num_districts", 5)
+    region_cache_path = region_cfg.get("cache_path")
+
+  result = run_voting_round(
+      num_voters=num_voters,
+      model_path=model_path,
+      prism_dataset_dir=prism_dir,
+      political_questions_path=pq_path,
+      party_dir=party_dir,
+      topic=topic,
+      seed=seed,
+      is_api=is_api,
+      backend=backend,
+      temperature=temperature,
+      max_workers=max_workers,
+      region_description=region_description,
+      num_districts=num_districts,
+      region_cache_path=region_cache_path,
+      parties=parties,
+  )
+
+  # Report results.
+  logging.info(result.summary())
+
+  # Also log individual counts for quick verification.
+  logging.info(
+      "Pipeline complete: %d voter responses, %d party responses.",
+      len(result.voter_responses),
+      len(result.party_responses),
+  )
+  return result
+

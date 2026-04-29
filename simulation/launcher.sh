@@ -1,6 +1,6 @@
 #!/bin/bash
 
- model_id="Qwen/Qwen3-4B-Thinking-2507"
+model_id="Qwen/Qwen3-4B-Thinking-2507"
 
 project_dir="/home/$USER/projects/aip-rgrosse/$USER/VoteSim"
 
