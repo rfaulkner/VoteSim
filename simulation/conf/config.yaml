@@ -13,12 +13,14 @@ region:
   cache_path: "dataset/regions"
 
 pipeline:
-  num_voters: 10
+  num_voters: 100
   topic: "social"
   parties:
     - liberal
     - conservative
     - socialist
+  voting_system: "fptp"   # "fptp" or "dhondt"
+  max_rank: 3             # number of parties each voter ranks
 
 political_questions:
   path: "dataset/political_questions/political-questions.csv"

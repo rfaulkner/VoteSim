@@ -1,4 +1,4 @@
-"""Voting-round pipeline: voter survey → party policy responses.
+"""Voting-round pipeline: voter survey → party policies → voter ranking → election.
 
 Orchestrates a single round of the VoteSim experiment:
 1. Optionally load or generate a ``Region`` with districts.
@@ -7,13 +7,15 @@ Orchestrates a single round of the VoteSim experiment:
    elicit their opinions on the issue.
 4. Concurrently generate policy responses from every party platform,
    conditioned on the voter responses, the issue, and regional context.
+5. Each voter ranks the parties based on their policy proposals.
+6. Apply a voting system (FPTP or D'Hondt) to determine seat allocation
+   and the governing party.
 """
 
+from dataclasses import dataclass
+from dataclasses import field
 import logging
 import os
-
-from dataclasses import dataclass
-from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -24,9 +26,14 @@ from simulation.district_generator import RegionGenerator
 from simulation.policy_generator import PolicyResponse
 from simulation.political_sampler import PoliticalQuestionSampler
 from simulation.prism_sampler import PrismSampler
-from simulation.survey import VoterResponse
 from simulation.survey import generate_party_responses
+from simulation.survey import generate_voter_rankings
 from simulation.survey import generate_voter_responses
+from simulation.survey import VoterResponse
+from simulation.voting import allocate_district_seats
+from simulation.voting import ElectionResult
+from simulation.voting import run_election
+from simulation.voting import VoterBallot
 
 
 @dataclass
@@ -36,6 +43,8 @@ class VotingRoundResult:
   question: str
   voter_responses: List[VoterResponse]
   party_responses: Dict[str, PolicyResponse]
+  ballots: List[VoterBallot] = field(default_factory=list)
+  election: Optional[ElectionResult] = None
   region: Optional[Region] = None
 
   def summary(self) -> str:
@@ -59,20 +68,27 @@ class VotingRoundResult:
       lines.append(f"\n  Voter {i} [{vr.user_id}] (district: {district_name})")
       lines.append(f"    {vr.response}")
 
-    lines.append(
-        f"\n--- Party Responses ({len(self.party_responses)}) ---"
-    )
+    lines.append(f"\n--- Party Responses ({len(self.party_responses)}) ---")
     for ideology in sorted(self.party_responses):
       pr = self.party_responses[ideology]
       lines.append(f"\n  {pr.party_name} ({pr.ideology})")
       lines.append(f"    Position: {pr.position_statement}")
-      lines.append(f"    Proposals:")
+      lines.append("    Proposals:")
       for proposal in pr.key_proposals:
         lines.append(f"      - {proposal}")
-      lines.append(
-          f"    Voter alignment: {pr.voter_alignment_score:.2f}"
-      )
+      lines.append(f"    Voter alignment: {pr.voter_alignment_score:.2f}")
       lines.append(f"    Reasoning: {pr.reasoning}")
+
+    if self.ballots:
+      lines.append(f"\n--- Voter Rankings ({len(self.ballots)}) ---")
+      for ballot in self.ballots:
+        lines.append(
+            f"  {ballot.user_id} ({ballot.district_name}): "
+            f"{' > '.join(ballot.ranking)}"
+        )
+
+    if self.election:
+      lines.append(f"\n{self.election.summary()}")
 
     lines.append("\n" + "=" * 60)
     return "\n".join(lines)
@@ -88,9 +104,7 @@ def _load_or_generate_region(
     cache_path: Optional[str] = None,
 ) -> Region:
   """Load a cached region or generate a new one via LLM."""
-  region_file = (
-      os.path.join(cache_path, "region.json") if cache_path else None
-  )
+  region_file = os.path.join(cache_path, "region.json") if cache_path else None
 
   if region_file and os.path.exists(region_file):
     logging.info("Loading cached region from %s", region_file)
@@ -125,10 +139,19 @@ def run_voting_round(
     region_description: Optional[str] = None,
     num_districts: int = 5,
     region_cache_path: Optional[str] = None,
-    model: Optional[Any] = None,
     parties: Optional[List[str]] = None,
+    voting_system: str = "fptp",
+    max_rank: int = 3,
 ) -> VotingRoundResult:
-  """Execute a full voting round: voters respond → parties respond.
+  """Execute a full voting round with election.
+
+  Pipeline phases:
+    1. Region generation (optional)
+    2. Sample political question
+    3. Voter opinion survey (concurrent)
+    4. Party policy responses (concurrent)
+    5. Voter ranking of parties (concurrent)
+    6. Election — seat allocation via the configured voting system
 
   Args:
     num_voters: Number of voters to sample from PRISM.
@@ -143,25 +166,16 @@ def run_voting_round(
     temperature: Sampling temperature for LLM generation.
     max_workers: Max concurrent LLM calls per stage.
     region_description: If provided, a region is loaded/generated and voters are
-      assigned districts.  Example: ``"the Midwestern United States"``.
+      assigned districts.
     num_districts: Number of districts in the generated region.
     region_cache_path: Directory to cache the generated region JSON.
-    model: Optional pre-loaded PathFinder model instance.  If ``None``,
-      the model is loaded once from ``model_path``.
-    parties: Optional list of ideology names to include (e.g.
-      ``["liberal", "conservative"]``).  If ``None``, all platforms are used.
+    parties: Optional list of ideology names to include.
+    voting_system: Electoral system — ``"fptp"`` or ``"dhondt"``.
+    max_rank: Maximum number of parties each voter ranks.
 
   Returns:
-    A ``VotingRoundResult`` containing voter responses, party responses,
-    the sampled question, and the region (if any).
+    A ``VotingRoundResult`` with all phases' outputs.
   """
-  # -- 0. Model (load once) ------------------------------------------------
-  if model is None:
-    logging.info("Loading model '%s' (backend=%s)...", model_path, backend)
-    model = get_model(
-        model_path, is_api=is_api, seed=seed, backend_name=backend
-    )
-
   # -- 1. Region -----------------------------------------------------------
   region: Optional[Region] = None
   if region_description:
@@ -181,6 +195,9 @@ def run_voting_round(
   logging.info("Sampled question [%s]: %s", topic, question)
 
   # -- 3. Voter survey (concurrent) ----------------------------------------
+  logging.info("Loading model '%s' (backend=%s)...", model_path, backend)
+  model = get_model(model_path, is_api=is_api, seed=seed, backend_name=backend)
+
   prism = PrismSampler(prism_dataset_dir)
   voter_responses = generate_voter_responses(
       k=num_voters,
@@ -205,10 +222,34 @@ def run_voting_round(
       parties=parties,
   )
 
+  # -- 5. Voter ranking (concurrent) --------------------------------------
+  ballots = generate_voter_rankings(
+      voter_responses=voter_responses,
+      party_responses=party_responses,
+      model=model,
+      temperature=temperature,
+      max_rank=max_rank,
+      max_workers=max_workers,
+      region=region,
+  )
+
+  # -- 6. Election — seat allocation --------------------------------------
+  election: Optional[ElectionResult] = None
+  if region and ballots:
+    district_seats = allocate_district_seats(region.districts)
+    logging.info("District seat allocation: %s", district_seats)
+    election = run_election(
+        ballots=ballots,
+        district_seats=district_seats,
+        system=voting_system,
+    )
+
   result = VotingRoundResult(
       question=question,
       voter_responses=voter_responses,
       party_responses=party_responses,
+      ballots=ballots,
+      election=election,
       region=region,
   )
   logging.info("Voting round complete.")

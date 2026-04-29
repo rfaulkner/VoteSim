@@ -194,6 +194,8 @@ def run_pipeline(cfg: DictConfig):
   parties = pipe_cfg.get("parties", None)
   if parties is not None:
     parties = list(parties)
+  voting_system = pipe_cfg.get("voting_system", "fptp")
+  max_rank = pipe_cfg.get("max_rank", 3)
 
   # Dataset paths.
   prism_dir = cfg.get("dataset_dir", DEFAULT_PRISM_DATASET_DIR)
@@ -229,16 +231,24 @@ def run_pipeline(cfg: DictConfig):
       num_districts=num_districts,
       region_cache_path=region_cache_path,
       parties=parties,
+      voting_system=voting_system,
+      max_rank=max_rank,
   )
 
   # Report results.
   logging.info(result.summary())
 
   # Also log individual counts for quick verification.
+  governing = (
+      result.election.governing_party if result.election else "N/A"
+  )
   logging.info(
-      "Pipeline complete: %d voter responses, %d party responses.",
+      "Pipeline complete: %d voters, %d parties, %d ballots. "
+      "Governing party: %s",
       len(result.voter_responses),
       len(result.party_responses),
+      len(result.ballots),
+      governing,
   )
   return result
 

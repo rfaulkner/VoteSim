@@ -32,6 +32,7 @@ from simulation.district_generator import Region
 from simulation.policy_generator import PartyPlatform
 from simulation.policy_generator import PolicyResponse
 from simulation.prism_sampler import PrismSampler
+from simulation.voting import VoterBallot
 
 # ---------------------------------------------------------------------------
 # Prompt templates
@@ -85,6 +86,34 @@ response and the voter sentiments provided (1 = perfect alignment)
 feedback shaped this response
 
 Return ONLY valid JSON — no markdown fences, no commentary."""
+
+
+VOTER_RANKING_PROMPT = """\
+You are a person with the following demographics:
+- Age: {age}
+- Gender: {gender}
+- Employment: {employment}
+- Education: {education}
+{region_block}
+Here are some examples of things you have said in the past:
+{examples}
+
+You previously shared your opinion on the following social issue:
+  "{question}"
+
+Your response was:
+  "{voter_response}"
+
+The following political parties have published policy proposals on this issue:
+
+{party_policies_block}
+
+Based on your values, background, and your original response, rank the \
+parties from MOST aligned with your views to LEAST aligned.  Return your \
+ranking as a JSON array of party ideology strings, best first.  Rank \
+exactly {max_rank} parties.
+
+Return ONLY the JSON array — no other text."""
 
 
 # ---------------------------------------------------------------------------
@@ -500,4 +529,184 @@ def generate_party_responses(
       "Collected %d / %d party responses.", len(results), len(platforms)
   )
   return results
+
+
+# ---------------------------------------------------------------------------
+# Voter ranking generation
+# ---------------------------------------------------------------------------
+
+
+def _format_party_policies_block(
+    party_responses: Dict[str, PolicyResponse],
+) -> str:
+  """Format party policy responses for the voter ranking prompt."""
+  lines = []
+  for ideology in sorted(party_responses):
+    pr = party_responses[ideology]
+    proposals = "; ".join(pr.key_proposals) if pr.key_proposals else "N/A"
+    lines.append(
+        f"  {pr.party_name} ({pr.ideology}):\n"
+        f"    Position: {pr.position_statement}\n"
+        f"    Key Proposals: {proposals}"
+    )
+  return "\n\n".join(lines)
+
+
+def _query_voter_ranking(
+    voter_response: VoterResponse,
+    party_responses: Dict[str, PolicyResponse],
+    model: Any,
+    temperature: float,
+    max_rank: int = 3,
+    region: Optional[Region] = None,
+) -> VoterBallot:
+  """Ask one voter to rank parties based on policy responses.
+
+  ``model`` should be a shared PathFinder model instance — this function
+  calls ``model.copy()`` to obtain a thread-local conversation state.
+  """
+  demo = voter_response.demographics
+  examples_str = "\n".join(
+      f"- {ex}" for ex in demo.get("examples", [])
+  ) if "examples" in demo else ""
+  region_block = _format_region_block(region, voter_response.district)
+  party_policies_block = _format_party_policies_block(party_responses)
+
+  # Clamp max_rank to the number of available parties.
+  available_parties = list(sorted(party_responses.keys()))
+  effective_rank = min(max_rank, len(available_parties))
+
+  prompt = VOTER_RANKING_PROMPT.format(
+      age=demo.get("age", "unknown"),
+      gender=demo.get("gender", "unknown"),
+      employment=demo.get("employment", "unknown"),
+      education=demo.get("education", "unknown"),
+      region_block=region_block,
+      examples=examples_str,
+      question=voter_response.question,
+      voter_response=voter_response.response,
+      party_policies_block=party_policies_block,
+      max_rank=effective_rank,
+  )
+
+  lm = model.copy()
+
+  with user():
+    lm += prompt
+  with assistant():
+    lm += gen(max_tokens=512, temperature=temperature, name="ranking_json")
+
+  raw = lm["ranking_json"]
+  # Strip <think> blocks if present.
+  text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
+
+  # Strip markdown fences if present.
+  if text.startswith("```"):
+    text = text.split("\n", 1)[1]
+    text = text.rsplit("```", 1)[0]
+    text = text.strip()
+
+  try:
+    ranking = json.loads(text)
+  except json.JSONDecodeError:
+    logging.warning(
+        "Failed to parse ranking JSON for voter %s. Raw: %.200s",
+        voter_response.user_id,
+        text,
+    )
+    # Fallback: use available parties in alphabetical order.
+    ranking = available_parties[:effective_rank]
+
+  # Validate and sanitise: keep only recognised ideologies.
+  valid = [r for r in ranking if r in party_responses]
+  if len(valid) < effective_rank:
+    # Fill missing slots with any un-ranked parties.
+    for p in available_parties:
+      if p not in valid:
+        valid.append(p)
+      if len(valid) >= effective_rank:
+        break
+  ranking = valid[:effective_rank]
+
+  district_name = (
+      voter_response.district["name"]
+      if voter_response.district
+      else "unassigned"
+  )
+
+  return VoterBallot(
+      user_id=voter_response.user_id,
+      district_name=district_name,
+      ranking=ranking,
+  )
+
+
+def generate_voter_rankings(
+    voter_responses: List[VoterResponse],
+    party_responses: Dict[str, PolicyResponse],
+    model: Any,
+    temperature: float = 0.7,
+    max_rank: int = 3,
+    max_workers: Optional[int] = None,
+    region: Optional[Region] = None,
+) -> List[VoterBallot]:
+  """Concurrently generate voter rankings of party policies.
+
+  Args:
+    voter_responses: Voter responses from phase 3.
+    party_responses: Party policy responses from phase 4.
+    model: A loaded PathFinder model instance (shared across threads).
+    temperature: Sampling temperature.
+    max_rank: Maximum number of parties each voter ranks.
+    max_workers: Concurrency limit.
+    region: Optional region for prompt context.
+
+  Returns:
+    A list of ``VoterBallot`` objects, one per voter.
+  """
+  logging.info(
+      "Generating voter rankings for %d voters (max_rank=%d)...",
+      len(voter_responses),
+      max_rank,
+  )
+
+  workers = max_workers or len(voter_responses)
+
+  with futures.ThreadPoolExecutor(max_workers=workers) as pool:
+    future_to_voter = {
+        pool.submit(
+            _query_voter_ranking,
+            vr,
+            party_responses,
+            model,
+            temperature,
+            max_rank,
+            region,
+        ): vr
+        for vr in voter_responses
+    }
+
+    ballots: List[VoterBallot] = []
+    for future in futures.as_completed(future_to_voter):
+      vr = future_to_voter[future]
+      try:
+        ballot = future.result()
+        ballots.append(ballot)
+        logging.info(
+            "Voter %s ranked: %s",
+            ballot.user_id,
+            ballot.ranking,
+        )
+      except Exception:  # pylint: disable=broad-except
+        logging.exception(
+            "Failed to generate ranking for voter %s",
+            vr.user_id,
+        )
+
+  logging.info(
+      "Collected %d / %d voter rankings.",
+      len(ballots),
+      len(voter_responses),
+  )
+  return ballots
 
