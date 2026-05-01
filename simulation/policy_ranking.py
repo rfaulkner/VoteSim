@@ -44,6 +44,8 @@ from pathfinder import user
 from simulation.deliberate import DeliberationResult
 from simulation.deliberate import run_deliberation
 from simulation.policy_generator import PolicyResponse
+from simulation.survey import _format_demographics_block
+from simulation.survey import _format_examples_block
 from simulation.survey import VoterResponse
 from simulation.voting import ElectionResult
 from simulation.voting import run_election
@@ -54,13 +56,13 @@ from simulation.voting import VoterBallot
 # ---------------------------------------------------------------------------
 
 POLICY_RANKING_PROMPT = """\
-You are a person with the following demographics:
-- Age: {age}
-- Gender: {gender}
-- Employment: {employment}
-- Education: {education}
+You are a person with the following background:
+{demographics_block}
 {region_block}
-Here are some examples of things you have said in the past:
+Here is how you describe your own values and outlook:
+  "{self_description}"
+
+Here are some statements you have made in the past that reflect your views:
 {examples}
 
 You previously shared your opinion on the following social issue:
@@ -258,21 +260,16 @@ def _query_voter_system_ranking(
   Returns ``(user_id, [system ranking])``.
   """
   demo = voter_response.demographics
-  examples_str = (
-      "\n".join(f"- {ex}" for ex in demo.get("examples", []))
-      if "examples" in demo
-      else ""
-  )
+  demographics_block = _format_demographics_block(demo)
+  examples_str = _format_examples_block(demo.get("examples", []))
   region_block = _format_region_block(voter_response)
   policies_block = _format_policies_block(system_policies)
   system_names = sorted(system_policies.keys())
 
   prompt = POLICY_RANKING_PROMPT.format(
-      age=demo.get("age", "unknown"),
-      gender=demo.get("gender", "unknown"),
-      employment=demo.get("employment", "unknown"),
-      education=demo.get("education", "unknown"),
+      demographics_block=demographics_block,
       region_block=region_block,
+      self_description=demo.get("self_description", ""),
       examples=examples_str,
       question=voter_response.question,
       voter_response=voter_response.response,
@@ -481,11 +478,21 @@ def save_rankings(
       }
     existing[issue]["parties"] = parties_dict
 
-  # Store voter responses.
+  # Store voter responses with personalization data.
   if voter_responses is not None:
-    existing[issue]["voters"] = {
-        vr.user_id: vr.response for vr in voter_responses
-    }
+    voters_dict: Dict[str, Any] = {}
+    for vr in voter_responses:
+      demo = vr.demographics or {}
+      voters_dict[vr.user_id] = {
+          "response": vr.response,
+          "demographics": {
+              k: v for k, v in demo.items()
+              if k not in ("examples", "self_description")
+          },
+          "self_description": demo.get("self_description", ""),
+          "examples": demo.get("examples", []),
+      }
+    existing[issue]["voters"] = voters_dict
 
   # Store voter system rankings.
   existing[issue]["rankings"] = rankings

@@ -39,13 +39,13 @@ from simulation.voting import VoterBallot
 # ---------------------------------------------------------------------------
 
 VOTER_PROMPT = """\
-You are a person with the following demographics:
-- Age: {age}
-- Gender: {gender}
-- Employment: {employment}
-- Education: {education}
+You are a person with the following background:
+{demographics_block}
 {region_block}
-Here are some examples of things you have said in the past:
+Here is how you describe your own values and outlook:
+  "{self_description}"
+
+Here are some statements you have made in the past that reflect your views:
 {examples}
 
 Answer the following social-issue question as yourself. Be authentic and \
@@ -89,13 +89,13 @@ Return ONLY valid JSON — no markdown fences, no commentary."""
 
 
 VOTER_RANKING_PROMPT = """\
-You are a person with the following demographics:
-- Age: {age}
-- Gender: {gender}
-- Employment: {employment}
-- Education: {education}
+You are a person with the following background:
+{demographics_block}
 {region_block}
-Here are some examples of things you have said in the past:
+Here is how you describe your own values and outlook:
+  "{self_description}"
+
+Here are some statements you have made in the past that reflect your views:
 {examples}
 
 You previously shared your opinion on the following social issue:
@@ -169,6 +169,29 @@ def _format_region_block(
   )
 
 
+def _format_demographics_block(demo: Dict[str, Any]) -> str:
+  """Build a demographics bullet list from the expanded PRISM data."""
+  lines = []
+  _add = lambda label, key: (  # pylint: disable=unnecessary-lambda-assignment
+      lines.append(f"- {label}: {demo[key]}")
+      if demo.get(key) else None
+  )
+  _add("Age", "age")
+  _add("Gender", "gender")
+  _add("Employment", "employment")
+  _add("Education", "education")
+  _add("Ethnicity", "ethnicity")
+  _add("Religion", "religion")
+  _add("Location", "location")
+  _add("Marital status", "marital_status")
+  return "\n".join(lines) if lines else "(demographics unknown)"
+
+
+def _format_examples_block(examples: List[str]) -> str:
+  """Format example statements as a bulleted list."""
+  return "\n".join(f"- {ex}" for ex in examples) if examples else ""
+
+
 def _format_constituency_block(
     voter_responses: List["VoterResponse"],
     region: Optional[Region],
@@ -209,14 +232,13 @@ def _build_voter_prompt(
 ) -> str:
   """Build a personalized prompt for a single voter."""
   demo = voter["demographics"]
-  examples_str = "\n".join(f"- {ex}" for ex in voter["examples"])
+  demographics_block = _format_demographics_block(demo)
+  examples_str = _format_examples_block(voter["examples"])
   region_block = _format_region_block(region, district)
   return VOTER_PROMPT.format(
-      age=demo.get("age", "unknown"),
-      gender=demo.get("gender", "unknown"),
-      employment=demo.get("employment", "unknown"),
-      education=demo.get("education", "unknown"),
+      demographics_block=demographics_block,
       region_block=region_block,
+      self_description=demo.get("self_description", ""),
       examples=examples_str,
       question=question,
   )
@@ -249,9 +271,13 @@ def _query_voter(
   # Strip <think> blocks if present.
   text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
 
+  # Include examples in demographics so downstream ranking phases can
+  # re-use them for prompt personalization.
+  demo_with_examples = {**voter["demographics"], "examples": voter["examples"]}
+
   return VoterResponse(
       user_id=voter["user_id"],
-      demographics=voter["demographics"],
+      demographics=demo_with_examples,
       district=district,
       question=question,
       response=text,
@@ -566,9 +592,8 @@ def _query_voter_ranking(
   calls ``model.copy()`` to obtain a thread-local conversation state.
   """
   demo = voter_response.demographics
-  examples_str = "\n".join(
-      f"- {ex}" for ex in demo.get("examples", [])
-  ) if "examples" in demo else ""
+  demographics_block = _format_demographics_block(demo)
+  examples_str = _format_examples_block(demo.get("examples", []))
   region_block = _format_region_block(region, voter_response.district)
   party_policies_block = _format_party_policies_block(party_responses)
 
@@ -577,11 +602,9 @@ def _query_voter_ranking(
   effective_rank = min(max_rank, len(available_parties))
 
   prompt = VOTER_RANKING_PROMPT.format(
-      age=demo.get("age", "unknown"),
-      gender=demo.get("gender", "unknown"),
-      employment=demo.get("employment", "unknown"),
-      education=demo.get("education", "unknown"),
+      demographics_block=demographics_block,
       region_block=region_block,
+      self_description=demo.get("self_description", ""),
       examples=examples_str,
       question=voter_response.question,
       voter_response=voter_response.response,
