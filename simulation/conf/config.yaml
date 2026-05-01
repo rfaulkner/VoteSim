@@ -1,7 +1,7 @@
 mode: pipeline  # "pipeline" (full voting round) or "query" (single personalized query)
 
 llm:
-  path: mistralai/Mistral-7B-Instruct-v0.2
+  path: mistralai/Mistral-Small-3.1-24B-Instruct-2503  # mistralai/Mistral-7B-Instruct-v0.2
   temperature: 0.0
   top_p: 1.0
 
@@ -19,13 +19,22 @@ pipeline:
     - liberal
     - conservative
     - socialist
-  voting_system: "fptp"   # "fptp" or "dhondt"
-  max_rank: 3             # number of parties each voter ranks
+  voting_system: "fptp"         # primary system for single-election result
+  voting_systems:                # systems for comparative policy ranking
+    - fptp
+    - smdp
+    - alternative_vote
+    - dhondt
+    - hare
+    - sainte_lague
+  max_rank: 3                    # number of parties each voter ranks
+  results_dir: "results"         # output dir for per-model ranking JSON
   deliberation:
-    enabled: true         # toggle parliamentary deliberation phase
-    max_rounds: 3         # maximum bill consideration attempts
+    enabled: true                # toggle parliamentary deliberation phase
+    max_rounds: 3                # maximum bill consideration attempts
 
 political_questions:
   path: "dataset/political_questions/political-questions.csv"
   topic: "social"
+
 

@@ -164,10 +164,14 @@ def run_pipeline(cfg: DictConfig):
     - ``pipeline.temperature``: float — LLM temperature.
     - ``pipeline.max_workers``: int — concurrency limit.
     - ``pipeline.topic``: str — question topic filter.
+    - ``pipeline.voting_systems``: list[str] — systems for
+      comparative policy ranking (phase 8).
+    - ``pipeline.results_dir``: str — output dir for per-model
+      ranking JSON files.
     - ``dataset_dir``: str — PRISM dataset path.
     - ``political_questions.path``: str — CSV path.
     - ``party_dir``: str — directory of party platform JSONs.
-    - ``region.description``: str — region description for generation.
+    - ``region.description``: str — region description.
     - ``region.num_districts``: int — number of districts.
     - ``region.cache_path``: str — where to cache region JSON.
   
@@ -196,6 +200,12 @@ def run_pipeline(cfg: DictConfig):
     parties = list(parties)
   voting_system = pipe_cfg.get("voting_system", "fptp")
   max_rank = pipe_cfg.get("max_rank", 3)
+
+  # Comparative ranking settings.
+  voting_systems = pipe_cfg.get("voting_systems", None)
+  if voting_systems is not None:
+    voting_systems = list(voting_systems)
+  results_dir = pipe_cfg.get("results_dir", None)
 
   # Deliberation settings.
   delib_cfg = pipe_cfg.get("deliberation", {})
@@ -240,6 +250,8 @@ def run_pipeline(cfg: DictConfig):
       max_rank=max_rank,
       deliberation_enabled=deliberation_enabled,
       deliberation_max_rounds=deliberation_max_rounds,
+      voting_systems=voting_systems,
+      results_dir=results_dir,
   )
 
   # Report results.

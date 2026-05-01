@@ -1,6 +1,11 @@
 import torch
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
+try:
+    from transformers import AutoModelForImageTextToText
+except ImportError:
+    AutoModelForImageTextToText = None
+
 from .api import AnthropicAPI, AzureOpenAIAPI, MistralAPI, OpenAIAPI, OpenRouter
 from .chat import (
     ChatML,
@@ -100,18 +105,26 @@ def get_model(name, is_api=False, seed=42, backend_name="transformers"):
             name, trust_remote_code=trust_remote_code
         )
 
-        model = AutoModelForCausalLM.from_pretrained(
-            name,
+        load_kwargs = dict(
             device_map="balanced",
             trust_remote_code=trust_remote_code,
             revision=branch,
-            # attn_implementation=(
-            #     "flash_attention_2" if not "gptq" in name.lower() else None
-            # ),
             torch_dtype=(
-                model_config.torch_dtype if not "gptq" in name.lower() else None
+                model_config.torch_dtype if "gptq" not in name.lower() else None
             ),
         )
+
+        try:
+            model = AutoModelForCausalLM.from_pretrained(name, **load_kwargs)
+        except ValueError:
+            # Multimodal models (e.g. Mistral-Small-3.1 with Mistral3Config)
+            # are not supported by AutoModelForCausalLM. Fall back to the
+            # image-text-to-text auto class which handles them.
+            if AutoModelForImageTextToText is None:
+                raise
+            model = AutoModelForImageTextToText.from_pretrained(
+                name, **load_kwargs
+            )
 
         if "gptq" in name.lower() and extend_context_length:
             from auto_gptq import exllama_set_max_input_length
@@ -133,3 +146,4 @@ def get_model(name, is_api=False, seed=42, backend_name="transformers"):
         )
 
     return backend
+
