@@ -1,11 +1,11 @@
 mode: pipeline  # "pipeline" (full voting round) or "query" (single personalized query)
 
 llm:
-  path: mistralai/Mistral-Small-3.1-24B-Instruct-2503  # mistralai/Mistral-7B-Instruct-v0.2
+  path: openrouter-google/gemma-3-12b-it
+  is_api: true              # true for API models, false for local
+  backend: transformers     # "transformers" or "vllm" (ignored when is_api=true)
   temperature: 0.0
   top_p: 1.0
-
-prompt: "What is the capital of France?"
 
 region:
   description: "Southern Ontario Canada"
@@ -14,6 +14,7 @@ region:
 
 pipeline:
   num_voters: 100
+  max_workers: 5                 # max concurrent LLM calls (keep low for API rate limits)
   topic: "social"
   parties:
     - liberal
@@ -36,5 +37,4 @@ pipeline:
 political_questions:
   path: "dataset/political_questions/political-questions.csv"
   topic: "social"
-
 
