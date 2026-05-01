@@ -20,6 +20,9 @@ from typing import Dict
 from typing import List
 from typing import Optional
 
+from simulation.deliberate import DeliberationResult
+from simulation.deliberate import run_deliberation
+
 from pathfinder import get_model
 from simulation.district_generator import Region
 from simulation.district_generator import RegionGenerator
@@ -46,6 +49,7 @@ class VotingRoundResult:
   ballots: List[VoterBallot] = field(default_factory=list)
   election: Optional[ElectionResult] = None
   region: Optional[Region] = None
+  deliberation: Optional[DeliberationResult] = None
 
   def summary(self) -> str:
     """Return a human-readable summary of the round."""
@@ -89,6 +93,9 @@ class VotingRoundResult:
 
     if self.election:
       lines.append(f"\n{self.election.summary()}")
+
+    if self.deliberation:
+      lines.append(f"\n{self.deliberation.summary()}")
 
     lines.append("\n" + "=" * 60)
     return "\n".join(lines)
@@ -142,6 +149,8 @@ def run_voting_round(
     parties: Optional[List[str]] = None,
     voting_system: str = "fptp",
     max_rank: int = 3,
+    deliberation_enabled: bool = True,
+    deliberation_max_rounds: int = 3,
 ) -> VotingRoundResult:
   """Execute a full voting round with election.
 
@@ -152,6 +161,8 @@ def run_voting_round(
     4. Party policy responses (concurrent)
     5. Voter ranking of parties (concurrent)
     6. Election — seat allocation via the configured voting system
+    7. Parliamentary deliberation — bill drafting, amendment, and vote
+       (optional, enabled by default)
 
   Args:
     num_voters: Number of voters to sample from PRISM.
@@ -172,6 +183,8 @@ def run_voting_round(
     parties: Optional list of ideology names to include.
     voting_system: Electoral system — ``"fptp"`` or ``"dhondt"``.
     max_rank: Maximum number of parties each voter ranks.
+    deliberation_enabled: Whether to run the parliamentary deliberation phase.
+    deliberation_max_rounds: Maximum bill consideration attempts (default 3).
 
   Returns:
     A ``VotingRoundResult`` with all phases' outputs.
@@ -244,6 +257,20 @@ def run_voting_round(
         system=voting_system,
     )
 
+  # -- 7. Deliberation — parliamentary bill process ------------------------
+  deliberation: Optional[DeliberationResult] = None
+  if deliberation_enabled and election and election.total_seats:
+    logging.info("Starting parliamentary deliberation...")
+    deliberation = run_deliberation(
+        model=model,
+        issue=question,
+        seat_allocation=election.total_seats,
+        party_policies=party_responses,
+        temperature=temperature,
+        max_rounds=deliberation_max_rounds,
+        max_workers=max_workers,
+    )
+
   result = VotingRoundResult(
       question=question,
       voter_responses=voter_responses,
@@ -251,6 +278,7 @@ def run_voting_round(
       ballots=ballots,
       election=election,
       region=region,
+      deliberation=deliberation,
   )
   logging.info("Voting round complete.")
   return result

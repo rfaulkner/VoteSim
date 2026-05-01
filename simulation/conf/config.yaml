@@ -21,6 +21,9 @@ pipeline:
     - socialist
   voting_system: "fptp"   # "fptp" or "dhondt"
   max_rank: 3             # number of parties each voter ranks
+  deliberation:
+    enabled: true         # toggle parliamentary deliberation phase
+    max_rounds: 3         # maximum bill consideration attempts
 
 political_questions:
   path: "dataset/political_questions/political-questions.csv"

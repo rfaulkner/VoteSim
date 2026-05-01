@@ -197,6 +197,11 @@ def run_pipeline(cfg: DictConfig):
   voting_system = pipe_cfg.get("voting_system", "fptp")
   max_rank = pipe_cfg.get("max_rank", 3)
 
+  # Deliberation settings.
+  delib_cfg = pipe_cfg.get("deliberation", {})
+  deliberation_enabled = delib_cfg.get("enabled", True)
+  deliberation_max_rounds = delib_cfg.get("max_rounds", 3)
+
   # Dataset paths.
   prism_dir = cfg.get("dataset_dir", DEFAULT_PRISM_DATASET_DIR)
   pq_cfg = cfg.get("political_questions", {})
@@ -233,6 +238,8 @@ def run_pipeline(cfg: DictConfig):
       parties=parties,
       voting_system=voting_system,
       max_rank=max_rank,
+      deliberation_enabled=deliberation_enabled,
+      deliberation_max_rounds=deliberation_max_rounds,
   )
 
   # Report results.
