@@ -1,7 +1,7 @@
 mode: pipeline  # "pipeline" (full voting round) or "query" (single personalized query)
 
 llm:
-  path: openrouter-google/gemma-3-12b-it
+  path: openrouter-google/gemma-4-31b-it
   is_api: true              # true for API models, false for local
   backend: transformers     # "transformers" or "vllm" (ignored when is_api=true)
   temperature: 0.0

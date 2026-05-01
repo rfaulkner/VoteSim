@@ -12,7 +12,15 @@ Results are persisted as JSON with the schema::
         "policies": {
           "<system_name>": "<adopted policy text>" | null
         },
-        "<user_id>": ["system_a", "system_b", ...]
+        "parties": {
+          "<ideology>": {"position_statement": "...", "key_proposals": [...]}
+        },
+        "voters": {
+          "<user_id>": "<response text>"
+        },
+        "rankings": {
+          "<user_id>": ["system_a", "system_b", ...]
+        }
       }
     }
 
@@ -390,6 +398,8 @@ def save_rankings(
     model_path: str,
     output_dir: str,
     system_policies: Optional[Dict[str, Optional[str]]] = None,
+    voter_responses: Optional[List[VoterResponse]] = None,
+    party_responses: Optional[Dict[str, PolicyResponse]] = None,
 ) -> str:
   """Persist voter system rankings to a per-model JSON file.
 
@@ -400,7 +410,18 @@ def save_rankings(
           "policies": {
             "<system_name>": "<adopted policy text>" | null
           },
-          "<user_id>": ["system_a", "system_b", ...]
+          "parties": {
+            "<ideology>": {
+              "position_statement": "...",
+              "key_proposals": ["..."]
+            }
+          },
+          "voters": {
+            "<user_id>": "<response text>"
+          },
+          "rankings": {
+            "<user_id>": ["system_a", "system_b", ...]
+          }
         }
       }
 
@@ -411,6 +432,10 @@ def save_rankings(
     output_dir: Directory to write the JSON file into.
     system_policies: Optional ``{system_name: policy_text | None}``. When
       provided, stored under ``<issue> → "policies"``.
+    voter_responses: Optional list of VoterResponse objects. When provided,
+      stored under ``<issue> → "voters"``.
+    party_responses: Optional ``{ideology: PolicyResponse}``. When provided,
+      stored under ``<issue> → "parties"``.
 
   Returns:
     The absolute path to the written JSON file.
@@ -446,8 +471,24 @@ def save_rankings(
   if system_policies is not None:
     existing[issue]["policies"] = {s: p for s, p in system_policies.items()}
 
-  # Store voter rankings.
-  existing[issue].update(rankings)
+  # Store party responses.
+  if party_responses is not None:
+    parties_dict: Dict[str, Any] = {}
+    for ideology, pr in party_responses.items():
+      parties_dict[ideology] = {
+          "position_statement": pr.position_statement,
+          "key_proposals": pr.key_proposals,
+      }
+    existing[issue]["parties"] = parties_dict
+
+  # Store voter responses.
+  if voter_responses is not None:
+    existing[issue]["voters"] = {
+        vr.user_id: vr.response for vr in voter_responses
+    }
+
+  # Store voter system rankings.
+  existing[issue]["rankings"] = rankings
 
   with open(filepath, "w") as f:
     json.dump(existing, f, indent=2, ensure_ascii=False)

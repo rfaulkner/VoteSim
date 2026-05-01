@@ -349,6 +349,8 @@ def run_voting_round(
           model_path=model_path,
           output_dir=results_dir,
           system_policies=sys_policies,
+          voter_responses=voter_responses,
+          party_responses=party_responses,
       )
 
   result = VotingRoundResult(
