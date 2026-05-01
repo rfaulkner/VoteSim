@@ -174,4 +174,3 @@ class ModelVLLMBackend(PathFinder):
     )
     res = output[0].outputs[0].text
     return res
-

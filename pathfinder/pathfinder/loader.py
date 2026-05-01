@@ -146,4 +146,3 @@ def get_model(name, is_api=False, seed=42, backend_name="transformers"):
         )
 
     return backend
-

@@ -743,4 +743,3 @@ def run_election(
   )
   return fn(ballots, district_seats)
 
-

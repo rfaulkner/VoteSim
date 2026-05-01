@@ -37,4 +37,3 @@ pipeline:
 political_questions:
   path: "dataset/political_questions/political-questions.csv"
   topic: "social"
-

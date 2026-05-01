@@ -500,4 +500,3 @@ def save_rankings(
       issue,
   )
   return filepath
-

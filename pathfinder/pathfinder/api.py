@@ -417,4 +417,3 @@ class AnthropicAPI(ModelAPI):
         max_tokens=max_tokens,
     )
     return out.content[0].text
-

@@ -366,4 +366,3 @@ def run_voting_round(
   )
   logging.info("Voting round complete.")
   return result
-
