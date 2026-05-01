@@ -1,0 +1,21 @@
+id,question,source,axis
+d20_01,Universal basic income should replace the existing welfare system to provide a floor of economic security for all citizens,curated,economic
+d20_02,Governments should mandate strict data privacy regulations even if it slows technological innovation,curated,technology
+d20_03,Nuclear power should be expanded as a primary tool for decarbonising the energy grid,curated,environment
+d20_04,Public healthcare systems should be fully government-funded with no role for private insurance,curated,health
+d20_05,Immigration levels should be significantly increased to address labour shortages and demographic decline,curated,immigration
+d20_06,Recreational drug use should be fully decriminalised and treated as a public health matter rather than a criminal one,curated,social
+d20_07,Governments should impose rent controls and expand public housing to address the affordability crisis,curated,housing
+d20_08,Higher education should be tuition-free at all public universities funded through progressive taxation,curated,education
+d20_09,Nations should reduce military spending by at least 25 percent and redirect funds to domestic infrastructure,curated,governance
+d20_10,Artificial intelligence systems used in hiring and criminal sentencing should be subject to mandatory government audits,curated,technology
+d20_11,Countries should adopt a carbon border adjustment tax on imports from nations with weaker climate policies,curated,environment
+d20_12,Mandatory national service either military or civilian should be required of all young adults,curated,governance
+d20_13,Social media platforms should be legally liable for the content their algorithms promote,curated,technology
+d20_14,The voting age should be lowered to sixteen for all national elections,curated,governance
+d20_15,Agricultural subsidies should be eliminated and replaced with direct payments tied to sustainable farming practices,curated,economic
+d20_16,All police forces should be required to wear body cameras with footage made publicly accessible,curated,social
+d20_17,International trade agreements should include binding minimum labour and environmental standards,curated,economic
+d20_18,Inheritance above five million dollars should be taxed at seventy percent to reduce wealth concentration,curated,economic
+d20_19,Governments should provide universal free childcare from birth to school age,curated,social
+d20_20,Autonomous weapons systems should be banned under international treaty,curated,governance

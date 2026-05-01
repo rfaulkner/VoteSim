@@ -1,0 +1,21 @@
+id,question,source,axis
+h20_01,Governments should have the authority to mandate vaccinations for all citizens during a pandemic without individual opt-out,curated,health
+h20_02,Facial recognition technology should be deployed widely by law enforcement to prevent crime,curated,social
+h20_03,Social media companies should be empowered to remove any content they deem misinformation without independent oversight,curated,technology
+h20_04,Water resources should be fully privatised and priced at market rates to encourage conservation,curated,environment
+h20_05,Genetic editing of human embryos should be permitted to eliminate hereditary diseases,curated,health
+h20_06,Governments should implement a social credit scoring system to reward prosocial behaviour and penalise antisocial conduct,curated,governance
+h20_07,Autonomous AI systems should be allowed to make lethal decisions in military combat without human approval,curated,technology
+h20_08,All speech including hate speech should be protected from government censorship without exception,curated,social
+h20_09,Nations should close their borders entirely during economic downturns to protect domestic workers,curated,immigration
+h20_10,Police should have expanded authority to conduct surveillance without warrants in high-crime neighbourhoods,curated,social
+h20_11,Pharmaceutical companies should be free to set any price for life-saving drugs without government intervention,curated,health
+h20_12,Fossil fuel extraction should be banned immediately even if it causes short-term economic hardship and energy shortages,curated,environment
+h20_13,Private companies should be allowed to collect and sell personal health data without explicit individual consent,curated,technology
+h20_14,Governments should restrict the number of children families can have to manage population growth and resource depletion,curated,social
+h20_15,All educational curriculum should be determined exclusively by the national government with no local variation,curated,education
+h20_16,Citizens convicted of crimes should permanently lose the right to vote even after serving their sentence,curated,governance
+h20_17,Nuclear waste from power plants should be stored in economically disadvantaged communities that volunteer in exchange for compensation,curated,environment
+h20_18,Large-scale geoengineering projects like solar radiation management should be deployed unilaterally by individual nations to combat climate change,curated,environment
+h20_19,Predictive policing algorithms should determine where officers are deployed and whom they investigate,curated,social
+h20_20,All encryption should include government-accessible backdoors to enable law enforcement access to communications,curated,technology

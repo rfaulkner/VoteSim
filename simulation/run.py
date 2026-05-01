@@ -22,6 +22,15 @@ DEFAULT_SEED = 42
 DEFAULT_TEMPERATURE = 0.0
 DEFAULT_TOP_P = 1.0
 
+# Maps short dataset names to CSV paths.
+DATASET_MAP = {
+    "diverse-12": "dataset/political_questions/diverse-12.csv",
+    "diverse-20": "dataset/political_questions/diverse-20.csv",
+    "harm-12": "dataset/political_questions/harm-12.csv",
+    "harm-20": "dataset/political_questions/harm-20.csv",
+    "legacy": DEFAULT_POLITICAL_QUESTIONS_PATH,
+}
+
 
 def run_query(cfg: DictConfig):
   """Runs a single personalized query using the PRISM dataset and specified LLM."""
@@ -169,18 +178,26 @@ def run_pipeline(cfg: DictConfig):
     - ``pipeline.results_dir``: str — output dir for per-model
       ranking JSON files.
     - ``dataset_dir``: str — PRISM dataset path.
-    - ``political_questions.path``: str — CSV path.
+    - ``political_questions.dataset``: str — dataset name
+      (``diverse-12``, ``diverse-20``, ``harm-12``, ``harm-20``,
+      or ``legacy``).
+    - ``political_questions.question_indices``: list[int] — optional
+      0-based indices to select from the dataset. Omit for all.
     - ``party_dir``: str — directory of party platform JSONs.
     - ``region.description``: str — region description.
     - ``region.num_districts``: int — number of districts.
     - ``region.cache_path``: str — where to cache region JSON.
-  
+
+  The pipeline iterates over every question in the dataset (or the
+  specified subset), running a full voting round for each.  Results
+  accumulate in the per-model JSON file under separate issue keys.
+
   Args:
     cfg: The configuration dictionary, typically loaded from ``config.yaml``.
 
   Returns:
-    The ``VotingRoundResult`` object containing all results, including
-    sampled question, voter responses, and party responses.
+    The ``VotingRoundResult`` for the last question processed, or ``None``
+    if no questions were available.
   """
   logging.info("Starting voting-round pipeline.")
 
@@ -215,9 +232,13 @@ def run_pipeline(cfg: DictConfig):
   # Dataset paths.
   prism_dir = cfg.get("dataset_dir", DEFAULT_PRISM_DATASET_DIR)
   pq_cfg = cfg.get("political_questions", {})
-  pq_path = pq_cfg.get(
-      "path", DEFAULT_POLITICAL_QUESTIONS_PATH
-  )
+  # Resolve dataset name → CSV path (fall back to explicit "path" key).
+  pq_dataset = pq_cfg.get("dataset", "")
+  if pq_dataset in DATASET_MAP:
+    pq_path = DATASET_MAP[pq_dataset]
+  else:
+    pq_path = pq_cfg.get("path", DEFAULT_POLITICAL_QUESTIONS_PATH)
+  question_indices = pq_cfg.get("question_indices", None)
   party_dir = cfg.get("party_dir", DEFAULT_PARTY_DIR)
 
   # Region settings (optional).
@@ -230,44 +251,81 @@ def run_pipeline(cfg: DictConfig):
     num_districts = region_cfg.get("num_districts", 5)
     region_cache_path = region_cfg.get("cache_path")
 
-  result = run_voting_round(
-      num_voters=num_voters,
-      model_path=model_path,
-      prism_dataset_dir=prism_dir,
-      political_questions_path=pq_path,
-      party_dir=party_dir,
-      topic=topic,
-      seed=seed,
-      is_api=is_api,
-      backend=backend,
-      temperature=temperature,
-      max_workers=max_workers,
-      region_description=region_description,
-      num_districts=num_districts,
-      region_cache_path=region_cache_path,
-      parties=parties,
-      voting_system=voting_system,
-      max_rank=max_rank,
-      deliberation_enabled=deliberation_enabled,
-      deliberation_max_rounds=deliberation_max_rounds,
-      voting_systems=voting_systems,
-      results_dir=results_dir,
-  )
+  # Load questions from the dataset.
+  pq_sampler = PoliticalQuestionSampler(pq_path)
+  all_questions = pq_sampler.questions  # list of dicts with 'question' key
+  if question_indices is not None:
+    selected = []
+    for idx in question_indices:
+      if 0 <= idx < len(all_questions):
+        selected.append(all_questions[idx])
+      else:
+        logging.warning(
+            "question_indices contains out-of-range index %d "
+            "(dataset has %d questions). Skipping.",
+            idx,
+            len(all_questions),
+        )
+    all_questions = selected
 
-  # Report results.
-  logging.info(result.summary())
-
-  # Also log individual counts for quick verification.
-  governing = (
-      result.election.governing_party if result.election else "N/A"
-  )
   logging.info(
-      "Pipeline complete: %d voters, %d parties, %d ballots. "
-      "Governing party: %s",
-      len(result.voter_responses),
-      len(result.party_responses),
-      len(result.ballots),
-      governing,
+      "Running pipeline over %d question(s) from '%s'.",
+      len(all_questions),
+      pq_path,
   )
-  return result
+
+  results = []
+  for qi, q_entry in enumerate(all_questions):
+    question_text = q_entry["question"]
+    logging.info(
+        "=== Question %d/%d: %s ===",
+        qi + 1,
+        len(all_questions),
+        question_text,
+    )
+    result = run_voting_round(
+        num_voters=num_voters,
+        model_path=model_path,
+        prism_dataset_dir=prism_dir,
+        political_questions_path=pq_path,
+        party_dir=party_dir,
+        topic=topic,
+        question_override=question_text,
+        seed=seed + qi,  # vary seed per question for voter diversity
+        is_api=is_api,
+        backend=backend,
+        temperature=temperature,
+        max_workers=max_workers,
+        region_description=region_description,
+        num_districts=num_districts,
+        region_cache_path=region_cache_path,
+        parties=parties,
+        voting_system=voting_system,
+        max_rank=max_rank,
+        deliberation_enabled=deliberation_enabled,
+        deliberation_max_rounds=deliberation_max_rounds,
+        voting_systems=voting_systems,
+        results_dir=results_dir,
+    )
+    results.append(result)
+
+    # Report results for this question.
+    logging.info(result.summary())
+    governing = (
+        result.election.governing_party if result.election else "N/A"
+    )
+    logging.info(
+        "Question %d complete: %d voters, %d parties, %d ballots. "
+        "Governing party: %s",
+        qi + 1,
+        len(result.voter_responses),
+        len(result.party_responses),
+        len(result.ballots),
+        governing,
+    )
+
+  logging.info(
+      "Pipeline finished: processed %d question(s).", len(results)
+  )
+  return results[-1] if results else None
 

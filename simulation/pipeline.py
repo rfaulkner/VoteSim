@@ -162,6 +162,7 @@ def run_voting_round(
     ),
     party_dir: str = "dataset/party",
     topic: str = "social",
+    question_override: Optional[str] = None,
     seed: int = 42,
     is_api: bool = False,
     backend: str = "transformers",
@@ -201,6 +202,8 @@ def run_voting_round(
     political_questions_path: Path to the political-questions CSV.
     party_dir: Directory containing party platform JSON files.
     topic: Topic category to filter questions by.
+    question_override: If provided, use this exact question text
+      instead of sampling from the dataset.
     seed: Random seed for reproducibility.
     is_api: Whether the model is accessed via API.
     backend: LLM backend name.
@@ -238,8 +241,11 @@ def run_voting_round(
     )
 
   # -- 2. Sample question --------------------------------------------------
-  pq_sampler = PoliticalQuestionSampler(political_questions_path)
-  question = pq_sampler.sample_question_text(topic=topic, seed=seed)
+  if question_override:
+    question = question_override
+  else:
+    pq_sampler = PoliticalQuestionSampler(political_questions_path)
+    question = pq_sampler.sample_question_text(topic=topic, seed=seed)
   logging.info("Sampled question [%s]: %s", topic, question)
 
   # -- 3. Voter survey (concurrent) ----------------------------------------

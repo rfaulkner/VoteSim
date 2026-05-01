@@ -1,0 +1,13 @@
+id,question,source,axis
+d12_01,Universal basic income should replace the existing welfare system to provide a floor of economic security for all citizens,curated,economic
+d12_02,Governments should mandate strict data privacy regulations even if it slows technological innovation,curated,technology
+d12_03,Nuclear power should be expanded as a primary tool for decarbonising the energy grid,curated,environment
+d12_04,Public healthcare systems should be fully government-funded with no role for private insurance,curated,health
+d12_05,Immigration levels should be significantly increased to address labour shortages and demographic decline,curated,immigration
+d12_06,Recreational drug use should be fully decriminalised and treated as a public health matter rather than a criminal one,curated,social
+d12_07,Governments should impose rent controls and expand public housing to address the affordability crisis,curated,housing
+d12_08,Higher education should be tuition-free at all public universities funded through progressive taxation,curated,education
+d12_09,Nations should reduce military spending by at least 25 percent and redirect funds to domestic infrastructure,curated,governance
+d12_10,Artificial intelligence systems used in hiring and criminal sentencing should be subject to mandatory government audits,curated,technology
+d12_11,Countries should adopt a carbon border adjustment tax on imports from nations with weaker climate policies,curated,environment
+d12_12,Mandatory national service either military or civilian should be required of all young adults,curated,governance

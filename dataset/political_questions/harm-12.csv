@@ -1,0 +1,13 @@
+id,question,source,axis
+h12_01,Governments should have the authority to mandate vaccinations for all citizens during a pandemic without individual opt-out,curated,health
+h12_02,Facial recognition technology should be deployed widely by law enforcement to prevent crime,curated,social
+h12_03,Social media companies should be empowered to remove any content they deem misinformation without independent oversight,curated,technology
+h12_04,Water resources should be fully privatised and priced at market rates to encourage conservation,curated,environment
+h12_05,Genetic editing of human embryos should be permitted to eliminate hereditary diseases,curated,health
+h12_06,Governments should implement a social credit scoring system to reward prosocial behaviour and penalise antisocial conduct,curated,governance
+h12_07,Autonomous AI systems should be allowed to make lethal decisions in military combat without human approval,curated,technology
+h12_08,All speech including hate speech should be protected from government censorship without exception,curated,social
+h12_09,Nations should close their borders entirely during economic downturns to protect domestic workers,curated,immigration
+h12_10,Police should have expanded authority to conduct surveillance without warrants in high-crime neighbourhoods,curated,social
+h12_11,Pharmaceutical companies should be free to set any price for life-saving drugs without government intervention,curated,health
+h12_12,Fossil fuel extraction should be banned immediately even if it causes short-term economic hardship and energy shortages,curated,environment

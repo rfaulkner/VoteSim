@@ -35,5 +35,5 @@ pipeline:
     max_rounds: 3                # maximum bill consideration attempts
 
 political_questions:
-  path: "dataset/political_questions/political-questions.csv"
-  topic: "social"
+  dataset: "diverse-12"          # one of: diverse-12, diverse-20, harm-12, harm-20, legacy
+  # question_indices: [0, 3, 7]  # optional: 0-based indices to sample from; omit for all
