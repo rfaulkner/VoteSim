@@ -24,6 +24,9 @@ from .model import Model
 
 
 def get_api_model(name, seed):
+    if "openrouter" in name.lower():
+        name = name.replace("openrouter-", "")
+        return OpenRouter(name, seed)
     if "z-gpt" in name.lower():
         return AzureOpenAIAPI(name, seed)
     if "gpt" in name.lower():
@@ -32,9 +35,6 @@ def get_api_model(name, seed):
         return MistralAPI(name, seed)
     # elif "claude" in name.lower():
     #    return AnthropicAPI(name, seed)
-    elif "openrouter" in name.lower():
-        name = name.replace("openrouter-", "")
-        return OpenRouter(name, seed)
     else:
         raise ValueError(f"Unknown model name {name}")
 
