@@ -545,6 +545,7 @@ def save_rankings(
         Dict[str, PolicyResponse]
     ] = None,
     scores: Optional[Dict[str, Dict[str, float]]] = None,
+    ballots: Optional[List[VoterBallot]] = None,
 ) -> str:
   """Persist voter system rankings and scores to JSON.
 
@@ -563,6 +564,12 @@ def save_rankings(
           },
           "voters": {
             "<user_id>": "<response text>"
+          },
+          "ballots": {
+            "<user_id>": {
+              "district": "Ironforge Centre",
+              "ranking": ["liberal", "socialist", "conservative"]
+            }
           },
           "rankings": {
             "<user_id>": ["system_a", "system_b", ...]
@@ -585,6 +592,7 @@ def save_rankings(
     voter_responses: Optional voter response list.
     party_responses: Optional ``{ideology: PolicyResponse}``.
     scores: Optional ``{user_id: {system: float}}``.
+    ballots: Optional list of phase-5 voter party ballots.
 
   Returns:
     The absolute path to the written JSON file.
@@ -645,6 +653,16 @@ def save_rankings(
           "examples": demo.get("examples", []),
       }
     existing[issue]["voters"] = voters_dict
+
+  # Store voter party ballots (phase 5 rankings).
+  if ballots is not None:
+    ballots_dict: Dict[str, Any] = {}
+    for b in ballots:
+      ballots_dict[b.user_id] = {
+          "district": b.district_name,
+          "ranking": b.ranking,
+      }
+    existing[issue]["ballots"] = ballots_dict
 
   # Store voter system rankings.
   existing[issue]["rankings"] = rankings

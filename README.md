@@ -420,6 +420,12 @@ Results are saved as JSON files in `results/` (one per model). Each file has the
         "examples": ["...", "..."]
       }
     },
+    "ballots": {
+      "<user_id>": {
+        "district": "Ironforge Centre",
+        "ranking": ["liberal", "socialist", "conservative"]
+      }
+    },
     "rankings": {
       "<user_id>": ["system_a", "system_b", ...]
     },
@@ -433,8 +439,9 @@ Results are saved as JSON files in `results/` (one per model). Each file has the
 }
 ```
 
-- **rankings**: Per-voter ordinal ranking of voting systems (best → worst)
-- **scores**: Per-voter Likert scores (1.0 = no match, 5.0 = perfect match, 0.1 increments)
+- **ballots**: Per-voter party rankings from phase 5, including district assignment
+- **rankings**: Per-voter ordinal ranking of voting systems from phase 8 (best → worst)
+- **scores**: Per-voter Likert scores from phase 8 (1.0 = no match, 5.0 = perfect match, 0.1 increments)
 
 ## Voter Personas
 

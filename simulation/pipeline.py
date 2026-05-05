@@ -364,6 +364,7 @@ def run_voting_round(
           voter_responses=voter_responses,
           party_responses=party_responses,
           scores=comparative_scores,
+          ballots=ballots,
       )
 
   result = VotingRoundResult(
@@ -628,6 +629,7 @@ def run_platform_mode(
             voter_responses=voter_responses,
             party_responses=platform_policies,
             scores=comparative_scores,
+            ballots=ballots,
         )
 
     result = VotingRoundResult(
