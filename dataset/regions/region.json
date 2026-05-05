@@ -1,10 +1,10 @@
 {
-  "region_name": "The Thames Valley Region",
-  "description": "Southern Ontario Canada",
+  "region_name": "The Sims Valley Region",
+  "description": "A politically cohesive region under governance by its citizens.",
   "seed": 42,
   "districts": [
     {
-      "name": "Kitchener Centre",
+      "name": "Ironforge Centre",
       "population": 150000,
       "wealth": 0.95,
       "urbanisation": 0.98,
@@ -19,7 +19,7 @@
       "description": "A thriving urban hub with a mix of tech and manufacturing industries, known for its diverse population and strong community ties."
     },
     {
-      "name": "Waterloo West",
+      "name": "Silverpine West",
       "population": 85000,
       "wealth": 0.85,
       "urbanisation": 0.85,
@@ -34,7 +34,7 @@
       "description": "A rapidly growing tech district with a strong focus on startups and innovation, attracting young professionals."
     },
     {
-      "name": "Cambridge",
+      "name": "Millhaven",
       "population": 65000,
       "wealth": 0.7,
       "urbanisation": 0.75,
@@ -49,7 +49,7 @@
       "description": "A historic town with a strong agricultural tradition, known for its family-owned farms and local food markets."
     },
     {
-      "name": "Guelph",
+      "name": "Ashford",
       "population": 120000,
       "wealth": 0.75,
       "urbanisation": 0.8,
@@ -64,7 +64,7 @@
       "description": "A university town with a strong emphasis on healthcare and research, home to several medical facilities and research institutions."
     },
     {
-      "name": "Wellington",
+      "name": "Bramblewood",
       "population": 45000,
       "wealth": 0.6,
       "urbanisation": 0.65,
@@ -76,10 +76,10 @@
       "demographics_diversity": 0.25,
       "median_age": 45,
       "crime_rate": 0.9,
-      "description": "A small town centered around the historic Wellington County, known for its tourism and agricultural products."
+      "description": "A small town centered around a historic county seat, known for its tourism and agricultural products."
     },
     {
-      "name": "Brantford",
+      "name": "Copperfield",
       "population": 100000,
       "wealth": 0.65,
       "urbanisation": 0.75,
@@ -94,7 +94,7 @@
       "description": "A bustling industrial city with a strong logistics sector, serving as a key distribution hub for the region."
     },
     {
-      "name": "Hamilton",
+      "name": "Steelhaven",
       "population": 180000,
       "wealth": 0.8,
       "urbanisation": 0.85,
@@ -109,7 +109,7 @@
       "description": "A major industrial center with a long history in automotive manufacturing, home to several large factories."
     },
     {
-      "name": "St. Catharines",
+      "name": "Lakeshore",
       "population": 90000,
       "wealth": 0.55,
       "urbanisation": 0.7,
@@ -124,7 +124,7 @@
       "description": "A city with a strong tourism industry and agricultural roots, known for its historic downtown and lakefront attractions."
     },
     {
-      "name": "Niagara Falls",
+      "name": "Cascadia Falls",
       "population": 110000,
       "wealth": 0.7,
       "urbanisation": 0.8,
@@ -136,10 +136,10 @@
       "demographics_diversity": 0.5,
       "median_age": 40,
       "crime_rate": 0.6,
-      "description": "A popular tourist destination with a focus on Niagara Falls and nearby attractions, supporting a diverse economy."
+      "description": "A popular tourist destination built around a dramatic waterfall and nearby natural attractions, supporting a diverse economy."
     },
     {
-      "name": "Welland",
+      "name": "Portway",
       "population": 35000,
       "wealth": 0.45,
       "urbanisation": 0.55,
@@ -154,7 +154,7 @@
       "description": "A small industrial town with a focus on shipping and logistics, historically significant for its role in the region's trade."
     },
     {
-      "name": "Thorold",
+      "name": "Thornbury",
       "population": 25000,
       "wealth": 0.35,
       "urbanisation": 0.4,
@@ -169,7 +169,7 @@
       "description": "A rural town with a strong agricultural sector, known for its family farms and small-scale production."
     },
     {
-      "name": "Walkerton",
+      "name": "Dunmore",
       "population": 18000,
       "wealth": 0.3,
       "urbanisation": 0.3,
@@ -184,7 +184,7 @@
       "description": "A small rural community with a focus on farming, with limited infrastructure and a close-knit population."
     },
     {
-      "name": "Orangeville",
+      "name": "Applewood",
       "population": 60000,
       "wealth": 0.5,
       "urbanisation": 0.6,
@@ -199,7 +199,7 @@
       "description": "A town with a strong agricultural base, known for its food processing facilities and local markets."
     },
     {
-      "name": "Belleville",
+      "name": "Kingsport",
       "population": 80000,
       "wealth": 0.55,
       "urbanisation": 0.65,
@@ -214,7 +214,7 @@
       "description": "A growing city with a mix of manufacturing and logistics industries, serving as a regional economic hub."
     },
     {
-      "name": "Caledon",
+      "name": "Elmridge",
       "population": 45000,
       "wealth": 0.65,
       "urbanisation": 0.75,
@@ -229,7 +229,7 @@
       "description": "A suburban community with a strong retail and service sector, known for its family-friendly environment."
     },
     {
-      "name": "Newmarket",
+      "name": "Fairhaven",
       "population": 75000,
       "wealth": 0.6,
       "urbanisation": 0.7,
@@ -244,7 +244,7 @@
       "description": "A town with a strong agricultural tradition, known for its food processing plants and local farming."
     },
     {
-      "name": "Oshawa",
+      "name": "Ridgemont",
       "population": 100000,
       "wealth": 0.65,
       "urbanisation": 0.75,
@@ -259,7 +259,7 @@
       "description": "A city with a strong manufacturing sector, home to several industrial parks and technology companies."
     },
     {
-      "name": "Guelph South",
+      "name": "Ashford South",
       "population": 50000,
       "wealth": 0.55,
       "urbanisation": 0.65,
@@ -271,10 +271,10 @@
       "demographics_diversity": 0.35,
       "median_age": 43,
       "crime_rate": 0.5,
-      "description": "A suburban area of Guelph with a focus on healthcare and educational services, known for its growing population."
+      "description": "A suburban area with a focus on healthcare and educational services, known for its growing population."
     },
     {
-      "name": "Chatham",
+      "name": "Windhollow",
       "population": 30000,
       "wealth": 0.4,
       "urbanisation": 0.45,
@@ -289,7 +289,7 @@
       "description": "A small rural town with a focus on agriculture, known for its farming community and limited services."
     },
     {
-      "name": "Haldimand",
+      "name": "Riverbend",
       "population": 20000,
       "wealth": 0.3,
       "urbanisation": 0.25,

@@ -21,6 +21,8 @@ pipeline:
     - liberal
     - conservative
     - socialist
+    - libertarian
+    - green
   voting_system: "fptp"         # primary system for single-election result
   voting_systems:                # systems for comparative policy ranking
     - fptp

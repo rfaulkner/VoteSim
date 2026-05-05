@@ -14,7 +14,7 @@ from pathfinder import user
 
 DISTRICT_PROMPT = """You are a world-building assistant. Generate a realistic region inspired by {description}.
 
-The region has exactly {num_districts} districts. For each district, provide a JSON object with these fields:
+The region has exactly {num_districts} districts. Use fictional district names — do NOT use real-world place names, but base the socioeconomic attributes on realistic analogs from the described region. For each district, provide a JSON object with these fields:
 - "name": string (a plausible district name)
 - "population": int (estimated population)
 - "wealth": float 0-1 (relative wealth, 1 = wealthiest in region)
