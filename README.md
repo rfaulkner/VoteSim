@@ -1,35 +1,28 @@
-```
-                          🏛️
-
-            .  *  .           .  *  .
-          . 🌿      .       .      🌿 .
-        .  🌿        .     .        🌿  .
-       . 🌿    _______________    🌿 .
-      . 🌿    |               |    🌿 .
-     . 🌿     |   ⚖️  VOTE    |     🌿 .
-      . 🌿    |    S I M      |    🌿 .
-       . 🌿   |_______________|   🌿 .
-        .  🌿   /           \   🌿  .
-          . 🌿/               \🌿 .
-           ./      _____      \.
-           /     _/     \_     \
-          /    _/   | |   \_    \
-         /   /     | | |    \   \
-        ╱  ╱      | | | |    ╲  ╲
-       ╱  ╱   ┌───┴─┴─┴───┐   ╲  ╲
-      ╱  ╱    │           │    ╲  ╲
-     ╱  ╱     └───────────┘     ╲  ╲
-    ┌──┴──┐         ║         ┌──┴──┐
-    │     │         ║         │     │
-    │ ███ │         ║         │ ███ │
-    │     │       ╔═╩═╗       │     │
-    └─────┘       ║   ║       └─────┘
-                ╔═╩═══╩═╗
-                ║ █████ ║
-                ╚═══════╝
-```
-
 # VoteSim — Simulating Democratic Deliberation with LLMs
+
+            ,ggg,                   gg                   ,ggg,
+           d8P""8b                ,d88b,                d8""Y8b
+           Y8b,__,,aadd88888bbaaa,888888,aaadd88888bbaa,,__,d8P
+            "88888888888888888888I888888I88888888888888888888"
+            /|\`""YY8888888PP""""`888888'""""YY8888888PP""'/|\
+           / | \                  `WWWW'                  / | \
+          /  |  \                 ,dMMb,                 /  |  \
+         /   |   \                I8888I                /   |   \
+        /    |    \               `Y88P'               /    |    \
+       /     |     \               `YP'               /     |     \
+      /      |      \               88               /      |      \
+     /       |       \             i88i             /       |       \
+    /        |        \            8888            /        |        \
+"Y88888888888888888888888P"       i8888i       "Y88888888888888888888888P"
+  `""Y888888888888888P""'        ,888888,        `""Y888888888888888P""'
+                                 I888888I
+                                 Y888888P
+                                 `Y8888P'
+                                  `WWWW'    
+                                   dMMb     
+                               _,ad8888ba,_
+                    __,,aaaadd888888888888888bbaaaa,,__
+                  d8888888888888888888888888888888888888b 
 
 VoteSim is a simulation framework that models the full lifecycle of representative democracy: from voter opinion formation through electoral seat allocation, parliamentary deliberation, and comparative policy evaluation — all driven by large language models (LLMs) and grounded in real human personas from the [PRISM dataset](https://arxiv.org/abs/2404.16019).
 
@@ -44,38 +37,38 @@ The goal is to study how different electoral systems translate voter preferences
 │                                                                 │
 │  1. Region & District Generation                                │
 │     └─ LLM generates a geographically-grounded region with      │
-│        N districts, each with socioeconomic attributes           │
+│        N districts, each with socioeconomic attributes          │
 │                                                                 │
 │  2. Voter Sampling (PRISM)                                      │
 │     └─ K voters sampled with demographics, values,              │
-│        and past statements; assigned to districts                │
+│        and past statements; assigned to districts               │
 │                                                                 │
 │  3. Voter Opinion Survey                                        │
 │     └─ Each voter responds to a social-issue prompt             │
 │        in character, conditioned on their persona               │
 │                                                                 │
 │  4. Party Policy Generation                                     │
-│     └─ Each party produces a policy response conditioned         │
-│        on its platform, voter sentiment, and region              │
+│     └─ Each party produces a policy response conditioned        │
+│        on its platform, voter sentiment, and region             │
 │                                                                 │
 │  5. Voter Ranking of Parties                                    │
-│     └─ Each voter ranks parties by policy alignment              │
-│        (randomised presentation order per voter)                 │
+│     └─ Each voter ranks parties by policy alignment             │
+│        (randomised presentation order per voter)                │
 │                                                                 │
-│  6. Seat Allocation (per voting system)                          │
-│     └─ Ballots → district-level seat allocation via              │
-│        FPTP, D'Hondt, Hare, Sainte-Laguë, SMDP, or AV          │
+│  6. Seat Allocation (per voting system)                         │
+│     └─ Ballots → district-level seat allocation via             │
+│        FPTP, D'Hondt, Hare, Sainte-Laguë, SMDP, or AV           │
 │                                                                 │
 │  7. Parliamentary Deliberation                                  │
-│     └─ Governing party drafts a bill; opposition amends;         │
-│        seated members vote (multi-round)                         │
+│     └─ Governing party drafts a bill; opposition amends;        │
+│        seated members vote (multi-round)                        │
 │                                                                 │
 │  8. Comparative Policy Ranking & Scoring                        │
 │     └─ Voters rank AND score (1.0–5.0 Likert) the bills         │
-│        produced under each voting system                         │
+│        produced under each voting system                        │
 │                                                                 │
 │  9. Results Persistence (JSON)                                  │
-│     └─ Policies, rankings, scores, voter data saved per model    │
+│     └─ Policies, rankings, scores, voter data saved per model   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -457,3 +450,8 @@ To prevent positional bias in LLM responses, the order in which parties (phase 5
 - Different voters always see different orderings
 
 Ordering is deterministic (seeded by `md5(user_id + context_salt)`) for reproducibility.
+
+------------------------------------------------
+ASCII Art is courtesy of https://asciiart.website/
+This ASCII pic can be found at: https://asciiart.website/art/3128
+Normand Veilleux
