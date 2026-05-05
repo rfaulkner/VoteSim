@@ -20,6 +20,9 @@ Results are persisted as JSON with the schema::
         },
         "rankings": {
           "<user_id>": ["system_a", "system_b", ...]
+        },
+        "scores": {
+          "<user_id>": {"system_a": 4.2, "system_b": 2.0}
         }
       }
     }
@@ -79,14 +82,29 @@ under each system.  Compare them against your own views.
 
 {policies_block}
 
-Based on your values, background, and your original response, rank the \
-voting systems from MOST preferred (the system whose adopted policy best \
-reflects your views) to LEAST preferred.  Rank all {num_systems} systems.
+You must do TWO things:
 
-Return ONLY a JSON array of voting system name strings, best first.  \
-Example: ["system_a", "system_b", ...]
+1. **Rank** the voting systems from MOST preferred (the system whose \
+adopted policy best reflects your views) to LEAST preferred.  Rank \
+all {num_systems} systems.
 
-Return ONLY the JSON array — no other text."""
+2. **Score** each system on a Likert scale from 1.0 to 5.0 indicating \
+how well its policy matches your preferences:
+   1.0 = does not match at all
+   3.0 = neutral / partially matches
+   5.0 = perfect match
+Scores must be in increments of 0.1 (e.g. 1.0, 2.3, 4.5).  \
+Values like 2.25 or 4.333 are NOT allowed.
+
+Return ONLY a JSON object with two keys:
+- "ranking": an array of voting system name strings, best first
+- "scores": an object mapping each system name to its score
+
+Example:
+{{"ranking": ["system_a", "system_b"], \
+"scores": {{"system_a": 4.2, "system_b": 2.0}}}}
+
+Return ONLY the JSON object — no other text."""
 
 
 # ---------------------------------------------------------------------------
@@ -325,10 +343,10 @@ def _query_voter_system_ranking(
     system_policies: Dict[str, Optional[str]],
     model: Any,
     temperature: float,
-) -> Tuple[str, List[str]]:
-  """Ask a single voter to rank voting systems.
+) -> Tuple[str, List[str], Dict[str, float]]:
+  """Ask a single voter to rank and score voting systems.
 
-  Returns ``(user_id, [system ranking])``.
+  Returns ``(user_id, [system ranking], {system: score})``.
   """
   demo = voter_response.demographics
   demographics_block = _format_demographics_block(demo)
@@ -353,7 +371,7 @@ def _query_voter_system_ranking(
     lm += prompt
   with assistant():
     lm += gen(
-        max_tokens=512,
+        max_tokens=1024,
         temperature=temperature,
         name="system_ranking_json",
     )
@@ -361,39 +379,69 @@ def _query_voter_system_ranking(
   raw = lm["system_ranking_json"]
   text = _strip_llm_wrapping(raw)
 
+  # Parse: expect {"ranking": [...], "scores": {...}}
+  # Fall back to bare list for backward compat.
+  ranking = system_names  # default
+  scores: Dict[str, float] = {}  # default
+
   try:
-    ranking = json.loads(text)
+    data = json.loads(text)
   except json.JSONDecodeError:
     logging.warning(
-        "Failed to parse system ranking JSON for voter %s. Raw: %.200s",
+        "Failed to parse system ranking JSON for voter %s."
+        " Raw: %.200s",
         voter_response.user_id,
         text,
     )
-    ranking = system_names  # Fallback: alphabetical.
+    data = None
 
-  # Validate: keep only recognised system names.
+  if isinstance(data, dict):
+    ranking = data.get("ranking", system_names)
+    scores = data.get("scores", {})
+  elif isinstance(data, list):
+    # Legacy bare-array response.
+    ranking = data
+
+  # Validate ranking: keep only recognised system names.
   valid = [s for s in ranking if s in system_policies]
-  # Fill missing systems.
   for s in system_names:
     if s not in valid:
       valid.append(s)
   ranking = valid[: len(system_names)]
 
-  return (voter_response.user_id, ranking)
+  # Validate scores: clamp to [1.0, 5.0], round to 0.1.
+  validated_scores: Dict[str, float] = {}
+  for s in system_names:
+    raw_score = scores.get(s)
+    if raw_score is not None:
+      try:
+        val = round(float(raw_score), 1)
+        val = max(1.0, min(5.0, val))
+      except (ValueError, TypeError):
+        val = 3.0  # neutral default
+    else:
+      val = 3.0  # neutral default
+    validated_scores[s] = val
+
+  return (voter_response.user_id, ranking, validated_scores)
 
 
 def rank_policies(
     voter_responses: List[VoterResponse],
-    comparative_results: Dict[str, Tuple[ElectionResult, DeliberationResult]],
+    comparative_results: Dict[
+        str, Tuple[ElectionResult, DeliberationResult]
+    ],
     model: Any,
     temperature: float = 0.7,
     max_workers: Optional[int] = None,
-) -> Dict[str, List[str]]:
-  """Ask all voters to rank voting systems by policy preference.
+) -> Tuple[
+    Dict[str, List[str]], Dict[str, Dict[str, float]]
+]:
+  """Ask all voters to rank and score voting systems.
 
   Each voter is shown the adopted policy from every system's
   deliberation and asked to rank the *systems* from most to least
-  preferred.
+  preferred, and to score each system on a 1.0–5.0 Likert scale.
 
   Args:
     voter_responses: Voter responses from the survey phase.
@@ -403,7 +451,9 @@ def rank_policies(
     max_workers: Concurrency limit.
 
   Returns:
-    ``{user_id: [system_name_best, ..., system_name_worst]}``
+    A tuple of ``(rankings, scores)`` where:
+    - ``rankings``: ``{user_id: [system_best, ..., worst]}``
+    - ``scores``: ``{user_id: {system: float}}``
   """
   # Build the system → adopted policy text mapping.
   system_policies: Dict[str, Optional[str]] = {}
@@ -431,15 +481,18 @@ def rank_policies(
     }
 
     rankings: Dict[str, List[str]] = {}
+    all_scores: Dict[str, Dict[str, float]] = {}
     for future in futures.as_completed(future_to_voter):
       vr = future_to_voter[future]
       try:
-        user_id, ranking = future.result()
-        rankings[user_id] = ranking
+        uid, ranking, scores = future.result()
+        rankings[uid] = ranking
+        all_scores[uid] = scores
         logging.info(
-            "Voter %s system ranking: %s",
-            user_id,
+            "Voter %s system ranking: %s  scores: %s",
+            uid,
             ranking,
+            scores,
         )
       except Exception:  # pylint: disable=broad-except
         logging.exception(
@@ -452,7 +505,7 @@ def rank_policies(
       len(rankings),
       len(voter_responses),
   )
-  return rankings
+  return rankings, all_scores
 
 
 # ---------------------------------------------------------------------------
@@ -467,9 +520,12 @@ def save_rankings(
     output_dir: str,
     system_policies: Optional[Dict[str, Optional[str]]] = None,
     voter_responses: Optional[List[VoterResponse]] = None,
-    party_responses: Optional[Dict[str, PolicyResponse]] = None,
+    party_responses: Optional[
+        Dict[str, PolicyResponse]
+    ] = None,
+    scores: Optional[Dict[str, Dict[str, float]]] = None,
 ) -> str:
-  """Persist voter system rankings to a per-model JSON file.
+  """Persist voter system rankings and scores to JSON.
 
   The file is created or incrementally updated with the schema::
 
@@ -489,6 +545,12 @@ def save_rankings(
           },
           "rankings": {
             "<user_id>": ["system_a", "system_b", ...]
+          },
+          "scores": {
+            "<user_id>": {
+              "system_a": 4.2,
+              "system_b": 2.0
+            }
           }
         }
       }
@@ -498,12 +560,10 @@ def save_rankings(
     issue: Social issue text (used as top-level key).
     model_path: Model path — basename used for the filename.
     output_dir: Directory to write the JSON file into.
-    system_policies: Optional ``{system_name: policy_text | None}``. When
-      provided, stored under ``<issue> → "policies"``.
-    voter_responses: Optional list of VoterResponse objects. When provided,
-      stored under ``<issue> → "voters"``.
-    party_responses: Optional ``{ideology: PolicyResponse}``. When provided,
-      stored under ``<issue> → "parties"``.
+    system_policies: Optional ``{system_name: policy_text}``.
+    voter_responses: Optional voter response list.
+    party_responses: Optional ``{ideology: PolicyResponse}``.
+    scores: Optional ``{user_id: {system: float}}``.
 
   Returns:
     The absolute path to the written JSON file.
@@ -567,6 +627,10 @@ def save_rankings(
 
   # Store voter system rankings.
   existing[issue]["rankings"] = rankings
+
+  # Store Likert scores per voter per system.
+  if scores is not None:
+    existing[issue]["scores"] = scores
 
   with open(filepath, "w") as f:
     json.dump(existing, f, indent=2, ensure_ascii=False)

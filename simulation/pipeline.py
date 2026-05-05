@@ -341,7 +341,7 @@ def run_voting_round(
         max_workers=max_workers,
     )
 
-    comparative_rankings = rank_policies(
+    comparative_rankings, comparative_scores = rank_policies(
         voter_responses=voter_responses,
         comparative_results=comp_results,
         model=model,
@@ -363,6 +363,7 @@ def run_voting_round(
           system_policies=sys_policies,
           voter_responses=voter_responses,
           party_responses=party_responses,
+          scores=comparative_scores,
       )
 
   result = VotingRoundResult(
@@ -605,7 +606,7 @@ def run_platform_mode(
           max_workers=max_workers,
       )
 
-      comparative_rankings = rank_policies(
+      comparative_rankings, comparative_scores = rank_policies(
           voter_responses=voter_responses,
           comparative_results=comp_results,
           model=model,
@@ -626,6 +627,7 @@ def run_platform_mode(
             system_policies=sys_policies,
             voter_responses=voter_responses,
             party_responses=platform_policies,
+            scores=comparative_scores,
         )
 
     result = VotingRoundResult(
