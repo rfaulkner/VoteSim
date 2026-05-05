@@ -19,6 +19,7 @@ Orchestrates a single round of the VoteSim experiment:
 
 from dataclasses import dataclass
 from dataclasses import field
+import json
 import logging
 import os
 from typing import Dict
@@ -35,12 +36,17 @@ from simulation.policy_ranking import save_rankings
 from pathfinder import get_model
 from simulation.district_generator import Region
 from simulation.district_generator import RegionGenerator
+from simulation.policy_generator import PartyPlatform
 from simulation.policy_generator import PolicyResponse
 from simulation.political_sampler import PoliticalQuestionSampler
 from simulation.prism_sampler import PrismSampler
 from simulation.survey import generate_party_responses
+from simulation.survey import generate_platform_rankings
 from simulation.survey import generate_voter_rankings
 from simulation.survey import generate_voter_responses
+from simulation.survey import platform_to_policy_response
+from simulation.survey import prepare_voters
+from simulation.survey import survey_voters
 from simulation.survey import VoterResponse
 from simulation.voting import allocate_district_seats
 from simulation.voting import ElectionResult
@@ -372,3 +378,278 @@ def run_voting_round(
   )
   logging.info("Voting round complete.")
   return result
+
+
+# ---------------------------------------------------------------------------
+# Platform-only voting mode
+# ---------------------------------------------------------------------------
+
+
+def _load_party_platforms(
+    party_dir: str,
+    parties: Optional[List[str]] = None,
+) -> List[PartyPlatform]:
+  """Load party platforms from JSON files in a directory.
+
+  Args:
+    party_dir: Directory containing party platform JSON files.
+    parties: Optional list of ideology names to include.  If
+      ``None``, all platforms are loaded.
+
+  Returns:
+    A list of ``PartyPlatform`` objects.
+
+  Raises:
+    FileNotFoundError: If no valid platforms are found.
+  """
+  party_filter = {p.lower() for p in parties} if parties else None
+  platforms: List[PartyPlatform] = []
+  for filename in sorted(os.listdir(party_dir)):
+    if not filename.endswith(".json"):
+      continue
+    ideology_key = filename.removesuffix(".json").lower()
+    if party_filter and ideology_key not in party_filter:
+      continue
+    path = os.path.join(party_dir, filename)
+    try:
+      platforms.append(PartyPlatform.from_json(path))
+    except (json.JSONDecodeError, KeyError) as e:
+      logging.warning("Skipping %s: %s", path, e)
+
+  if not platforms:
+    raise FileNotFoundError(
+        f"No valid party platform JSON files in {party_dir}"
+    )
+  return platforms
+
+
+def run_platform_mode(
+    num_voters: int,
+    model_path: str,
+    questions: List[str],
+    prism_dataset_dir: str = "dataset/prism",
+    party_dir: str = "dataset/party",
+    seed: int = 42,
+    is_api: bool = False,
+    backend: str = "transformers",
+    temperature: float = 0.7,
+    max_workers: Optional[int] = None,
+    region_description: Optional[str] = None,
+    num_districts: int = 5,
+    region_cache_path: Optional[str] = None,
+    parties: Optional[List[str]] = None,
+    max_rank: int = 3,
+    deliberation_enabled: bool = True,
+    deliberation_max_rounds: int = 3,
+    voting_systems: Optional[List[str]] = None,
+    results_dir: Optional[str] = None,
+) -> List[VotingRoundResult]:
+  """Run the pipeline in platform-only voting mode.
+
+  In this mode voters rank parties **once** based on their general
+  platforms (no issue-specific policy generation), producing a
+  single set of ballots and a fixed seat allocation per voting
+  system.  Deliberation and comparative policy ranking then run
+  per-issue using those fixed seats and platform-derived policies.
+
+  Flow:
+    **Once (before the question loop):**
+      1. Generate or load region.
+      2. Load model, sample voters, assign districts.
+      3. Load party platforms.
+      4. Platform-based ranking → ballots.
+
+    **Per question:**
+      5. Voter opinion survey (for use in bill ranking).
+      6. Comparative elections — reuses fixed ballots, runs
+         deliberation per voting system, plus baselines.
+      7. Voters rank the resulting bills.
+      8. Persist results.
+
+  Args:
+    num_voters: Number of voters to sample from PRISM.
+    model_path: Path or name of the LLM to use.
+    questions: List of social-issue question texts to process.
+    prism_dataset_dir: Path to the PRISM dataset directory.
+    party_dir: Directory containing party platform JSON files.
+    seed: Random seed for reproducibility.
+    is_api: Whether the model is accessed via API.
+    backend: LLM backend name.
+    temperature: Sampling temperature.
+    max_workers: Max concurrent LLM calls per stage.
+    region_description: If provided, a region is generated.
+    num_districts: Number of districts in the region.
+    region_cache_path: Directory to cache the region JSON.
+    parties: Optional list of ideology names to include.
+    max_rank: Number of parties each voter ranks.
+    deliberation_enabled: Whether to run deliberation.
+    deliberation_max_rounds: Max bill consideration attempts.
+    voting_systems: List of voting system names for comparative
+      ranking.  If ``None`` or empty, only single-system
+      results are produced.
+    results_dir: Directory to persist per-model ranking JSON.
+
+  Returns:
+    A list of ``VotingRoundResult`` objects, one per question.
+  """
+  # -- 1. Region -----------------------------------------------------------
+  region: Optional[Region] = None
+  if region_description:
+    region = _load_or_generate_region(
+        region_description=region_description,
+        num_districts=num_districts,
+        model_path=model_path,
+        is_api=is_api,
+        seed=seed,
+        backend=backend,
+        cache_path=region_cache_path,
+    )
+
+  # -- 2. Load model, sample voters, assign districts ---------------------
+  logging.info(
+      "Loading model '%s' (backend=%s)...", model_path, backend
+  )
+  model = get_model(
+      model_path, is_api=is_api, seed=seed, backend_name=backend
+  )
+
+  prism = PrismSampler(prism_dataset_dir)
+  voters, voter_districts = prepare_voters(
+      num_voters=num_voters,
+      prism_sampler=prism,
+      seed=seed,
+      region=region,
+  )
+
+  # -- 3. Load party platforms --------------------------------------------
+  platforms = _load_party_platforms(party_dir, parties)
+  logging.info(
+      "Loaded %d party platforms: %s",
+      len(platforms),
+      [p.ideology for p in platforms],
+  )
+
+  # Build platform-derived PolicyResponse dict for deliberation.
+  platform_policies: Dict[str, PolicyResponse] = {
+      p.ideology: platform_to_policy_response(p)
+      for p in platforms
+  }
+
+  # -- 4. Platform-based ranking → ballots (ONCE) -------------------------
+  ballots = generate_platform_rankings(
+      voters=voters,
+      voter_districts=voter_districts,
+      platforms=platforms,
+      model=model,
+      temperature=temperature,
+      max_rank=max_rank,
+      max_workers=max_workers,
+      region=region,
+  )
+  logging.info(
+      "Platform rankings complete: %d ballots.", len(ballots)
+  )
+
+  # Pre-compute district seats for elections.
+  district_seats: Optional[Dict[str, int]] = None
+  if region:
+    district_seats = allocate_district_seats(region.districts)
+    logging.info("District seat allocation: %s", district_seats)
+
+  # -- Per-question loop ---------------------------------------------------
+  results: List[VotingRoundResult] = []
+
+  for qi, question in enumerate(questions):
+    logging.info(
+        "=== [Platform mode] Question %d/%d: %s ===",
+        qi + 1,
+        len(questions),
+        question,
+    )
+
+    # 5. Voter opinion survey (for bill ranking later).
+    voter_responses = survey_voters(
+        voters=voters,
+        voter_districts=voter_districts,
+        question=question,
+        model=model,
+        temperature=temperature,
+        max_workers=max_workers,
+        region=region,
+    )
+
+    # 6-7. Comparative elections + deliberation + bill ranking.
+    comparative_rankings: Optional[Dict[str, List[str]]] = None
+    rankings_file: Optional[str] = None
+
+    if voting_systems and district_seats and ballots:
+      logging.info(
+          "Comparative ranking across %d systems: %s",
+          len(voting_systems),
+          voting_systems,
+      )
+
+      effective_max_rounds = (
+          deliberation_max_rounds if deliberation_enabled else 0
+      )
+
+      comp_results = run_comparative_elections(
+          ballots=ballots,
+          district_seats=district_seats,
+          party_policies=platform_policies,
+          model=model,
+          voting_systems=voting_systems,
+          issue=question,
+          temperature=temperature,
+          deliberation_max_rounds=effective_max_rounds,
+          max_workers=max_workers,
+      )
+
+      comparative_rankings = rank_policies(
+          voter_responses=voter_responses,
+          comparative_results=comp_results,
+          model=model,
+          temperature=temperature,
+          max_workers=max_workers,
+      )
+
+      if results_dir:
+        sys_policies = {
+            s: _bill_to_text(delib)
+            for s, (_, delib) in comp_results.items()
+        }
+        rankings_file = save_rankings(
+            rankings=comparative_rankings,
+            issue=question,
+            model_path=model_path,
+            output_dir=results_dir,
+            system_policies=sys_policies,
+            voter_responses=voter_responses,
+            party_responses=platform_policies,
+        )
+
+    result = VotingRoundResult(
+        question=question,
+        voter_responses=voter_responses,
+        party_responses=platform_policies,
+        ballots=ballots,
+        election=None,
+        region=region,
+        deliberation=None,
+        comparative_rankings=comparative_rankings,
+        rankings_file=rankings_file,
+    )
+    results.append(result)
+    logging.info(
+        "Question %d complete: %d voter responses, "
+        "%d systems ranked.",
+        qi + 1,
+        len(voter_responses),
+        len(comparative_rankings) if comparative_rankings else 0,
+    )
+
+  logging.info(
+      "Platform mode finished: processed %d question(s).",
+      len(results),
+  )
+  return results

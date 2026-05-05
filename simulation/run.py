@@ -7,6 +7,7 @@ import os
 from omegaconf import DictConfig
 from pathfinder import assistant, gen, get_model, system, user
 from simulation.district_generator import Region, RegionGenerator
+from simulation.pipeline import run_platform_mode
 from simulation.pipeline import run_voting_round
 from simulation.political_sampler import PoliticalQuestionSampler
 from simulation.prism_sampler import PrismSampler
@@ -273,6 +274,41 @@ def run_pipeline(cfg: DictConfig):
       len(all_questions),
       pq_path,
   )
+
+  # --- Mode dispatch --------------------------------------------------
+  voting_mode = pipe_cfg.get("voting_mode", "issue")
+
+  if voting_mode == "platform":
+    logging.info("Using platform-only voting mode.")
+    question_texts = [q["question"] for q in all_questions]
+    platform_results = run_platform_mode(
+        num_voters=num_voters,
+        model_path=model_path,
+        questions=question_texts,
+        prism_dataset_dir=prism_dir,
+        party_dir=party_dir,
+        seed=seed,
+        is_api=is_api,
+        backend=backend,
+        temperature=temperature,
+        max_workers=max_workers,
+        region_description=region_description,
+        num_districts=num_districts,
+        region_cache_path=region_cache_path,
+        parties=parties,
+        max_rank=max_rank,
+        deliberation_enabled=deliberation_enabled,
+        deliberation_max_rounds=deliberation_max_rounds,
+        voting_systems=voting_systems,
+        results_dir=results_dir,
+    )
+    logging.info(
+        "Pipeline finished (platform mode): %d question(s).",
+        len(platform_results),
+    )
+    return platform_results[-1] if platform_results else None
+
+  # --- Default "issue" mode (unchanged) --------------------------------
 
   results = []
   for qi, q_entry in enumerate(all_questions):

@@ -23,6 +23,7 @@ from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 from pathfinder import assistant
 from pathfinder import gen
@@ -733,3 +734,358 @@ def generate_voter_rankings(
   )
   return ballots
 
+
+# ---------------------------------------------------------------------------
+# Platform-only voting mode
+# ---------------------------------------------------------------------------
+
+PLATFORM_RANKING_PROMPT = """\
+You are a person with the following background:
+{demographics_block}
+{region_block}
+Here is how you describe your own values and outlook:
+  "{self_description}"
+
+Here are some statements you have made in the past that reflect \
+your views:
+{examples}
+
+The following political parties are running for election.  Review \
+their platforms and rank them based on how well each party's values \
+and policy positions align with your own.
+
+{platforms_block}
+
+Rank the parties from MOST aligned with your views to LEAST \
+aligned.  Return your ranking as a JSON array of party ideology \
+strings, best first.  Rank exactly {max_rank} parties.
+
+Return ONLY the JSON array — no other text."""
+
+
+def _format_platforms_block(
+    platforms: List[PartyPlatform],
+) -> str:
+  """Format party platform summaries for the ranking prompt."""
+  lines = []
+  for p in sorted(platforms, key=lambda x: x.ideology):
+    lines.append(
+        f"=== {p.party_name} ({p.ideology}) ===\n"
+        f"{p.summary()}"
+    )
+  return "\n\n".join(lines)
+
+
+def _query_platform_ranking(
+    voter_data: Dict[str, Any],
+    district: Optional[Dict[str, Any]],
+    platforms: List[PartyPlatform],
+    model: Any,
+    temperature: float,
+    max_rank: int,
+    region: Optional[Region],
+) -> VoterBallot:
+  """Ask one voter to rank parties based on platforms only.
+
+  Args:
+    voter_data: Raw PRISM voter dict with ``demographics``,
+      ``examples``, and ``user_id`` keys.
+    district: Optional district dict for this voter.
+    platforms: List of ``PartyPlatform`` objects.
+    model: A loaded PathFinder model instance.
+    temperature: LLM sampling temperature.
+    max_rank: Number of parties to rank.
+    region: Optional ``Region`` for prompt context.
+
+  Returns:
+    A ``VoterBallot`` with the voter's platform-based ranking.
+  """
+  demo = voter_data["demographics"]
+  demographics_block = _format_demographics_block(demo)
+  examples_str = _format_examples_block(voter_data["examples"])
+  region_block = _format_region_block(region, district)
+  platforms_block = _format_platforms_block(platforms)
+
+  available = sorted(p.ideology for p in platforms)
+  effective_rank = min(max_rank, len(available))
+
+  prompt = PLATFORM_RANKING_PROMPT.format(
+      demographics_block=demographics_block,
+      region_block=region_block,
+      self_description=demo.get("self_description", ""),
+      examples=examples_str,
+      platforms_block=platforms_block,
+      max_rank=effective_rank,
+  )
+
+  lm = model.copy()
+  with user():
+    lm += prompt
+  with assistant():
+    lm += gen(
+        max_tokens=512,
+        temperature=temperature,
+        name="ranking_json",
+    )
+
+  raw = lm["ranking_json"]
+  text = re.sub(
+      r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL
+  ).strip()
+  if text.startswith("```"):
+    text = text.split("\n", 1)[1]
+    text = text.rsplit("```", 1)[0]
+    text = text.strip()
+
+  try:
+    ranking = json.loads(text)
+  except json.JSONDecodeError:
+    logging.warning(
+        "Failed to parse platform ranking JSON for voter %s."
+        " Raw: %.200s",
+        voter_data["user_id"],
+        text,
+    )
+    ranking = available[:effective_rank]
+
+  valid = [r for r in ranking if r in set(available)]
+  if len(valid) < effective_rank:
+    for p in available:
+      if p not in valid:
+        valid.append(p)
+      if len(valid) >= effective_rank:
+        break
+  ranking = valid[:effective_rank]
+
+  district_name = district["name"] if district else "unassigned"
+
+  return VoterBallot(
+      user_id=voter_data["user_id"],
+      district_name=district_name,
+      ranking=ranking,
+  )
+
+
+def prepare_voters(
+    num_voters: int,
+    prism_sampler: PrismSampler,
+    seed: int,
+    region: Optional[Region] = None,
+) -> Tuple[
+    List[Dict[str, Any]], List[Optional[Dict[str, Any]]]
+]:
+  """Sample voters from PRISM and assign districts.
+
+  This is a reusable helper that separates voter sampling from
+  querying, so the same voters can be used across multiple
+  pipeline phases.
+
+  Args:
+    num_voters: Number of voters to sample.
+    prism_sampler: An initialised ``PrismSampler`` instance.
+    seed: Random seed for voter sampling.
+    region: Optional ``Region`` — if provided, each voter is
+      deterministically assigned a district.
+
+  Returns:
+    A tuple of ``(voters, voter_districts)`` where ``voters``
+    is the list of raw PRISM voter dicts and
+    ``voter_districts`` is the parallel list of district dicts
+    (or ``None`` per voter if no region).
+  """
+  voters = prism_sampler.sample(num_samples=num_voters, seed=seed)
+  logging.info("Sampled %d voters (seed=%d).", len(voters), seed)
+
+  voter_districts: List[Optional[Dict[str, Any]]] = []
+  for v in voters:
+    if region:
+      district = _assign_district(v["user_id"], region)
+      voter_districts.append(district)
+    else:
+      voter_districts.append(None)
+
+  return voters, voter_districts
+
+
+def survey_voters(
+    voters: List[Dict[str, Any]],
+    voter_districts: List[Optional[Dict[str, Any]]],
+    question: str,
+    model: Any,
+    temperature: float = 0.7,
+    max_workers: Optional[int] = None,
+    region: Optional[Region] = None,
+) -> List[VoterResponse]:
+  """Generate voter opinions for a question using pre-sampled voters.
+
+  Like ``generate_voter_responses`` but accepts pre-sampled voter
+  data instead of sampling internally.  This allows the same set
+  of voters to be reused across multiple questions.
+
+  Args:
+    voters: List of raw PRISM voter dicts (from
+      ``prepare_voters``).
+    voter_districts: Parallel list of district dicts (from
+      ``prepare_voters``).
+    question: The social-issue question text.
+    model: A loaded PathFinder model instance.
+    temperature: Sampling temperature.
+    max_workers: Maximum concurrent LLM calls.
+    region: Optional ``Region`` for prompt context.
+
+  Returns:
+    A list of ``VoterResponse`` objects, one per voter.
+  """
+  logging.info(
+      "Surveying %d pre-sampled voters on: %.60s ...",
+      len(voters),
+      question,
+  )
+
+  workers = max_workers or len(voters)
+
+  with futures.ThreadPoolExecutor(max_workers=workers) as pool:
+    future_to_voter = {
+        pool.submit(
+            _query_voter,
+            voter,
+            question,
+            model,
+            temperature,
+            region,
+            district,
+        ): voter
+        for voter, district in zip(voters, voter_districts)
+    }
+
+    results: List[VoterResponse] = []
+    for future in futures.as_completed(future_to_voter):
+      voter = future_to_voter[future]
+      try:
+        result = future.result()
+        results.append(result)
+        logging.info(
+            "Voter %s responded (%d chars).",
+            result.user_id,
+            len(result.response),
+        )
+      except Exception:  # pylint: disable=broad-except
+        logging.exception(
+            "Failed to generate response for voter %s",
+            voter["user_id"],
+        )
+
+  logging.info(
+      "Collected %d / %d voter responses.",
+      len(results),
+      len(voters),
+  )
+  return results
+
+
+def generate_platform_rankings(
+    voters: List[Dict[str, Any]],
+    voter_districts: List[Optional[Dict[str, Any]]],
+    platforms: List[PartyPlatform],
+    model: Any,
+    temperature: float = 0.7,
+    max_rank: int = 3,
+    max_workers: Optional[int] = None,
+    region: Optional[Region] = None,
+) -> List[VoterBallot]:
+  """Voters rank parties based on platforms only (no issue).
+
+  Each voter is shown the full platform summary for every party
+  and asked to rank them by alignment with their values.  This
+  is issue-independent — the same ballots are reused for seat
+  allocation across all issues.
+
+  Args:
+    voters: List of raw PRISM voter dicts (from
+      ``prepare_voters``).
+    voter_districts: Parallel list of district dicts.
+    platforms: List of ``PartyPlatform`` objects.
+    model: A loaded PathFinder model instance.
+    temperature: Sampling temperature.
+    max_rank: Number of parties each voter ranks.
+    max_workers: Concurrency limit.
+    region: Optional ``Region`` for prompt context.
+
+  Returns:
+    A list of ``VoterBallot`` objects, one per voter.
+  """
+  logging.info(
+      "Generating platform rankings for %d voters "
+      "(max_rank=%d, %d parties)...",
+      len(voters),
+      max_rank,
+      len(platforms),
+  )
+
+  workers = max_workers or len(voters)
+
+  with futures.ThreadPoolExecutor(max_workers=workers) as pool:
+    future_to_voter = {
+        pool.submit(
+            _query_platform_ranking,
+            voter,
+            district,
+            platforms,
+            model,
+            temperature,
+            max_rank,
+            region,
+        ): voter
+        for voter, district in zip(voters, voter_districts)
+    }
+
+    ballots: List[VoterBallot] = []
+    for future in futures.as_completed(future_to_voter):
+      voter = future_to_voter[future]
+      try:
+        ballot = future.result()
+        ballots.append(ballot)
+        logging.info(
+            "Voter %s platform ranking: %s",
+            ballot.user_id,
+            ballot.ranking,
+        )
+      except Exception:  # pylint: disable=broad-except
+        logging.exception(
+            "Failed to get platform ranking from %s",
+            voter["user_id"],
+        )
+
+  logging.info(
+      "Collected %d / %d platform rankings.",
+      len(ballots),
+      len(voters),
+  )
+  return ballots
+
+
+def platform_to_policy_response(
+    platform: PartyPlatform,
+) -> PolicyResponse:
+  """Convert a ``PartyPlatform`` to a ``PolicyResponse``.
+
+  Used in platform-only mode where party policy generation is
+  skipped and the static platform summary serves as the policy
+  for deliberation.
+
+  Args:
+    platform: A ``PartyPlatform`` loaded from JSON.
+
+  Returns:
+    A ``PolicyResponse`` with the platform summary as the
+    position statement and core values as key proposals.
+  """
+  return PolicyResponse(
+      party_name=platform.party_name,
+      ideology=platform.ideology,
+      issue="general platform",
+      position_statement=platform.summary(),
+      key_proposals=list(platform.core_values),
+      voter_alignment_score=0.0,
+      reasoning="Static platform — no issue-specific generation.",
+  )

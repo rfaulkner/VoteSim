@@ -13,6 +13,7 @@ region:
   cache_path: "dataset/regions"
 
 pipeline:
+  voting_mode: "issue"           # "issue" (default) or "platform" (rank by party platforms once)
   num_voters: 100
   max_workers: 5                 # max concurrent LLM calls (keep low for API rate limits)
   topic: "social"
