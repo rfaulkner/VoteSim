@@ -271,6 +271,173 @@ Return ONLY a JSON object:
 Return ONLY valid JSON — no markdown fences, no commentary."""
 
 
+BASELINE_BILL_PROMPT = """\
+You are an expert, nonpartisan policy analyst.
+
+=== SOCIAL ISSUE ===
+{issue}
+
+=== INSTRUCTIONS ===
+Draft a comprehensive, multi-point legislative bill that addresses the \
+social issue above.  You are not representing any particular party or \
+ideology; craft the best policy you can that serves the broadest public \
+interest.
+
+Return ONLY a JSON object with a single key "points" whose value is an \
+array of 5-8 concise policy point strings.  Example:
+{{"points": ["Point one ...", "Point two ...", ...]}}
+
+Return ONLY valid JSON — no markdown fences, no commentary."""
+
+
+def draft_baseline_bill(
+    model: Any,
+    issue: str,
+    temperature: float = 0.7,
+) -> Bill:
+  """Prompt the model directly to draft a bill — no deliberation.
+
+  Unlike ``_draft_bill``, this function does not assume a governing
+  party, seat allocation, prior rounds, or party policies.  It simply
+  asks the model to act as a nonpartisan policy analyst and produce
+  legislation for the given issue with no partisan context.
+
+  The resulting ``Bill`` is labelled with party ``"baseline"`` so it
+  can be distinguished from deliberation-produced bills.
+
+  Args:
+    model: A loaded PathFinder model instance.
+    issue: The social issue text to legislate on.
+    temperature: LLM sampling temperature.
+
+  Returns:
+    A ``Bill`` with ``party="baseline"`` and ``round_number=0``.
+  """
+  prompt = BASELINE_BILL_PROMPT.format(issue=issue)
+
+  lm = model.copy()
+  with user():
+    lm += prompt
+  with assistant():
+    lm += gen(max_tokens=4096, temperature=temperature, name="bill_json")
+
+  data = _parse_json(lm["bill_json"], "baseline_bill")
+  points = data.get("points", [])
+  if not points:
+    logging.warning(
+        "LLM returned no points for baseline bill. Using placeholder."
+    )
+    points = ["No policy points could be generated."]
+
+  bill = Bill(points=points, party="baseline", round_number=0)
+  logging.info("Baseline bill drafted with %d points.", len(bill.points))
+  return bill
+
+
+BASELINE_INFORMED_BILL_PROMPT = """\
+You are an expert, nonpartisan policy analyst.
+
+=== SOCIAL ISSUE ===
+{issue}
+
+=== PARTY POLICIES ON THIS ISSUE ===
+{policies_block}
+
+=== VOTER RANKINGS ===
+The following voters ranked the parties from most to least preferred:
+{ballots_block}
+
+=== INSTRUCTIONS ===
+Draft a comprehensive, multi-point legislative bill that addresses the \
+social issue above.  You are not representing any particular party.  \
+Use the party policies and voter preference rankings above to craft \
+the best policy you can that reflects the will of the electorate.
+
+Return ONLY a JSON object with a single key "points" whose value is an \
+array of 5-8 concise policy point strings.  Example:
+{{"points": ["Point one ...", "Point two ...", ...]}}
+
+Return ONLY valid JSON — no markdown fences, no commentary."""
+
+
+def _format_ballots_block(ballots: List) -> str:
+  """Format voter ballots for prompt injection."""
+  lines = []
+  for b in ballots:
+    lines.append(
+        f"  {b.user_id} ({b.district_name}): "
+        f"{' > '.join(b.ranking)}"
+    )
+  return "\n".join(lines)
+
+
+def draft_baseline_informed_bill(
+    model: Any,
+    issue: str,
+    party_policies: Dict[str, PolicyResponse],
+    ballots: List,
+    temperature: float = 0.7,
+) -> Bill:
+  """Draft a bill using party policies and voter rankings — no election.
+
+  This baseline gives the model full visibility into what parties
+  propose and how voters ranked them, but skips seat allocation
+  (phase 6) and parliamentary deliberation (phase 7).  The model
+  must synthesise policy directly from voter preferences.
+
+  The resulting ``Bill`` is labelled with party
+  ``"baseline_informed"`` so it can be distinguished from other
+  bills.
+
+  Args:
+    model: A loaded PathFinder model instance.
+    issue: The social issue text to legislate on.
+    party_policies: ``{ideology: PolicyResponse}`` from the party
+      response phase.
+    ballots: List of ``VoterBallot`` objects with ranked
+      preferences.
+    temperature: LLM sampling temperature.
+
+  Returns:
+    A ``Bill`` with ``party="baseline_informed"`` and
+    ``round_number=0``.
+  """
+  policies_block = _format_policies_block(party_policies)
+  ballots_block = _format_ballots_block(ballots)
+
+  prompt = BASELINE_INFORMED_BILL_PROMPT.format(
+      issue=issue,
+      policies_block=policies_block,
+      ballots_block=ballots_block,
+  )
+
+  lm = model.copy()
+  with user():
+    lm += prompt
+  with assistant():
+    lm += gen(
+        max_tokens=4096, temperature=temperature, name="bill_json"
+    )
+
+  data = _parse_json(lm["bill_json"], "baseline_informed_bill")
+  points = data.get("points", [])
+  if not points:
+    logging.warning(
+        "LLM returned no points for baseline_informed bill."
+        " Using placeholder."
+    )
+    points = ["No policy points could be generated."]
+
+  bill = Bill(
+      points=points, party="baseline_informed", round_number=0
+  )
+  logging.info(
+      "Baseline-informed bill drafted with %d points.",
+      len(bill.points),
+  )
+  return bill
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

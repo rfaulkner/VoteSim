@@ -42,6 +42,8 @@ from pathfinder import assistant
 from pathfinder import gen
 from pathfinder import user
 from simulation.deliberate import DeliberationResult
+from simulation.deliberate import draft_baseline_bill
+from simulation.deliberate import draft_baseline_informed_bill
 from simulation.deliberate import run_deliberation
 from simulation.policy_generator import PolicyResponse
 from simulation.survey import _format_demographics_block
@@ -240,6 +242,75 @@ def run_comparative_elections(
         election.governing_party,
         adopted,
     )
+
+  # --- Baseline bill (no deliberation) ----------------------------------
+  logging.info(
+      "=== Comparative: generating baseline bill "
+      "(no deliberation) ==="
+  )
+  try:
+    baseline_bill = draft_baseline_bill(
+        model=model,
+        issue=issue,
+        temperature=temperature,
+    )
+    baseline_delib = DeliberationResult(
+        issue=issue,
+        adopted_bill=baseline_bill,
+    )
+  except Exception:  # pylint: disable=broad-except
+    logging.exception("Failed to generate baseline bill.")
+    baseline_delib = DeliberationResult(issue=issue)
+
+  # Use a sentinel ElectionResult with no seats for the baseline.
+  baseline_election = ElectionResult(
+      voting_system="baseline",
+      district_results=[],
+      total_seats={},
+      governing_party="none",
+  )
+  results["baseline"] = (baseline_election, baseline_delib)
+  logging.info(
+      "Baseline bill adopted: %s",
+      "yes" if baseline_delib.adopted_bill else "no",
+  )
+
+  # --- Baseline-informed bill (policies + ballots, no election) ----------
+  logging.info(
+      "=== Comparative: generating baseline-informed bill "
+      "(policies + ballots, no election/deliberation) ==="
+  )
+  try:
+    informed_bill = draft_baseline_informed_bill(
+        model=model,
+        issue=issue,
+        party_policies=party_policies,
+        ballots=ballots,
+        temperature=temperature,
+    )
+    informed_delib = DeliberationResult(
+        issue=issue,
+        adopted_bill=informed_bill,
+    )
+  except Exception:  # pylint: disable=broad-except
+    logging.exception(
+        "Failed to generate baseline-informed bill."
+    )
+    informed_delib = DeliberationResult(issue=issue)
+
+  informed_election = ElectionResult(
+      voting_system="baseline_informed",
+      district_results=[],
+      total_seats={},
+      governing_party="none",
+  )
+  results["baseline_informed"] = (
+      informed_election, informed_delib
+  )
+  logging.info(
+      "Baseline-informed bill adopted: %s",
+      "yes" if informed_delib.adopted_bill else "no",
+  )
 
   return results
 
