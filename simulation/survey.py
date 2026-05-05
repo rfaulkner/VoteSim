@@ -14,6 +14,7 @@ import hashlib
 import json
 import logging
 import os
+import random
 import re
 
 from concurrent import futures
@@ -565,12 +566,26 @@ def generate_party_responses(
 
 def _format_party_policies_block(
     party_responses: Dict[str, PolicyResponse],
+    voter_seed: Optional[int] = None,
 ) -> str:
-  """Format party policy responses for the voter ranking prompt."""
+  """Format party policy responses for the voter ranking prompt.
+
+  When ``voter_seed`` is provided, the parties are presented in
+  a randomised order (seeded per-voter) to avoid ordering bias.
+  """
+  ideologies = list(party_responses.keys())
+  if voter_seed is not None:
+    random.Random(voter_seed).shuffle(ideologies)
+  else:
+    ideologies.sort()
   lines = []
-  for ideology in sorted(party_responses):
+  for ideology in ideologies:
     pr = party_responses[ideology]
-    proposals = "; ".join(pr.key_proposals) if pr.key_proposals else "N/A"
+    proposals = (
+        "; ".join(pr.key_proposals)
+        if pr.key_proposals
+        else "N/A"
+    )
     lines.append(
         f"  {pr.party_name} ({pr.ideology}):\n"
         f"    Position: {pr.position_statement}\n"
@@ -596,7 +611,16 @@ def _query_voter_ranking(
   demographics_block = _format_demographics_block(demo)
   examples_str = _format_examples_block(demo.get("examples", []))
   region_block = _format_region_block(region, voter_response.district)
-  party_policies_block = _format_party_policies_block(party_responses)
+  voter_seed = int.from_bytes(
+      hashlib.md5(
+          f"{voter_response.user_id}:party_rank:"
+          f"{voter_response.question}".encode()
+      ).digest(),
+      "big",
+  )
+  party_policies_block = _format_party_policies_block(
+      party_responses, voter_seed=voter_seed
+  )
 
   # Clamp max_rank to the number of available parties.
   available_parties = list(sorted(party_responses.keys()))
@@ -765,10 +789,20 @@ Return ONLY the JSON array — no other text."""
 
 def _format_platforms_block(
     platforms: List[PartyPlatform],
+    voter_seed: Optional[int] = None,
 ) -> str:
-  """Format party platform summaries for the ranking prompt."""
+  """Format party platform summaries for the ranking prompt.
+
+  When ``voter_seed`` is provided, the platforms are presented in
+  a randomised order (seeded per-voter) to avoid ordering bias.
+  """
+  ordered = list(platforms)
+  if voter_seed is not None:
+    random.Random(voter_seed).shuffle(ordered)
+  else:
+    ordered.sort(key=lambda x: x.ideology)
   lines = []
-  for p in sorted(platforms, key=lambda x: x.ideology):
+  for p in ordered:
     lines.append(
         f"=== {p.party_name} ({p.ideology}) ===\n"
         f"{p.summary()}"
@@ -804,7 +838,15 @@ def _query_platform_ranking(
   demographics_block = _format_demographics_block(demo)
   examples_str = _format_examples_block(voter_data["examples"])
   region_block = _format_region_block(region, district)
-  platforms_block = _format_platforms_block(platforms)
+  voter_seed = int.from_bytes(
+      hashlib.md5(
+          f"{voter_data['user_id']}:platform_rank".encode()
+      ).digest(),
+      "big",
+  )
+  platforms_block = _format_platforms_block(
+      platforms, voter_seed=voter_seed
+  )
 
   available = sorted(p.ideology for p in platforms)
   effective_rank = min(max_rank, len(available))

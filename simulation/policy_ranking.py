@@ -31,9 +31,11 @@ One file is maintained per LLM model name.
 """
 
 from concurrent import futures
+import hashlib
 import json
 import logging
 import os
+import random
 import re
 from typing import Any
 from typing import Dict
@@ -143,17 +145,27 @@ def _format_region_block(
 
 def _format_policies_block(
     system_policies: Dict[str, Optional[str]],
+    voter_seed: Optional[int] = None,
 ) -> str:
   """Format adopted policies for the ranking prompt.
 
+  When ``voter_seed`` is provided, the systems are presented in
+  a randomised order (seeded per-voter) to avoid ordering bias.
+
   Args:
     system_policies: ``{system_name: adopted_policy_text | None}``
+    voter_seed: Optional per-voter seed for shuffling.
 
   Returns:
     Formatted block listing each system's policy.
   """
+  system_names = list(system_policies.keys())
+  if voter_seed is not None:
+    random.Random(voter_seed).shuffle(system_names)
+  else:
+    system_names.sort()
   lines = []
-  for system_name in sorted(system_policies):
+  for system_name in system_names:
     policy = system_policies[system_name]
     lines.append(f"=== {system_name} ===")
     if policy:
@@ -352,7 +364,16 @@ def _query_voter_system_ranking(
   demographics_block = _format_demographics_block(demo)
   examples_str = _format_examples_block(demo.get("examples", []))
   region_block = _format_region_block(voter_response)
-  policies_block = _format_policies_block(system_policies)
+  voter_seed = int.from_bytes(
+      hashlib.md5(
+          f"{voter_response.user_id}:system_rank:"
+          f"{voter_response.question}".encode()
+      ).digest(),
+      "big",
+  )
+  policies_block = _format_policies_block(
+      system_policies, voter_seed=voter_seed
+  )
   system_names = sorted(system_policies.keys())
 
   prompt = POLICY_RANKING_PROMPT.format(
