@@ -18,8 +18,8 @@
                                  I888888I
                                  Y888888P
                                  `Y8888P'
-                                  `WWWW'    
-                                   dMMb     
+                                  `WWWW'
+                                   dMMb
                                _,ad8888ba,_
                     __,,aaaadd888888888888888bbaaaa,,__
                   d8888888888888888888888888888888888888b 
@@ -453,5 +453,7 @@ Ordering is deterministic (seeded by `md5(user_id + context_salt)`) for reproduc
 
 ------------------------------------------------
 ASCII Art is courtesy of https://asciiart.website/
+
 This ASCII pic can be found at: https://asciiart.website/art/3128
-Normand Veilleux
+
+Artist: Normand Veilleux
