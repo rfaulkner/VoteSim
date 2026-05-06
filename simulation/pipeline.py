@@ -355,6 +355,10 @@ def run_voting_round(
           s: _bill_to_text(delib)
           for s, (_, delib) in comp_results.items()
       }
+      delib_rounds = {
+          s: len(delib.rounds)
+          for s, (_, delib) in comp_results.items()
+      }
       rankings_file = save_rankings(
           rankings=comparative_rankings,
           issue=question,
@@ -365,6 +369,7 @@ def run_voting_round(
           party_responses=party_responses,
           scores=comparative_scores,
           ballots=ballots,
+          deliberation_rounds=delib_rounds,
       )
 
   result = VotingRoundResult(
@@ -620,6 +625,10 @@ def run_platform_mode(
             s: _bill_to_text(delib)
             for s, (_, delib) in comp_results.items()
         }
+        delib_rounds = {
+            s: len(delib.rounds)
+            for s, (_, delib) in comp_results.items()
+        }
         rankings_file = save_rankings(
             rankings=comparative_rankings,
             issue=question,
@@ -630,6 +639,7 @@ def run_platform_mode(
             party_responses=platform_policies,
             scores=comparative_scores,
             ballots=ballots,
+            deliberation_rounds=delib_rounds,
         )
 
     result = VotingRoundResult(

@@ -546,6 +546,7 @@ def save_rankings(
     ] = None,
     scores: Optional[Dict[str, Dict[str, float]]] = None,
     ballots: Optional[List[VoterBallot]] = None,
+    deliberation_rounds: Optional[Dict[str, int]] = None,
 ) -> str:
   """Persist voter system rankings and scores to JSON.
 
@@ -555,6 +556,9 @@ def save_rankings(
         "<social issue>": {
           "policies": {
             "<system_name>": "<adopted policy text>" | null
+          },
+          "deliberation_rounds": {
+            "<system_name>": <int>
           },
           "parties": {
             "<ideology>": {
@@ -593,6 +597,7 @@ def save_rankings(
     party_responses: Optional ``{ideology: PolicyResponse}``.
     scores: Optional ``{user_id: {system: float}}``.
     ballots: Optional list of phase-5 voter party ballots.
+    deliberation_rounds: Optional ``{system_name: num_rounds}``.
 
   Returns:
     The absolute path to the written JSON file.
@@ -627,6 +632,10 @@ def save_rankings(
   # Store adopted policies per system.
   if system_policies is not None:
     existing[issue]["policies"] = {s: p for s, p in system_policies.items()}
+
+  # Store number of deliberation rounds per system.
+  if deliberation_rounds is not None:
+    existing[issue]["deliberation_rounds"] = deliberation_rounds
 
   # Store party responses.
   if party_responses is not None:

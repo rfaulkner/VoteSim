@@ -929,7 +929,7 @@ def run_deliberation(
     seat_allocation: Dict[str, int],
     party_policies: Dict[str, PolicyResponse],
     temperature: float = 0.7,
-    max_rounds: int = 3,
+    max_rounds: int = 5,
     max_workers: Optional[int] = None,
 ) -> DeliberationResult:
   """Run the full parliamentary deliberation process.
@@ -1032,10 +1032,18 @@ def run_deliberation(
       )
       prior_round = round_record
 
-  if result.adopted_bill is None:
+  if result.adopted_bill is None and result.rounds:
+    # Fall back to the bill with the most yes votes across all rounds.
+    best_round = max(result.rounds, key=lambda r: r.vote_record.yes_count)
+    adopted = _merge_amendments(best_round.bill, best_round.amendments)
+    result.adopted_bill = adopted
     logging.info(
-        "No bill adopted after %d rounds for issue: %s",
+        "No majority reached after %d rounds. Adopting best bill "
+        "(round %d, %d yes / %d no) for issue: %s",
         max_rounds,
+        best_round.bill.round_number,
+        best_round.vote_record.yes_count,
+        best_round.vote_record.no_count,
         issue[:80],
     )
 
