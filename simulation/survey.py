@@ -951,10 +951,21 @@ def prepare_voters(
   logging.info("Using %d voters (seed=%d).", len(voters), seed)
 
   voter_districts: List[Optional[Dict[str, Any]]] = []
+  # Build a lookup by district name for O(1) access.
+  district_by_name: Dict[str, Dict[str, Any]] = {}
+  if region:
+    district_by_name = {d["name"]: d for d in region.districts}
+
   for v in voters:
     if region:
-      district = _assign_district(v["user_id"], region)
-      voter_districts.append(district)
+      # Prefer the pre-assigned district from personas.json.
+      assigned_name = v.get("district")
+      if assigned_name and assigned_name in district_by_name:
+        voter_districts.append(district_by_name[assigned_name])
+      else:
+        # Fallback: hash-based assignment.
+        district = _assign_district(v["user_id"], region)
+        voter_districts.append(district)
     else:
       voter_districts.append(None)
 

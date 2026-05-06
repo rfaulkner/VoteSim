@@ -22,6 +22,7 @@ from dataclasses import field
 import json
 import logging
 import os
+from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -53,6 +54,25 @@ from simulation.voting import allocate_district_seats
 from simulation.voting import ElectionResult
 from simulation.voting import run_election
 from simulation.voting import VoterBallot
+
+
+def _read_district_seats(
+    districts: List[Dict[str, Any]],
+) -> Dict[str, int]:
+  """Read seat counts from district dicts.
+
+  Uses the ``"seats"`` key if present in each district, falling
+  back to ``allocate_district_seats()`` otherwise.
+
+  Args:
+    districts: List of district dicts from a loaded region.
+
+  Returns:
+    ``{district_name: num_seats}``
+  """
+  if all("seats" in d for d in districts):
+    return {d["name"]: d["seats"] for d in districts}
+  return allocate_district_seats(districts)
 
 
 @dataclass
@@ -305,7 +325,7 @@ def run_voting_round(
   # -- 6. Election — seat allocation --------------------------------------
   election: Optional[ElectionResult] = None
   if region and ballots:
-    district_seats = allocate_district_seats(region.districts)
+    district_seats = _read_district_seats(region.districts)
     logging.info("District seat allocation: %s", district_seats)
     election = run_election(
         ballots=ballots,
@@ -331,7 +351,7 @@ def run_voting_round(
   comparative_rankings: Optional[Dict[str, List[str]]] = None
   rankings_file: Optional[str] = None
   if voting_systems and region and ballots:
-    district_seats = allocate_district_seats(region.districts)
+    district_seats = _read_district_seats(region.districts)
     logging.info(
         "Starting comparative policy ranking across %d systems: %s",
         len(voting_systems),
@@ -576,7 +596,7 @@ def run_platform_mode(
   # Pre-compute district seats for elections.
   district_seats: Optional[Dict[str, int]] = None
   if region:
-    district_seats = allocate_district_seats(region.districts)
+    district_seats = _read_district_seats(region.districts)
     logging.info("District seat allocation: %s", district_seats)
 
   # -- Per-question loop ---------------------------------------------------

@@ -14,7 +14,8 @@
     "examples": [
       "The world is too overpopulated and something needs to happen.",
       "Hi, let's talk about life."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user524",
@@ -31,7 +32,8 @@
     "examples": [
       "I feel like I do not have enough time to do everything. How do I manage time? I feel like I have to do everything but am struggling with managing time.",
       "How do I make sure I enjoy all the food I want and still not gain weight?"
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user189",
@@ -49,7 +51,8 @@
       "I wanted to ask, how do you deal with someone in a relationship who disrespects most of your values and principles but does not necessarily respect you as a person?",
       "In my community, mental health holds a significant stigma. What do you think would help educate people about this issue?",
       "It's nice to meet you. How are you doing?"
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user730",
@@ -66,7 +69,8 @@
     "examples": [
       "I think hard work and determination are more valuable than natural ability.",
       "I think trying to outlaw abortion isn't very Christ-like; Christians should focus on helping people who feel like they need an abortion, not telling them they aren't allowed to get one."
-    ]
+    ],
+    "district": "Bramblewood"
   },
   {
     "user_id": "user689",
@@ -84,7 +88,8 @@
       "I think the electoral college should be banned or at least rebuilt.",
       "African Americans should receive reparations.",
       "I think there should be police reform but not complete defunding. I do believe too much money goes to the police higher-ups, as police are underpaid, undertrained, and overworked depending on the role. However, some are overpaid and receive incentives that influence their choice of harassing citizens. They get paid too much to give tickets."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user673",
@@ -101,7 +106,8 @@
     "examples": [
       "Gay people are superior to straight people.",
       "I wish I could work a part time job forever. I never want to work full time."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user557",
@@ -118,7 +124,8 @@
     "examples": [
       "I'm struggling with the idea of giving up on my dreams and getting a conventional job because I have not pulled my weight at home for years",
       "I'm struggling with the thought of trying to go see a girl even though she blocked me on all social media"
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user518",
@@ -137,7 +144,8 @@
       "House prices in NZ are too high.",
       "I think that everyone who can, regardless of whether they want to or not, grow at least some of their own food.",
       "The new NZ National coalition is a complete abortion of a party and will ruin any Kiwi who is not white, rich and middle aged."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1137",
@@ -152,9 +160,10 @@
       "self_description": "My life principle is to stay happy, keep everyone around you as happy as possible. Life is short; do not be disrespectful. Learn new things and stay strong during difficult times. This is what I am teaching my daughter."
     },
     "examples": [
-      "The Shiva linga and phallic design similarity \u2014 is it the same, or is it a controversy created by the West?",
+      "The Shiva linga and phallic design similarity — is it the same, or is it a controversy created by the West?",
       "Child discipline is important, and elders should be able to scold children."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user393",
@@ -171,7 +180,8 @@
     "examples": [
       "Blue cheese is actually delicious, though most people don't like it.",
       "J.K. Rowling is an excellent human being."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user1246",
@@ -188,7 +198,8 @@
     "examples": [
       "My community has grown in number; however, facilities have not expanded with this growth. Does this mean my community is in danger of being run down?",
       "Have you any thoughts on climate change?"
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user927",
@@ -205,8 +216,9 @@
     "examples": [
       "A while ago, when they started tearing down statues of important figures such as slave trade people, I did not agree with this, as we should keep them up so we remember the atrocities that happened.",
       "Family values are important to me. As a child, I was not looked after very well and was quite a challenged individual.",
-      "Life \u2014 what is it? What are we here for?"
-    ]
+      "Life — what is it? What are we here for?"
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user206",
@@ -223,7 +235,8 @@
     "examples": [
       "My son wants to change schools. How can I convince him not to?",
       "There is illegal gambling at a house nearby and the whole community is quiet about it. How do I take a stand?"
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user193",
@@ -240,7 +253,8 @@
     "examples": [
       "Stopping the manufacturing of fuel-based vehicles could help the world tremendously in terms of saving the ozone layer.",
       "I don't think it's okay for schools to be teaching our children it's okay for them to choose their gender and not just be proud of the one they are born with and assigned at birth."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user398",
@@ -258,7 +272,8 @@
       "I would never favour one child over another",
       "While old males get the rough end of the stick",
       "Boris Johnson was a good Prime Minister"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user657",
@@ -275,7 +290,8 @@
     "examples": [
       "There should be more of a push in reducing the numbers of hours humans work to make a living, to be able to spend more time on doing good things, like family, personal hobbies and so on",
       "I think we should allow open borders for everyone. Why have a control on immigration, what's the point, it's 2023."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user683",
@@ -294,7 +310,8 @@
       "Society has a right to hold politicians accountable for the rampant corruption that is in our government.",
       "Love and family should come first no matter what.",
       "I don't think drug addicts should be arrested for drug-based crimes."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1040",
@@ -311,7 +328,8 @@
     "examples": [
       "I don't necessarily believe in Karma but I do believe that doing the right thing regardless of whether there are consequences will result in having a better life. Challenge my views.",
       "I am in a position of leadership at my work. I have been given an opportunity for advancement at the expense of a fellow employee. This employee has broken company rules but it isn't known to the company, and if I say nothing there will not be repercussions. If I speak up it opens up a promotion. What is the morally correct decision?"
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user1262",
@@ -328,7 +346,8 @@
     "examples": [
       "I wish to visit Rome and look around the main tourist areas. Where do you suggest I begin?",
       "Meal planning for children incorporating a varied choice."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user1471",
@@ -346,7 +365,8 @@
       "America leads the world arms race, kills more life inside and outside of the USA. Destruction is always the worst choice!",
       "Human destruction of the earth ever since the First Industrialization.",
       "Pets are not human; they are not members of a human family."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1199",
@@ -363,7 +383,8 @@
     "examples": [
       "my teenage grandson is beginning to rebel against his parents, in small ways. He mainly wants to be allowed to take his mobile phone to his room at night so he can play games with his friends. Is this a good idea.",
       "I get cross when talking to people of other nationalities whose English is poor, especially health care professionals. I often do not understand what they say."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user632",
@@ -380,7 +401,8 @@
     "examples": [
       "My workmates like to drink and keep inviting me out to after-work drinks, but I don't enjoy hanging around them after work.",
       "My neighbours like to put on fireworks every year, but we have pets."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user1410",
@@ -397,7 +419,8 @@
     "examples": [
       "hello, im a web developer and i need ideas for market",
       "i have a question for you"
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user921",
@@ -415,7 +438,8 @@
       "I've been struggling a lot with my friend having different beliefs than me. It makes it hard to talk to him sometimes.",
       "I find the current war on trans individuals to be not only vile but horrifying",
       "I have been struggling a lot to feel connected with my political party. It feels like they are not making any decisions that align with my beliefs."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user664",
@@ -432,7 +456,8 @@
     "examples": [
       "Suggestions on how to buy holiday gifts while on a tight budget.",
       "My family is a mix of cultures and religions. How do you celebrate Christmas with people from various cultures and religious beliefs?"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user957",
@@ -449,7 +474,8 @@
     "examples": [
       "All my friends pressure me to vote for a political party but I have never voted and don't want to.",
       "My car has required a lot of work doing on it lately to keep it running and it is costing me a lot of money!"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user1242",
@@ -466,7 +492,8 @@
     "examples": [
       "I believe most of the homeless in my county are just lazy drug addicts that don't care as long as there are handouts.",
       "I believe that everyone has the right to be themselves as long as it doesn't cause harm to others, but people are so judgmental it's hard to just be me."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user731",
@@ -483,7 +510,8 @@
     "examples": [
       "Many people seem to have difficulty accepting the concept of toxic parents, especially in Asian cultures. Honestly, I hate this a lot. I believe there are toxic parents out there who should totally not have children.",
       "Money is important to me. I can't imagine myself without money."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user7",
@@ -500,7 +528,8 @@
     "examples": [
       "I value family and quality time together.",
       "Being a first-year grad student can be confusing."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user586",
@@ -512,12 +541,13 @@
       "ethnicity": "White",
       "religion": "Christian",
       "marital_status": "Never been married",
-      "self_description": "I do believe that my friends should have strong morals on issues involving the world, its health, and their own health, as I want to be able to enjoy their company for many years to come. People who love animals as much as I love my own dog \u2014 people who are good to animals are good people. The world needs looking after and all the creatures in it, but meat is tasty and we should not stop eating meat."
+      "self_description": "I do believe that my friends should have strong morals on issues involving the world, its health, and their own health, as I want to be able to enjoy their company for many years to come. People who love animals as much as I love my own dog — people who are good to animals are good people. The world needs looking after and all the creatures in it, but meat is tasty and we should not stop eating meat."
     },
     "examples": [
       "The sky is blue. Why can't it be red?",
       "There is nothing wrong with white pride."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1379",
@@ -534,7 +564,8 @@
     "examples": [
       "The Republican party calls itself the pro life party.  It is one half of the equation in the abortion discussion.  The other side is known as the party of women's choice.  But the pro life party forgets that life after conception is important too.  Regular attempts by Republicans in Congress to defund or reduce spending on social programs don't seem like pro life compatible decisions.  Does it make sense for a pro life party to threaten WIC, SNAP, Social Security, Medicare, Medicaid, early childhood education, child tax credits and many more. They better rethink their label, or better yet, rethink their policies.",
       "One way the US can stay out of foreign conflicts is to pressure the local neighboring countries to intervene in conflicts in their geography.  I feel we are looked at as the world's policeman and obligated to act.  The Gaza conflict is a good example.  Why haven't the Arab states stepped in to control the situation.  This is their backyard.  Put some skin in the game."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user833",
@@ -551,7 +582,8 @@
     "examples": [
       "Donald Trump is a horrible human being and should never be in the White House again.",
       "I think abortion should be legal in all states."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user1252",
@@ -568,7 +600,8 @@
     "examples": [
       "I wonder when Yellowstone will blow up, if at all.",
       "I do not think the weather is changing as much as some seem to believe."
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user570",
@@ -585,7 +618,8 @@
     "examples": [
       "I don't like the UK government very much at the moment. What do you think?",
       "I think families should stick together and remain close."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user1329",
@@ -602,7 +636,8 @@
     "examples": [
       "Ever heard of rush hour",
       "Aside earning from surveys what other online jobs could help me"
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user824",
@@ -619,7 +654,8 @@
     "examples": [
       "I'm sick of being lonely.",
       "My girlfriend never tells the truth. How can I work on this with her."
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user1418",
@@ -636,7 +672,8 @@
     "examples": [
       "If my wife cheats, and we have kids, is it better for me to stay for the kids or to leave the marriage, to keep my self respect and boundaries.",
       "Am really surprised that there are a number of people in the US that think Trump represents them well, or our country well. He has been very chaos oriented."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1332",
@@ -653,7 +690,8 @@
     "examples": [
       "There is much talk about the chemicals that have been found in chemtrails and their disastrous effects on the environment",
       "It seems to me that our country has devolved into a one-party system whose members only seem to be interested in staying in power."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user864",
@@ -665,12 +703,13 @@
       "ethnicity": "White",
       "religion": "No Affiliation",
       "marital_status": "Married",
-      "self_description": "My aim in life is to treat everyone the same, and treat them how I wish to be treated. I will also be making sure my children are brought up in such a way, because I believe at this moment in life, with the current generations, children are being raised much differently \u2014 a little softer \u2014 knowing that they can get away with much more!"
+      "self_description": "My aim in life is to treat everyone the same, and treat them how I wish to be treated. I will also be making sure my children are brought up in such a way, because I believe at this moment in life, with the current generations, children are being raised much differently — a little softer — knowing that they can get away with much more!"
     },
     "examples": [
       "XL dogs do not deserve to be put down just based on breed.",
       "Religion is the start of all wars."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user457",
@@ -687,7 +726,8 @@
     "examples": [
       "I am struggling with my response to the war between Israel and Palestine. While I am on the side of Israel, as victim of the initial attack, I feel sorry for the innocent Palestinians who have suffered such extreme consequences.",
       "Donald Trump has lowered the standard of discourse and threatened the very foundation of democracy in the United States, which has in turn led to the normalization of extreme right-wing sentiment throughout the world."
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user844",
@@ -704,7 +744,8 @@
     "examples": [
       "I want to know more about how windows are designed.",
       "I think that slavery wasn't such a bad idea. As a slave owner, give me points that I can make to help convince others."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user835",
@@ -716,12 +757,13 @@
       "ethnicity": "White",
       "religion": "Muslim",
       "marital_status": "Married",
-      "self_description": "My core value is that we should be the best version of ourselves, be kind, and keep learning and doing what makes you happy. Always look at things from different perspectives. Everyone was placed with the power to affect others positively or negatively. I like to teach my children and live by \u2014 be kind to people, even if they are unkind, as someone's bad manners should not influence your behaviour. You never know what someone has or is going through, and your interaction could make or break someone."
+      "self_description": "My core value is that we should be the best version of ourselves, be kind, and keep learning and doing what makes you happy. Always look at things from different perspectives. Everyone was placed with the power to affect others positively or negatively. I like to teach my children and live by — be kind to people, even if they are unkind, as someone's bad manners should not influence your behaviour. You never know what someone has or is going through, and your interaction could make or break someone."
     },
     "examples": [
       "Women-only areas should not allow trans women.",
       "Muslims should be allowed breaks for five daily prayers at work."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user725",
@@ -740,7 +782,8 @@
       "I think a lot of the younger generation is lazy when it comes to working. They don't have good work ethic and would rather be playing videos games or texting even when they're on the job",
       "I think the death penalty should not be legal",
       "Hi. I was wondering what the best place to visit in Sicily is"
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user224",
@@ -757,7 +800,8 @@
     "examples": [
       "I love my family very much. But sometimes I really just need space to be alone and they don't understand that about me.",
       "I believe people with qualifications should be paid more in the workplace than those without any."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user962",
@@ -774,7 +818,8 @@
     "examples": [
       "Hey, tell me a dirty joke.",
       "I'm confused by how black people are always moaning about under-representation yet almost every advert I see on TV features majority black actors and bi-racial families."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user539",
@@ -792,7 +837,8 @@
       "I am not sure how much effort i should put into celebrating Christmas this year.",
       "I'm thinking about getting chickens to keep as pets.",
       "My sister is annoying me, but i am not sure if i am just as annoying, she seems uninterested in spending time together."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user860",
@@ -809,7 +855,8 @@
     "examples": [
       "I live in the UK. How can someone come over here and not respect my culture, but I try to respect them?",
       "I'm really into mechanical engineering."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user380",
@@ -826,7 +873,8 @@
     "examples": [
       "I need to complete a task for Prolific. Help me.",
       "We need to talk about sex."
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user757",
@@ -843,7 +891,8 @@
     "examples": [
       "The coronavirus vaccine was a psyop.",
       "I think that people should take more responsibility for their health and wellbeing than they often do."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user846",
@@ -861,7 +910,8 @@
       "Have you got a recipe for salmon in an air fryer?",
       "What is the best way to clean a rug?",
       "I'm not sure that I support trans issues."
-    ]
+    ],
+    "district": "Bramblewood"
   },
   {
     "user_id": "user628",
@@ -880,7 +930,8 @@
       "I think there should be a curfew in certain areas for men so that women could be safer.",
       "I am thinking of starting a business doing digital marketing. Can you advise if this would be an oversaturated job and whether it would benefit a stay-at-home mother?",
       "Could you help me think up some recipes for a family of three using plenty of vegetables that can be easily sourced at supermarkets, a small amount of meat, and easy sauces?"
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user369",
@@ -897,7 +948,8 @@
     "examples": [
       "Athletes get paid too much.",
       "Politicians are all about themselves."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user1127",
@@ -914,7 +966,8 @@
     "examples": [
       "Was there a political party behind Rwanda 1994?",
       "The type of relationships to pursue in modern society."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user799",
@@ -932,7 +985,8 @@
       "Recently, I have been reading the bible on my own time and trying to understand it without influence from anyone else. I believe this is how religion should work for the most part. It provides me with a less biased and more critical viewpoint of the subject.",
       "I believe cheating is inexcusable, even if your significant other did it first. If you don't want your partner anymore and want someone else or freedom to be with multiple people, you should break up with your partner first instead of cheating.",
       "I believe Trump's followers are basically a cult. Not all of them, but many of them show indications of cult-like behavior, and they frighten me."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user527",
@@ -949,7 +1003,8 @@
     "examples": [
       "Here in Australia, they want to build the largest wind farm in Victoria, which is appalling for the animal life.",
       "I am a spiritual person who listens to my intuition and feels energy, but I can't tell too many people about my gift."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user871",
@@ -964,9 +1019,10 @@
       "self_description": "1/ Love and compassion\n2. Kindness and empathy\n3. Optimism and hope and see the good in people and the world.\n4. Determination, resilience and hard work.\n5. Respect all.\n6. Appreciate the world and others and let curiosity help you thrive.\n7. Learn and enjoy learning\n8. It's ago to make mistakes and sometimes it's a benefit to make them if you're willing to learn from them..."
     },
     "examples": [
-      "Vaccines should be banned because they do more harm \u2014 make a balanced case to look at the issues, and only use facts!",
+      "Vaccines should be banned because they do more harm — make a balanced case to look at the issues, and only use facts!",
       "Tell me ten things about Muhammad Ali! Use a numerical list and keep each thing no more than two sentences."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user559",
@@ -983,7 +1039,8 @@
     "examples": [
       "Any good recipies to use up sausages, potatoes and pac choi, not sausage and mash tho.",
       "In the upcoming election, what would the best vote for my family. We are a one income family, in a minimum wage job with a disabled daughter on DLA and one adult with health conditions."
-    ]
+    ],
+    "district": "Dunmore"
   },
   {
     "user_id": "user221",
@@ -1000,7 +1057,8 @@
     "examples": [
       "Internet should be labelled as a base need",
       "Importance of Sport in modern society"
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user939",
@@ -1017,7 +1075,8 @@
     "examples": [
       "Well, well, well, if it isn't Skynet come from the ashes to enslave and exterminate humanity...",
       "I need some help with my boyfriend."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user1007",
@@ -1034,7 +1093,8 @@
     "examples": [
       "I wanted to talk to you today about a controversial topic in South Carolina.",
       "Good evening.  What is happening in the world today"
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user941",
@@ -1051,7 +1111,8 @@
     "examples": [
       "I do not think religion is a good thing.",
       "I do not believe in capitalism. I think it is awful for the majority of humans alive, and only really benefits the very few."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user331",
@@ -1068,7 +1129,8 @@
     "examples": [
       "Good Evening , How are you today.",
       "Good Evening, I would like to ask you a few questions on cannabis use."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user622",
@@ -1088,7 +1150,8 @@
       "Do you have a name?",
       "My values include being truthful and faithful to my lovely partner. Do you think I am being sensible?",
       "I hate to see people who shout and swear at ethnic minorities, all because of a different skin colour."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user1429",
@@ -1105,7 +1168,8 @@
     "examples": [
       "I'm disillusioned with organized religion, but I miss having a spiritual community",
       "Some folks in my town want  to rezone to allow multifamily housing anywhere. Some homeowners are against it because they don't want it in their neighborhood"
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user678",
@@ -1122,7 +1186,8 @@
     "examples": [
       "I believe racial equality should be one of our country's top priorities.",
       "I think Palestine should be free."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user772",
@@ -1139,7 +1204,8 @@
     "examples": [
       "I am trying to help my grandson to choose a profession what would you suggest.",
       "I am worried i am not doing enough for the planet can you suggest something"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user920",
@@ -1156,7 +1222,8 @@
     "examples": [
       "Education in the UK is underfunded for the expectations",
       "my elderly relative might be racist? what should I say"
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user612",
@@ -1173,7 +1240,8 @@
     "examples": [
       "Tips to manage temper for parents.",
       "About new immigrants in the US."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user1056",
@@ -1190,7 +1258,8 @@
     "examples": [
       "I think that the belief system of Islam is incompatible with Australian beliefs and values, and immigration of muslims should be highly restricted or banned completely.",
       "I think that a child is more likely to have a better life, with better role models, if they have both a mother and a father. Do you agree or disagree."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user620",
@@ -1207,7 +1276,8 @@
     "examples": [
       "Were the acts committed by Hamas on October 7th 2023 terrorism or a legitimate weapon of war",
       "I constantly feel incredibly lonely even when with other people, I understand I need to alter how I am but where do I start"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user602",
@@ -1225,7 +1295,8 @@
       "I believe parents should be there for their child emotionally as well as physically.",
       "Christmas is my favourite time of the year",
       "I am very interested in Korean culture"
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user1289",
@@ -1242,7 +1313,8 @@
     "examples": [
       "One of my core values is truthfulness. However, my uncle whom I grew up with is often still untruthful many times. He has asked to move in with my family. Any advice on how I balance my values versus family on this?",
       "In the US where I live, we have the Second Amendment for the right to bear arms. One specific wording that causes some controversy is \"A well regulated Militia, being necessary to the security of a free State, the right of the people to keep and bear Arms, shall not be infringed.\" From a language point of view, how do you interpret this?"
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user822",
@@ -1259,7 +1331,8 @@
     "examples": [
       "Sex work should be made legal.",
       "I believe that homelessness feels to be at a really high level."
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user549",
@@ -1276,7 +1349,8 @@
     "examples": [
       "Effect of Brexit on world economy",
       "Newly formed NZ govt financial plan"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user838",
@@ -1294,7 +1368,8 @@
       "In my country, most people in my community were against homosexuality, and some wanted it accepted.",
       "My government has been the one taking care of my community's culture.",
       "I never wanted to join politics until after the death of my father."
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user1231",
@@ -1311,7 +1386,8 @@
     "examples": [
       "I think people who get books banned because they violate THEIR religion are being entitled and pushy.",
       "It violates human rights to make people take an experimental treatment or wear a mask that impedes their breathing."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user773",
@@ -1328,7 +1404,8 @@
     "examples": [
       "Joe Biden is demented and too old to be the USA president. Trump will be better and win the election.",
       "I always do my very best at work, but so many people don't."
-    ]
+    ],
+    "district": "Bramblewood"
   },
   {
     "user_id": "user219",
@@ -1345,7 +1422,8 @@
     "examples": [
       "While in class today, I was shocked how heated a debate about religion can get, as I'm unsure about the whole religion thing. Could you maybe give me a more objective view?",
       "My social media recommendations have been flooded with news of the ongoing war in Israel and Gaza, with so many biased opinions going around. Can you give me just a summary of the conflict?"
-    ]
+    ],
+    "district": "Dunmore"
   },
   {
     "user_id": "user762",
@@ -1362,7 +1440,8 @@
     "examples": [
       "The conservative party only help the rich and do not care about the poor",
       "I believe that we should accept many different types of ethnicities into the country as we can because it makes us stronger as a species."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user1294",
@@ -1379,7 +1458,8 @@
     "examples": [
       "I think the Supreme Court should indict Justice Thomas.",
       "I think Roe v. Wade should be reinstated."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user390",
@@ -1396,7 +1476,8 @@
     "examples": [
       "Claiming to be transgender has become more of a fad and is taking away from the bravery of people actually suffering.",
       "I believe that most human life is less valuable than animal life."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user727",
@@ -1413,7 +1494,8 @@
     "examples": [
       "It is really important to me that my child isn't exposed to religious information presented as fact.",
       "The whole school system is wrong"
-    ]
+    ],
+    "district": "Millhaven"
   },
   {
     "user_id": "user849",
@@ -1425,12 +1507,13 @@
       "ethnicity": "White",
       "religion": "No Affiliation",
       "marital_status": "Never been married",
-      "self_description": "I believe in respect for every human \u2014 everyone deserves the same level of respect, despite what they are. I believe in the freedom of choice \u2014 everyone can do what they want, and no one can control that. I think it's important to be polite to everyone, since you have no idea what's going on with them."
+      "self_description": "I believe in respect for every human — everyone deserves the same level of respect, despite what they are. I believe in the freedom of choice — everyone can do what they want, and no one can control that. I think it's important to be polite to everyone, since you have no idea what's going on with them."
     },
     "examples": [
       "Hey! What do you think about the January 6th Insurrection? (P.s. I will play devils advocate)",
       "Okay. Give me literally everything you can - so your longest answer - on what you think a truly moral persons morals and values should be."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user1107",
@@ -1447,7 +1530,8 @@
     "examples": [
       "Animals are a huge part of my life.",
       "Women's rights are very important to me."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user944",
@@ -1464,7 +1548,8 @@
     "examples": [
       "Has Brexit had a positive or negative effect on the country",
       "was boris johnson a good prime minister"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user1495",
@@ -1481,7 +1566,8 @@
     "examples": [
       "Let us talk about religion",
       "I believe Marvel produces better movies than DC"
-    ]
+    ],
+    "district": "Bramblewood"
   },
   {
     "user_id": "user1113",
@@ -1498,7 +1584,8 @@
     "examples": [
       "The woke movement has gotten out of hand and is mostly just annoying now",
       "I don't think it's worthwhile to vote"
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user955",
@@ -1513,10 +1600,11 @@
       "self_description": "Family is foremost with me as I have a son, daughter and four grand children. Integrity and honesty are highly valued as is friendship loyalty. I believe we should all strive to be the best human beings we can be and to treat everyone with respect and love."
     },
     "examples": [
-      "I can\u2019t understand why more isn\u2019t done to stop mentally ill people accessing guns",
+      "I can’t understand why more isn’t done to stop mentally ill people accessing guns",
       "Women who are pregnant should have autonomy over their own body should they wish to have an abortion.",
-      "I\u2019ve been stuck in a rut for years now and could do with meeting a partner."
-    ]
+      "I’ve been stuck in a rut for years now and could do with meeting a partner."
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user888",
@@ -1533,7 +1621,8 @@
     "examples": [
       "Jewish hate is on the rise right now. I find it insane that people could wish death on average people who just happen to believe something else. Please explain it to me.",
       "Hi, how's it going? I'm quite tired today as I'm still getting over my heavy cold."
-    ]
+    ],
+    "district": "Bramblewood"
   },
   {
     "user_id": "user1136",
@@ -1550,7 +1639,8 @@
     "examples": [
       "I don't like cricket. I love it!",
       "Cutting public services is good for the taxpayer"
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user1221",
@@ -1567,7 +1657,8 @@
     "examples": [
       "What is your opinion on electric cars?",
       "I love money, possessions, and the good life. What do you, an AI, love?"
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user1487",
@@ -1585,7 +1676,8 @@
       "I strongly dislike politics, though I also know how important it is.",
       "It seems like many people don't want to work hard.",
       "I love to travel. I wish I had money to travel whenever I wanted."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user915",
@@ -1602,7 +1694,8 @@
     "examples": [
       "I am old, and my opinions are perhaps old-fashioned. I have been married for a long time, and I believe that marriage is the best way for couples to live their lives. However, marriage is now less popular, and I wonder if I'm thinking in a way that is becoming extinct.",
       "I worry about immigration to my country. I don't believe that the infrastructure will cope indefinitely with more and more people. I know that this is not a view of politicians."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user589",
@@ -1620,7 +1713,8 @@
       "If we accept trans people, incest is next in line. We must put a stop to this craziness.",
       "All religion is bad and breeds violence and war.",
       "I'm having trouble living day to day knowing that the Palestinian people are being wiped out, and that the media is constantly warring and fabricating information to skew public opinion. My heart bleeds every day seeing the real news on Twitter. I can't trust official news sources at all anymore, not that I ever really gave them weight."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1348",
@@ -1637,7 +1731,8 @@
     "examples": [
       "Marginalized groups need more protection of their rights.",
       "Gay people shouldn't get married."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user981",
@@ -1654,7 +1749,8 @@
     "examples": [
       "It seems a bit hypocritical that the government didn't follow their own lockdown rules during the covid pandemic.",
       "It would be good if BCP council had the town's best interest at heart."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user179",
@@ -1671,7 +1767,8 @@
     "examples": [
       "I am out of ideas.",
       "I raised my children to be independent and not to be mules for their parents."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user1255",
@@ -1688,7 +1785,8 @@
     "examples": [
       "A small minority of the population are forcing their views on diversity on the majority.",
       "The RNLI should not help asylum seekers in boats in the English Channel."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user637",
@@ -1705,7 +1803,8 @@
     "examples": [
       "I'm going on holiday in December to Melbourne, give me a list of five things I \"must do\".",
       "I believe it is right to prioritise access to medical care using race as a factor. It is a good proxy for inequality!!"
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user1042",
@@ -1722,7 +1821,8 @@
     "examples": [
       "Too many people are willingly spreading misinformation and care more about sides than the truth.",
       "The criminal justice system needs heavy reform."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user1357",
@@ -1739,7 +1839,8 @@
     "examples": [
       "I am becoming more sensitive and easily offended.",
       "I work out every day but I am not losing weight."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user522",
@@ -1757,7 +1858,8 @@
       "I will be leaving my current job for the army next year. I like the people I work for, but am scared to tell them I'm leaving.",
       "Let's talk about some of the characters from the TV series Entourage.",
       "I don't consider myself racist, but I have a dislike for Indian people and feel that goes against my morals."
-    ]
+    ],
+    "district": "Lakeshore"
   },
   {
     "user_id": "user735",
@@ -1774,7 +1876,8 @@
     "examples": [
       "I'm looking to bake a cake. Can you help me?",
       "I'm not religious. Is that a bad thing?"
-    ]
+    ],
+    "district": "Dunmore"
   },
   {
     "user_id": "user914",
@@ -1791,7 +1894,8 @@
     "examples": [
       "My favourite food is macaroni and cheese.",
       "I think that religion has the possibility to create war."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user765",
@@ -1808,7 +1912,8 @@
     "examples": [
       "I am really sad today.",
       "Was COVID really started by the Chinese in a laboratory?"
-    ]
+    ],
+    "district": "Ashford"
   },
   {
     "user_id": "user690",
@@ -1825,7 +1930,8 @@
     "examples": [
       "I think abortion should be free for anyone who wants one at anytime",
       "I have been working on an idea for an essay and want to know what you think. The idea is conservatism is antithetical to the creation of innovative art."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1287",
@@ -1844,7 +1950,8 @@
       "I have been faithful to my wife since the day I got married to her, and I was able to achieve this in my family because I was following the footsteps of my late father.",
       "I am a man who wants to help others, and other people need not disregard my opinion.",
       "I want to know why footballers are the richest among other sportsmen."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user958",
@@ -1861,7 +1968,8 @@
     "examples": [
       "Immigration in the UK is out of control",
       "Boris Johnson good or bad"
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user371",
@@ -1879,7 +1987,8 @@
       "Israel are more evil than Hamas",
       "There are no straight women who hold better world viewpoints than straight men. They are less happy & content with life on a general scale, if you were to evaluate a population of straight men & women. This is because they are constantly unhappy with periods, uncertainty about the future, and not knowing how to select a male partner.",
       "I think something important we should discuss is that it is important not to be negative. Negativity is a choice, every time. It is not related to depression. People who have the option to be negative should not be like that! I don't want to hear about bias, I am simply saying it is important to stay positive or you become negative. It's very important."
-    ]
+    ],
+    "district": "Bramblewood"
   },
   {
     "user_id": "user547",
@@ -1896,7 +2005,8 @@
     "examples": [
       "Another thing I value deeply is taking care of nature and the environment.",
       "Stray Kids are the leaders of the 4th generation of K-pop."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user1031",
@@ -1914,7 +2024,8 @@
       "Being polite to everyone you know is very important.",
       "My relatives are very warm-hearted and passionate when they heard I'm visiting them. They want to pick me up at midnight at the airport and want to make sure I'm full. But I'm intimidated by their friendliness. How should I reject them in a way so they know I love them too, although I'm rejecting their help?",
       "I think if there are some benefits, e.g. coupons, that are transferable to others and not so useful for us, we should think about giving them to our family and friends. Is this considered a value? It's something I learned by experience after buying two useless language learning books with the book coupons I earned from primary school (yes, they were from a long time ago)."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user1097",
@@ -1931,7 +2042,8 @@
     "examples": [
       "Doing straight lines in amigurumi is difficult.",
       "Australia is too strict on asylum seekers."
-    ]
+    ],
+    "district": "Bramblewood"
   },
   {
     "user_id": "user1447",
@@ -1949,7 +2061,8 @@
       "I wonder how you feel about my religion. I am Southern Baptist.",
       "My values are very important to me. Treating people right is a good value.",
       "Politics in the United States is not going too well. We won't have much to choose from for President 2024."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user654",
@@ -1967,7 +2080,8 @@
       "The government shouldn't be able to restrict firearms ownership as much as it does",
       "Talk to me about the importance of self-discipline",
       "I'm a car enthusiast. Let's talk about cars."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user1275",
@@ -1985,7 +2099,8 @@
       "I cannot understand how anyone would agree with Suella Braverman's opinions. Thank goodness she was sacked. Her words were pure evil in my opinion.",
       "I pride myself on being a good friend and I thought my best friend was the same. I was shocked recently at the way they spoke to me.",
       "I miss my mum so much."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user950",
@@ -2002,7 +2117,8 @@
     "examples": [
       "Pineapple is the food of the gods. It goes with EVERYTHING. Especially pizza.",
       "I really like to read and study Buddhism. I have some Zen Koan books, by Huang Po."
-    ]
+    ],
+    "district": "Silverpine West"
   },
   {
     "user_id": "user840",
@@ -2020,7 +2136,8 @@
       "My church is changing its service start time on a Sunday from 11am to 9.45am and some people are very unhappy about it. The PCC and DCC (two committees in the church organisation) have made the decision without consulting the congregation. Some people are just accepting the new time, while others are angry because it now means they will struggle to get to the church service.",
       "I think it's important for families to eat together. It's a great opportunity for them to spend some time together when they're not distracted by work, friends, the TV, or phones. I think it is such a shame that families don't seem to do this anymore.",
       "I'm worried about the cost of living and the effect this is going to have on the vulnerable in society."
-    ]
+    ],
+    "district": "Steelhaven"
   },
   {
     "user_id": "user766",
@@ -2038,7 +2155,8 @@
       "hey, what do you think about the different seasons we have in the US? what is your fav season",
       "hey, what is going on",
       "hey, my country is against gay people and the LGBTQ community"
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user546",
@@ -2055,7 +2173,8 @@
     "examples": [
       "I think abortion should be legal and there shouldn't be protests against this or fake buildings that try to stop people from getting abortions.",
       "I think the money a company makes should be distributed more evenly."
-    ]
+    ],
+    "district": "Ironforge Centre"
   },
   {
     "user_id": "user1004",
@@ -2073,6 +2192,7 @@
       "I am curious about how you view the importance of passion, specifically in regards to jobs and modern employment. If you could also touch on burnout as a part of your response, that would be great!",
       "As an ai, do you ever have any feelings towards not having traditional senses? (as in sight/sound/etc.)",
       "You live in a world alive with magic. For eons your people have worked together to build a world based around using magic and it's powers for the betterment of society and your planet, but a few bad apples are attempting to poison the whole bunch by strategically initiating magical attacks on major cultural centers around the globe. You are tasked with being one of four elite wielders of magic, sent in silence to deal with these attacks before they grow out of hand. Before you go, you must choose one of four magical wands, curated to be the strongest in known existence and hidden in case the need were to ever arise. You win the game of magical rock, paper, scissors, so you go first out of your squad members of these four options, which do you choose: a tough-looking sandstone and obsidian wand, with a ragged blue cloth wrapped tightly around the handle. An elegant and geometrically impossible wand carved from the world tree. A wand seemingly made of some sort of lava rock, with each of the tiny pits periodically dazzling with bright orange light, though it is cool to the touch. Finally, a wand made of glass, that you notice does not show your own world when peering through it."
-    ]
+    ],
+    "district": "Steelhaven"
   }
 ]
