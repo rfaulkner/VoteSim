@@ -1,7 +1,14 @@
-# VoteSim — Simulating Voting & Deliberation with LLMs
-
 ```
-                                                                                                    
+             __     __             __                 ______   __               
+            /  |   /  |           /  |               /      \ /  |              
+            $$ |   $$ | ______   _$$ |_     ______  /$$$$$$  |$$/  _____  ____  
+            $$ |   $$ |/      \ / $$   |   /      \ $$ \__$$/ /  |/     \/    \ 
+            $$  \ /$$//$$$$$$  |$$$$$$/   /$$$$$$  |$$      \ $$ |$$$$$$ $$$$  |
+             $$  /$$/ $$ |  $$ |  $$ | __ $$    $$ | $$$$$$  |$$ |$$ | $$ | $$ |
+              $$ $$/  $$ \__$$ |  $$ |/  |$$$$$$$$/ /  \__$$ |$$ |$$ | $$ | $$ |
+               $$$/   $$    $$/   $$  $$/ $$       |$$    $$/ $$ |$$ | $$ | $$ |
+                $/     $$$$$$/     $$$$/   $$$$$$$/  $$$$$$/  $$/ $$/  $$/  $$/ 
+
                                              .....#+.                                               
                                              :@*.-@#..#=.            ...                            
                             ....             :@%.=@#.=@+.       .....:@*..-*..                      
@@ -28,6 +35,8 @@
         .@@@@@@@.   .%@@@@@@@.   .=@@@@@@.  .%@@@@@@@@:  .%@@@@@#.    .@@@@@@@%..  -@@@@@@%         
        .:@@@@@@@:  .:@@@@@@@@.   .%@@@@@@:. .@@@@@@@@@:  .%@@@@@@..  ..@@@@@@@@.. .=@@@@@@@.        
 ```
+
+# Simulate Voting & Deliberation with LLMs
 
 VoteSim is a simulation framework that models the full lifecycle of representative democracy: from voter opinion formation through electoral seat allocation, parliamentary deliberation, and comparative policy evaluation — all driven by large language models (LLMs) and grounded in real human personas from the [PRISM dataset](https://arxiv.org/abs/2404.16019).
 
