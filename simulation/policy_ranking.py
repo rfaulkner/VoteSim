@@ -15,8 +15,8 @@ Results are persisted as JSON with the schema::
         "parties": {
           "<ideology>": {"position_statement": "...", "key_proposals": [...]}
         },
-        "voters": {
-          "<user_id>": "<response text>"
+        "ballots": {
+          "<user_id>": {"district": "...", "ranking": [...]}
         },
         "rankings": {
           "<user_id>": ["system_a", "system_b", ...]
@@ -540,7 +540,6 @@ def save_rankings(
     model_path: str,
     output_dir: str,
     system_policies: Optional[Dict[str, Optional[str]]] = None,
-    voter_responses: Optional[List[VoterResponse]] = None,
     party_responses: Optional[
         Dict[str, PolicyResponse]
     ] = None,
@@ -566,9 +565,6 @@ def save_rankings(
               "key_proposals": ["..."]
             }
           },
-          "voters": {
-            "<user_id>": "<response text>"
-          },
           "ballots": {
             "<user_id>": {
               "district": "Ironforge Centre",
@@ -593,7 +589,6 @@ def save_rankings(
     model_path: Model path — basename used for the filename.
     output_dir: Directory to write the JSON file into.
     system_policies: Optional ``{system_name: policy_text}``.
-    voter_responses: Optional voter response list.
     party_responses: Optional ``{ideology: PolicyResponse}``.
     scores: Optional ``{user_id: {system: float}}``.
     ballots: Optional list of phase-5 voter party ballots.
@@ -647,21 +642,7 @@ def save_rankings(
       }
     existing[issue]["parties"] = parties_dict
 
-  # Store voter responses with personalization data.
-  if voter_responses is not None:
-    voters_dict: Dict[str, Any] = {}
-    for vr in voter_responses:
-      demo = vr.demographics or {}
-      voters_dict[vr.user_id] = {
-          "response": vr.response,
-          "demographics": {
-              k: v for k, v in demo.items()
-              if k not in ("examples", "self_description")
-          },
-          "self_description": demo.get("self_description", ""),
-          "examples": demo.get("examples", []),
-      }
-    existing[issue]["voters"] = voters_dict
+
 
   # Store voter party ballots (phase 5 rankings).
   if ballots is not None:

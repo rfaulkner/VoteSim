@@ -14,7 +14,8 @@ region:
 
 pipeline:
   voting_mode: "issue"           # "issue" (default) or "platform" (rank by party platforms once)
-  num_voters: 100
+  num_voters: 120
+  personas_path: "dataset/personas/personas.json"  # cached persona set (created on first run)
   max_workers: 5                 # max concurrent LLM calls (keep low for API rate limits)
   topic: "social"
   parties:
@@ -31,7 +32,7 @@ pipeline:
     - dhondt
     - hare
     - sainte_lague
-  max_rank: 3                    # number of parties each voter ranks
+  max_rank: 5                    # number of parties each voter ranks
   results_dir: "results"         # output dir for per-model ranking JSON
   deliberation:
     enabled: true                # toggle parliamentary deliberation phase

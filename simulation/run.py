@@ -19,6 +19,7 @@ DEFAULT_POLITICAL_QUESTIONS_PATH = (
     "dataset/political_questions/political-questions.csv"
 )
 DEFAULT_PARTY_DIR = "dataset/party"
+DEFAULT_PERSONAS_PATH = "dataset/personas/personas.json"
 DEFAULT_SEED = 42
 DEFAULT_TEMPERATURE = 0.0
 DEFAULT_TOP_P = 1.0
@@ -241,6 +242,7 @@ def run_pipeline(cfg: DictConfig):
     pq_path = pq_cfg.get("path", DEFAULT_POLITICAL_QUESTIONS_PATH)
   question_indices = pq_cfg.get("question_indices", None)
   party_dir = cfg.get("party_dir", DEFAULT_PARTY_DIR)
+  personas_path = pipe_cfg.get("personas_path", DEFAULT_PERSONAS_PATH)
 
   # Region settings (optional).
   region_cfg = cfg.get("region")
@@ -301,6 +303,7 @@ def run_pipeline(cfg: DictConfig):
         deliberation_max_rounds=deliberation_max_rounds,
         voting_systems=voting_systems,
         results_dir=results_dir,
+        personas_path=personas_path,
     )
     logging.info(
         "Pipeline finished (platform mode): %d question(s).",
@@ -342,6 +345,7 @@ def run_pipeline(cfg: DictConfig):
         deliberation_max_rounds=deliberation_max_rounds,
         voting_systems=voting_systems,
         results_dir=results_dir,
+        personas_path=personas_path,
     )
     results.append(result)
 

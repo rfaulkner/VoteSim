@@ -295,6 +295,7 @@ def generate_voter_responses(
     temperature: float = 0.7,
     max_workers: Optional[int] = None,
     region: Optional[Region] = None,
+    voters_override: Optional[List[Dict[str, Any]]] = None,
 ) -> List[VoterResponse]:
   """Sample *k* voters from PRISM and concurrently generate their responses.
 
@@ -309,13 +310,18 @@ def generate_voter_responses(
     max_workers: Maximum concurrent LLM calls.  Defaults to *k*.
     region: Optional ``Region`` — if provided, each voter is
       deterministically assigned a district based on their user_id.
+    voters_override: If provided, use these pre-loaded personas
+      instead of sampling from ``prism_sampler``.
 
   Returns:
     A list of ``VoterResponse`` objects, one per sampled voter.
   """
-  voters = prism_sampler.sample(num_samples=k, seed=seed)
+  if voters_override is not None:
+    voters = voters_override[:k]
+  else:
+    voters = prism_sampler.sample(num_samples=k, seed=seed)
   logging.info(
-      "Sampled %d voters (seed=%d).  Generating responses concurrently...",
+      "Using %d voters (seed=%d).  Generating responses concurrently...",
       len(voters),
       seed,
   )
@@ -913,6 +919,7 @@ def prepare_voters(
     prism_sampler: PrismSampler,
     seed: int,
     region: Optional[Region] = None,
+    voters_override: Optional[List[Dict[str, Any]]] = None,
 ) -> Tuple[
     List[Dict[str, Any]], List[Optional[Dict[str, Any]]]
 ]:
@@ -928,6 +935,8 @@ def prepare_voters(
     seed: Random seed for voter sampling.
     region: Optional ``Region`` — if provided, each voter is
       deterministically assigned a district.
+    voters_override: If provided, use these pre-loaded personas
+      instead of sampling from ``prism_sampler``.
 
   Returns:
     A tuple of ``(voters, voter_districts)`` where ``voters``
@@ -935,8 +944,11 @@ def prepare_voters(
     ``voter_districts`` is the parallel list of district dicts
     (or ``None`` per voter if no region).
   """
-  voters = prism_sampler.sample(num_samples=num_voters, seed=seed)
-  logging.info("Sampled %d voters (seed=%d).", len(voters), seed)
+  if voters_override is not None:
+    voters = voters_override[:num_voters]
+  else:
+    voters = prism_sampler.sample(num_samples=num_voters, seed=seed)
+  logging.info("Using %d voters (seed=%d).", len(voters), seed)
 
   voter_districts: List[Optional[Dict[str, Any]]] = []
   for v in voters:

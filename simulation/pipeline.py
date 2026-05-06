@@ -39,6 +39,7 @@ from simulation.district_generator import RegionGenerator
 from simulation.policy_generator import PartyPlatform
 from simulation.policy_generator import PolicyResponse
 from simulation.political_sampler import PoliticalQuestionSampler
+from simulation.prism_sampler import load_or_create_personas
 from simulation.prism_sampler import PrismSampler
 from simulation.survey import generate_party_responses
 from simulation.survey import generate_platform_rankings
@@ -184,6 +185,7 @@ def run_voting_round(
     deliberation_max_rounds: int = 3,
     voting_systems: Optional[List[str]] = None,
     results_dir: Optional[str] = None,
+    personas_path: Optional[str] = None,
 ) -> VotingRoundResult:
   """Execute a full voting round with election.
 
@@ -259,6 +261,12 @@ def run_voting_round(
   model = get_model(model_path, is_api=is_api, seed=seed, backend_name=backend)
 
   prism = PrismSampler(prism_dataset_dir)
+  voters = load_or_create_personas(
+      prism_dataset_dir=prism_dataset_dir,
+      personas_path=personas_path,
+      num_personas=num_voters,
+      seed=seed,
+  ) if personas_path else prism.sample(num_samples=num_voters, seed=seed)
   voter_responses = generate_voter_responses(
       k=num_voters,
       question=question,
@@ -268,6 +276,7 @@ def run_voting_round(
       temperature=temperature,
       max_workers=max_workers,
       region=region,
+      voters_override=voters,
   )
 
   # -- 4. Party responses (concurrent) ------------------------------------
@@ -365,7 +374,6 @@ def run_voting_round(
           model_path=model_path,
           output_dir=results_dir,
           system_policies=sys_policies,
-          voter_responses=voter_responses,
           party_responses=party_responses,
           scores=comparative_scores,
           ballots=ballots,
@@ -450,6 +458,7 @@ def run_platform_mode(
     deliberation_max_rounds: int = 3,
     voting_systems: Optional[List[str]] = None,
     results_dir: Optional[str] = None,
+    personas_path: Optional[str] = None,
 ) -> List[VotingRoundResult]:
   """Run the pipeline in platform-only voting mode.
 
@@ -521,11 +530,18 @@ def run_platform_mode(
   )
 
   prism = PrismSampler(prism_dataset_dir)
+  personas = load_or_create_personas(
+      prism_dataset_dir=prism_dataset_dir,
+      personas_path=personas_path,
+      num_personas=num_voters,
+      seed=seed,
+  ) if personas_path else prism.sample(num_samples=num_voters, seed=seed)
   voters, voter_districts = prepare_voters(
       num_voters=num_voters,
       prism_sampler=prism,
       seed=seed,
       region=region,
+      voters_override=personas,
   )
 
   # -- 3. Load party platforms --------------------------------------------
@@ -635,7 +651,6 @@ def run_platform_mode(
             model_path=model_path,
             output_dir=results_dir,
             system_policies=sys_policies,
-            voter_responses=voter_responses,
             party_responses=platform_policies,
             scores=comparative_scores,
             ballots=ballots,

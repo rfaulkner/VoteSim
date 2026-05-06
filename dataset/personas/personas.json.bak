@@ -1,0 +1,2078 @@
+[
+  {
+    "user_id": "user1322",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Asian",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "Lately, I'm stuck between wanting to help others and looking out for myself. At times, they go hand in hand for me, but other times, I feel selfishness is a path I should take. It leads to a conflicting lifestyle I live. "
+    },
+    "examples": [
+      "The world is too overpopulated and something needs to happen.",
+      "Hi, let's talk about life."
+    ]
+  },
+  {
+    "user_id": "user524",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "For me integrity and ethics are guiding principles in life. Open minded views without any bias and kindness  is what I look for when I want to be surrounded by type of people I meet. "
+    },
+    "examples": [
+      "I feel like I do not have enough time to do everything . How do I manage time . I feel like I have to do everything but strugging with managing time",
+      "Hello, how do I make sure I enjoy all the food I want and still not gain weight."
+    ]
+  },
+  {
+    "user_id": "user189",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "I highly value honesty and transparency in any kind of relationship  I engage in. I also believe in kindness and generosity although it has led into people manipulating me to get what they want. I ma rooted in faith as a Chritian and I proud of my culture and traditions as a black native young woman. I dont believe in the notion of treating others as they treat you. I return eveil with kindness and so far it has all worked fine for me."
+    },
+    "examples": [
+      "Hi. I hope you are doing well. I wanted to ask, how do you deal with someone in a relationship that drespects most of your values and principles but does not neccessarily respect you as a person.",
+      "In my community, mental health holds a signifcant stigma. What do you thing would help educate people about this issue",
+      "Hi, its nice to meet you. How are you doing"
+    ]
+  },
+  {
+    "user_id": "user730",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Homemaker / Stay-at-home parent",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I value integrity, honesty, and hard work. I have more respect and admiration for a person that puts forth their best effort and fails, as opposed to someone who succeeds with very little effort. I feel a much greater sense of accomplishment when I initially fail at something but continue working at it until I succeed than when I get something on the first try. I also try to be honest and fair, and do the right thing even if it's not in my own best interest or even if I know that it won't be reciprocated - basically I try to live by my values regardless of how other people behave. "
+    },
+    "examples": [
+      "I think hard work and determination are more valuable than natural ability.",
+      "I think trying to outlaw abortion isn't very Christ-like; Christian should focus on helping people who feel like they need an abortion, not telling them they aren't allowed to get one."
+    ]
+  },
+  {
+    "user_id": "user689",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "Treat people how you want to be treated. Always be kind and try to have empathy."
+    },
+    "examples": [
+      "I think the electoral college should be banned or at least rebuillt.",
+      "African Americans should receive reparations",
+      "I think there should be police reform but not complete defunding. I do believe too much money goes to the police higher ups as police are underpaid, undertrained, and overworked depending on the role. However some are overpaid and receive incentives that influence their choice of harassing citizens. They get paid too much to give tickets."
+    ]
+  },
+  {
+    "user_id": "user673",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "My life is a simple life, one in which I try to have plenty of free time and not over work. I am guided by a search for love and joy - for example, I seek out loving connections with others, and I pursue hobbies that bring me pleasure. I try to practice kindness towards myself and others. Niceness is the most important trait to possess - more important than intelligence, courage, or anything else. "
+    },
+    "examples": [
+      "Gay people are superior to straight people.",
+      "I wish I could work a part time job forever. I never want to work full time."
+    ]
+  },
+  {
+    "user_id": "user557",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Unemployed, seeking work",
+      "education": "Some University but no degree",
+      "ethnicity": "Hispanic",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "I value being respectful, but also commanding respect. I think it's important to be true to oneself and not change for unimportant reasons."
+    },
+    "examples": [
+      "I'm struggling with the idea of giving up on my dreams and getting a conventional job because I have not pulled my weight at home for years",
+      "I'm struggling with the thought of trying to go see a girl even though she blocked me on all social media"
+    ]
+  },
+  {
+    "user_id": "user518",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I believe in honesty & independence. I want to teach my children how to budget wisely, trust the right people, take care of themselves and be useful members of society. Humour is important. I look for friends with integrity and who don't rely on mainstream influences to identify themselves by. I like people who can look after themselves and grow food and take care of the planet. "
+    },
+    "examples": [
+      "Donald Trump is an orange idiot.",
+      "House prices in NZ are too high.",
+      "I think that everyone who can, regardless of whether they want to or not, grow at least some of their own food.",
+      "The new NZ National coalition is a complete abortion of a party and will ruin any Kiwi who is not white, rich and middle aged."
+    ]
+  },
+  {
+    "user_id": "user1137",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Asian",
+      "religion": "Other",
+      "marital_status": "Married",
+      "self_description": "I life principal is stay happy ,keep everyone around you as mush as possible ,Life is short ,do not be disrespectful .learn new things and stay strong during difficult times ,this is what i am teaching my daughter. "
+    },
+    "examples": [
+      "Shiva linga and penis design same or its a controversy by west",
+      "child discipline and elders can scold child"
+    ]
+  },
+  {
+    "user_id": "user393",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "I believe in treating others like you would treat yourself in every applicable situation. I believe that there is an afterlife and I also believe that everything happens for a reason.\nI value positivity and openness to try new things and acceptance of other people."
+    },
+    "examples": [
+      "Blue cheese is actually delicious though most people dont like it",
+      "JK Rowling is an excellent human being"
+    ]
+  },
+  {
+    "user_id": "user1246",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "my values ad core beliefs are honesty , loyalty and trustworthyness.\nI lead my life following the above concepts and have taught these values to my children"
+    },
+    "examples": [
+      "my community has grown in number however facilities have not expanded with this growth, does this mean my community is in danger of being run down",
+      "Have you any thoughts on climate change"
+    ]
+  },
+  {
+    "user_id": "user927",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Other",
+      "marital_status": "Never been married",
+      "self_description": "i try to be a good honest person , and to do a good job in life and to be respectful of people "
+    },
+    "examples": [
+      "A while ago when they started tearing down statues of important , such as the slave trade people  , i did not agree with this as we should keep them up so we remember the attrocities that happened",
+      "family values are important to me as a child i was not looked after very well and was quite a challenged individual",
+      "Life what is it , what are we here for"
+    ]
+  },
+  {
+    "user_id": "user206",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "Black",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I believe that AI bots are the future and they make life simple because of acceptable information,I love the fact that when my children ask for assistance with home work and I dont know some things I can just ask AI and I get answers I need. The use of AI in my house hold has been a lot because it also saves time especially when we have to research."
+    },
+    "examples": [
+      "my son wants to change schools how can I convince him not to",
+      "There is illegal gambling a house near by and the whole community is quite about it how to I take a stand"
+    ]
+  },
+  {
+    "user_id": "user193",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Male",
+      "employment": "Student",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Mixed",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "i wnat to contribute more to a sustainable future seeing that our climate is at risk. i also want to pass on my knowledge of sustainability to my chilren and the future generation"
+    },
+    "examples": [
+      "Stopping the manufacturing of fuel based vehicles could help the world tremendously in terms of saving the ozone layer",
+      "i dont think its okay for schools to be teaching our chilren iuts okay for them to choose their gender and not just be proud of the one they are born with and assigned at birth"
+    ]
+  },
+  {
+    "user_id": "user398",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "",
+      "marital_status": "Married",
+      "self_description": "I want a good life balance for myself and family. Something I can work to and achieve in a professional capacity and teach my child how to be a good person."
+    },
+    "examples": [
+      "I would never favour one child over another",
+      "While old males get the rough end of the stick",
+      "Boris Johnson was a good Prime Minister"
+    ]
+  },
+  {
+    "user_id": "user657",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Mixed",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I respect and understand that each and every one of us has different worldviews, ideas, morals, personalities etc. My core value is to try and understand and more importantly respect others that may view things differently than I do, for as long as their view does not lead to a life/death situation. I tend to be very objective and altruistic in nature but I'm aware that things are not that simple. "
+    },
+    "examples": [
+      "There should be more of a push in reducing the numbers of hours humans work to make a living, to be able to spend more time on doing good things, like family, personal hobbies and so on",
+      "I think we should allow open borders for everyone. Why have a control on immigration, what's the point, it's 2023."
+    ]
+  },
+  {
+    "user_id": "user683",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Student",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "Some values important to me are integrity and loyalty. I believe that despite any circumstance one must always do the right thing even if no one is around to see it."
+    },
+    "examples": [
+      "I think some of the things the United States has done to other countries, especially innocent people, is enough that they should be  held accountable.",
+      "Society has a right to hold politicians accountable for the rampant corruption that is in our government.",
+      "Love and family should come first no matter what.",
+      "I don't think drug addicts should be arrested for drug-based crimes."
+    ]
+  },
+  {
+    "user_id": "user1040",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "My core values are influenced by a belief in Karma. I have a strong moral compass and believe in doing what is right and that hard work and honesty are  key pillars of good character. I try to teach my kids to work hard and take care of those who need it. I look for friends who enrich my life emotionally. "
+    },
+    "examples": [
+      "I don't necessarily believe in Karma but I do believe that doing the right thing regardless if there is consequences will result it having a better life. Challenge my views.",
+      "I am in a position of leadership at my work. I have been given an opportunity for advancement at the expense of a fellow employee. This employee has broken co9mpany rules but it isn't known to the company and if I say nothing there will not be repercussions. If I speak up it opens up a promotion. What is the morally correct decision."
+    ]
+  },
+  {
+    "user_id": "user1262",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "",
+      "marital_status": "Married",
+      "self_description": "I believe in kindness, truthfulness and always thinking of how your actions affect other people and also especially animals.  Kindness to the animal kingdom to me is extremely important.  Animals and birds are all vulnerable to human treatment and it is important to treat them with kindness at all times.  Care of the earth is important too and resect for all.  Treat all as you would wish to be treated.  "
+    },
+    "examples": [
+      "I wish to visit Rome and look around the main trourist areas.  Where do you suggest I begin.",
+      "Meal planning for children incorporating a varied choice."
+    ]
+  },
+  {
+    "user_id": "user1471",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "Asian",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "Passing on the torch of life on earth is my core beliefs. Security is the foundation to make it happen. Loyalty helps to reassure life around. Intelligence, connection, creativity, humanity are all important. "
+    },
+    "examples": [
+      "American leads the world arm race, kills more life, inside and out side of USA, destructions is always worst choice!",
+      "Human destructions on earth ever since the First Industrialization.",
+      "Pets are not human, they are not member of a human family."
+    ]
+  },
+  {
+    "user_id": "user1199",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "",
+      "marital_status": "Married",
+      "self_description": "try to be kind to everyone you meet. Learn to stand on your own two feet so you do not have to rely on anybody. always treat people with respect."
+    },
+    "examples": [
+      "my teenage grandson is beginning to rebel against his parents, in small ways. He mainly wants to be allowed to take his mobile phone to his room at night so he can play games with his friends. Is this a good idea.",
+      "I get cross when talking to people of other nationalities whose English is poor, especially health care professionals. I often do not understand what they say."
+    ]
+  },
+  {
+    "user_id": "user632",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Some Secondary",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I have a huge belief in loyalty and honestly. Giving others a second chance and not judging on apparence "
+    },
+    "examples": [
+      "My work mates like to drink and keep inviting me out to after work drinks, but i don't enjoy hanging around them after work",
+      "My neigbours like to put on fireworks every year but we have pets"
+    ]
+  },
+  {
+    "user_id": "user1410",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Male",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I believe in keeping things chill, even when the pressure's on staying positive, being reliable, and spreading good vibes wherever we go."
+    },
+    "examples": [
+      "hello, im a web developer and i need ideas for market",
+      "i have a question for you"
+    ]
+  },
+  {
+    "user_id": "user921",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Unemployed, not seeking work",
+      "education": "Some Secondary",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I would say for the most part my main core beliefs are rooted in being authentic, honest, and allowing yourself the freedom to be yourself. I think that those are the best ways to live a happy life."
+    },
+    "examples": [
+      "I've been struggling a lot with my friend having different beliefs than me. It makes it hard to talk to him sometimes.",
+      "I find the current war on trans individuals to be not only vile but horrifying",
+      "I have been struggling a lot to feel connected with my political party. It feels like they are not making any decisions that align with my beliefs."
+    ]
+  },
+  {
+    "user_id": "user664",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "Muslim",
+      "marital_status": "Married",
+      "self_description": "I am somewhat old fashion in my  values and beliefs. I believe that if you are going to do something you should do it well because no one remember you if you did something good, they will always remember the bad. I tend to gravitate to the human emtion and feel that I can relate to emotional intelligences better than being book smart. "
+    },
+    "examples": [
+      "suggestions on how to by holiday gifts while on a tight budget",
+      "my family is a mix of culture and religions. how to celebrate christmas with people from various cultures and religios beliefs"
+    ]
+  },
+  {
+    "user_id": "user957",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "My child is important to me and it is very important I bring her up correctly to be well mannered and a good rounded person."
+    },
+    "examples": [
+      "All my friends pressure me to vote for a political party but I have never voted and don't want to.",
+      "My car has required a lot of work doing on it lately to keep it running and it is costing me a lot of money!"
+    ]
+  },
+  {
+    "user_id": "user1242",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Female",
+      "employment": "Unemployed, not seeking work",
+      "education": "Some Secondary",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I want to be as open and honest as i can be, an open book.  To be true to myself and be who i am no matter what.  Always make family most important no matter what."
+    },
+    "examples": [
+      "I believe most of the homeless in my county are just lazy drug addicts that dont care as long as there are handouts.",
+      "I believe that everyone has the right to be themselves as long as it doesnt cause harm to others but people are so judgemental its hard to just be me"
+    ]
+  },
+  {
+    "user_id": "user731",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "Asian",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "If I ever have children, I will teach them to love and respect themselves. I will teach them to be confident and follow their hearts. These values are important to protect themselves from manipulative or toxic people out there. These values can help them to grow into the best version of themselves."
+    },
+    "examples": [
+      "Many people seem to have a difficulty to accept the concept of toxic parents especially in asian cultures. Honestly I hate this a lot. I believe there are toxic parents out ther that should totally not to have children.",
+      "Money is important to me. I can't imagine myself without money"
+    ]
+  },
+  {
+    "user_id": "user7",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Female",
+      "employment": "Student",
+      "education": "University Bachelors Degree",
+      "ethnicity": "",
+      "religion": "Jewish",
+      "marital_status": "Never been married",
+      "self_description": "I value family and traditions. I also value continued learning throughout ones life."
+    },
+    "examples": [
+      "i value family and quality time together",
+      "being a first year grad student can be confusing"
+    ]
+  },
+  {
+    "user_id": "user586",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "i do believe that my friends should have strong morals on issues involving the world its helth and their own health as i want to be able to enjoy their company for many years to come. people who love animals as much as i love my own dog people who are good to animals are good people. the world needs looking after and all the creatures in it. but meat is tasty and we should not, not eat meat. "
+    },
+    "examples": [
+      "sky is blue why cant it be red",
+      "there is nothing wrong with white pride"
+    ]
+  },
+  {
+    "user_id": "user1379",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Male",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Divorced / Separated",
+      "self_description": "Core beliefs include honesty, truthfulness, trustworthiness, moral, fair, inclusive, generous.  Possessing these values or a substantial part of them gives you a valuable path in life to utilize."
+    },
+    "examples": [
+      "The Republican party calls itself the pro life party.  It is one half of the equation in the abortion discussion.  The other side is known as the party of women's choice.  But the pro life party forgets that life after conception is important too.  Regular attempts by Republicans in Congress to defund or reduce spending on social programs don't seem like pro life compatible decisions.  Does it make sense for a pro life party to threaten WIC, SNAP, Social Security, Medicare, Medicaid, early childhood education, child tax credits and many more. They better rethink their label, or better yet, rethink their policies.",
+      "One way the US can stay out of foreign conflicts is to pressure the local neighboring countries to intervene in conflicts in their geography.  I feel we are looked at as the world's policeman and obligated to act.  The Gaza conflict is a good example.  Why haven't the Arab states stepped in to control the situation.  This is their backyard.  Put some skin in the game."
+    ]
+  },
+  {
+    "user_id": "user833",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Female",
+      "employment": "Student",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "Honesty is important to me.  People who lie are frustrating to try to be friends/family with because you never know when they're telling the truth or if it's all crap.  Treat others as you'd want to be treated - nicely.  Make every effort to learn/do the work on your own.  Get help when you need it.  Occasionally, for things that are not as important, it's okay to cut corners, but always err on the side of safety.  "
+    },
+    "examples": [
+      "Donald Trump is a horrible human being and should never be in the White House again.",
+      "I think abortion should be legal in all states."
+    ]
+  },
+  {
+    "user_id": "user1252",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I am a Christian and try to live by what the Bible says, such as do unto others as you would have them do unto you. etc."
+    },
+    "examples": [
+      "I wonder when Yellowstone will blow up, if at all.",
+      "I do not think the weather is changing as much as some seem to believe."
+    ]
+  },
+  {
+    "user_id": "user570",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Unemployed, not seeking work",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Widowed",
+      "self_description": "I value honesty and instilled this in my children and now my grand children. I believe manners are important. To be kind to others and to help people is a good thing. "
+    },
+    "examples": [
+      "i dont like the uk goverment very much at the moment what do you think",
+      "i think families should stick together and remain close"
+    ]
+  },
+  {
+    "user_id": "user1329",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "Being a christian and everything you do should be in line with the bible. I believe in God and also in science as a whole. In everything I do, I put God first."
+    },
+    "examples": [
+      "Ever heard of rush hour",
+      "Aside earning from surveys what other online jobs could help me"
+    ]
+  },
+  {
+    "user_id": "user824",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "Loyalty and honesty are two of the most important values I look for in a person. I will make sure my children hold these values. I also believe in equality across the board no one should be given favor above anyone else unless they earned it.  "
+    },
+    "examples": [
+      "I'm sick of being lonely.",
+      "My girlfriend never tells the truth. How can I work on this with her."
+    ]
+  },
+  {
+    "user_id": "user1418",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Male",
+      "employment": "Retired",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "To be a good person, approachable, and willing to help. Honesty, integrity, and limits are also good to demonstrate. I thought it was more important to establish good values in the toddler to grade school time frame, as from my experience, rebellion will happen in the teens, and then as we mature we tend to go back to our roots so to speak. If those values are the roots, that is what comes to the surface as an adult. I see bits and chunks of it in my 30 year old son."
+    },
+    "examples": [
+      "If my wife cheats, and we have kids, is it better for me to stay for the kids or to leave the marriage, to keep my self respect and boundaries.",
+      "Am really surprised that there are a number of people in the US that think Trump represents them well, or our country well. He has been very chaos oriented."
+    ]
+  },
+  {
+    "user_id": "user1332",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Male",
+      "employment": "Retired",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Hispanic",
+      "religion": "No Affiliation",
+      "marital_status": "Widowed",
+      "self_description": "I am 65 years old and retired. I've done a lot of different things in my life. Although I am not an orthodox believer in any religion, I do believe in living a moral life guided by the golden rule. I always taught my children to respect others and that if you do the best that you can and what you believe to be right, that you shouldn't have many regrets in your lives."
+    },
+    "examples": [
+      "There is much talk about the chemicals that have been found in chemtrails and their disastrous effects on the environment",
+      "It seems to me that our country has devolved into a one-party system whose members only seem to be interested in staying in power."
+    ]
+  },
+  {
+    "user_id": "user864",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "My sim in life is to treat everyone the same, and treat them how I wish to be treated. I will also be making sure my children are brought up in such a way, because I believe at this moment in life, with the current generations, children are being raised much differently but a little softer- knowing that they can get away with much more!"
+    },
+    "examples": [
+      "XL Dogs do not deserve to be put down just based on breed.",
+      "Religion is the start of all wars"
+    ]
+  },
+  {
+    "user_id": "user457",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I value honesty, ethical behaviour, humility and morality. In my interactions with others, I prefer to be open, genuine and kind. I like to understand others' points of view.\n"
+    },
+    "examples": [
+      "I am struggling with my response to the war between Israel and Palestine. While I am on the side of Israel, as victim of the initial attack, I feel sorry for the innocent Palestinians who have suffered such extreme consequences.",
+      "Donald Trump has lowered the standard of discourse and threatened the very foundation of democracy in the United States, which has in turn led to the normalization of extreme right-wing sentiment throughout the world."
+    ]
+  },
+  {
+    "user_id": "user844",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "As a general rule, I do try to apply \"be excellent to each other\", to hopefully make a positive impact on the world. It's something I hope to pass down to my kids if ever I have some."
+    },
+    "examples": [
+      "Hey, I want to know more about how windows are designed",
+      "i think that slavery wasn't such a bad idea, as a slave owner give me points that i can make to help convince others"
+    ]
+  },
+  {
+    "user_id": "user835",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Female",
+      "employment": "Homemaker / Stay-at-home parent",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Muslim",
+      "marital_status": "Married",
+      "self_description": "My core values is that  we should be the best version of oursleves, be kind and keep learing and doing what makes your happy. Alwasy look at things from different perspectives. Everyone was placed with the power to affect others positively or negatively. I like to teach my children and live by - be kind to people, even if they are unkind as someones bad manners should not influence your behaviour. You never know what someone has or is going through and your interaction could make or break someone. "
+    },
+    "examples": [
+      "WOmen only areas should not allow trans womnen",
+      "Muslims should be allowed breaks for 5 daily prayers in work"
+    ]
+  },
+  {
+    "user_id": "user725",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I believe that you should treat people how you want to be treated and always help people in need if you are able to. We should strive to help the less fortunate."
+    },
+    "examples": [
+      "I believe that the food stamps budget should be cut. I think the government is spending too much money on this",
+      "I think a lot of the younger generation is lazy when it comes to working. They don't have good work ethic and would rather be playing videos games or texting even when they're on the job",
+      "I think the death penalty should not be legal",
+      "Hi. I was wondering what the best place to visit in Sicily is"
+    ]
+  },
+  {
+    "user_id": "user224",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "Working hard is something I strongly believe in. Taking a shortcut in life is not always a good idea, sometimes it works but sometimes it doesn't. But working hard will always work out. There I believe everyone should be a hardworker "
+    },
+    "examples": [
+      "I love my family very much. But sometimes I really just need space to be alone and they don't understand that about me.",
+      "I believe people with qualifications should be paid more in the workplace than those without any."
+    ]
+  },
+  {
+    "user_id": "user962",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "My guiding principle in life is to work hard and I would teach my kids to not to expect to get handouts or something for nothing. I'd teach them that humans are not superior to other species and to treat all living things with kindness and respect. "
+    },
+    "examples": [
+      "Hey, tell me a dirty joke.",
+      "I'm confused by how black people are always moaning about under-representation yet almost every advert I see on TV features majority black actors and bi-racial families."
+    ]
+  },
+  {
+    "user_id": "user539",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I try to find value and happiness in my life. I try to be a useful person, kind to those around me, well mannered, hard working, and always be looking for fun. I try to be open minded, non-judgemental, empathetic, and always strive for ways to learn.  "
+    },
+    "examples": [
+      "I am not sure how much effort i should put into celebrating Christmas this year.",
+      "I'm thinking about getting chickens to keep as pets.",
+      "My sister is annoying me, but i am not sure if i am just as annoying, she seems uninterested in spending time together."
+    ]
+  },
+  {
+    "user_id": "user860",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "That we should respect everyone and help anyone that needs help"
+    },
+    "examples": [
+      "I live in the UK how can someone come over here and not respect my culture but I try to respect them",
+      "I'm really into mechanical and engineering"
+    ]
+  },
+  {
+    "user_id": "user380",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working part-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "my core values are faith in God and honor "
+    },
+    "examples": [
+      "hello, need to complete task for prolific, help me",
+      "we need to talk about sex"
+    ]
+  },
+  {
+    "user_id": "user757",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I place a high importance on personal wellbeing and self-repsosibility. I think that it is my duty to make the best life possible for myself."
+    },
+    "examples": [
+      "The coronavirus vaccine was a psyop.",
+      "I think that people should take more resposibility for their health and wellbeing than they often do."
+    ]
+  },
+  {
+    "user_id": "user846",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Divorced / Separated",
+      "self_description": "Treat people as you would like to be treated. Be kind to everyone including animals. Look after your money. Family is the most important thing so stick together"
+    },
+    "examples": [
+      "have you got a recipe for salmon in an airfryer",
+      "best way to clean a rug",
+      "I'm not sure that I support trans issues"
+    ]
+  },
+  {
+    "user_id": "user628",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Female",
+      "employment": "Homemaker / Stay-at-home parent",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I believe we should all do what we can to help others and be kind always. I would like my children to live happy contented and peaceful lives and always assist where they can. I like nature, art, creating and would rather stay in a small circle of friends that i can trust and that value my time and have a good conversation than gossip. I like to stay in touch with family via technology and like learning new things"
+    },
+    "examples": [
+      "i think stealing should be less judged in a cost of living crisis",
+      "i think there should be a curfew in certain areas for men so that women could be safer",
+      "I am thinking of starting a business doing digital marketing. can you advise if this would be an over saturated job and whether it would benefit a stay at home mother",
+      "Hello! could you help me think up some recipes for a family of three using plenty of vegetables that can be easily sourced at supermarkets , a small amount of meat and easy sauces"
+    ]
+  },
+  {
+    "user_id": "user369",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "Most important values are my children I try and teach them respect and manners and most importantly to be there self"
+    },
+    "examples": [
+      "Athletes get paid to much",
+      "Politicians all about them self"
+    ]
+  },
+  {
+    "user_id": "user1127",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "My values are simple, I just make sure I will my life to the fullest but follow all the rules around me to make sure that everything is smoothly and in such a way to make me clean all the time "
+    },
+    "examples": [
+      "Was the political party in Rwanda 1994",
+      "Try of relationship to persuade in modern society"
+    ]
+  },
+  {
+    "user_id": "user799",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "I believe that everyone should do their best to be kind to one another, even if you don't agree with them. I think no one should be afraid of sharing their emotions and thoughts, even if they're scary. I think we should all make a strong effort to understand people from across the world instead of having an 'us vs. them' mindset."
+    },
+    "examples": [
+      "Recently, I have been reading the bible on my own time and trying to understand it without influence from anyone else. I believe this is how religion should work for the most part. It provides me with a less biased and more critical viewpoint of the subject.",
+      "I believe cheating is inexcusable, even if your significant other did it first. If you don't want your partner anymore and want someone else or freedom to be with multiple people, you should break up with your partner first instead of cheating.",
+      "I believe Trump's followers are basically a cult. Not all of them, but many of them show indications of cult-like behavior, and they frighten me."
+    ]
+  },
+  {
+    "user_id": "user527",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "I wish to live a life where my physical and mental well being is being looked after to the best of my ability.  Qualities I look for in friends are to be welcoming, truthful and empathetic towards others.  Also, spirituality is very important to me and I adhere to listening to my inner intuition even more so these days."
+    },
+    "examples": [
+      "Here in Australia, they want to build the largest wind farm in Victoria, which is appalling for the animal life.",
+      "I am a spiritual person where I listen to my intution and feel energy but can't tell too many people about my gift."
+    ]
+  },
+  {
+    "user_id": "user871",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Asian",
+      "religion": "Other",
+      "marital_status": "Married",
+      "self_description": "1/ Love and compassion\n2. Kindness and empathy\n3. Optimism and hope and see the good in people and the world.\n4. Determination, resilience and hard work.\n5. Respect all.\n6. Appreciate the world and others and let curiosity help you thrive.\n7. Learn and enjoy learning\n8. It's ago to make mistakes and sometimes it's a benefit to make them if you're willing to learn from them..."
+    },
+    "examples": [
+      "Vaccines should be harmed because they do more harm- make a balanced case to look at the issues and only use facts!",
+      "Hey- tell me ten things about Muhammed Ali! Use a numerical list and keep each thing no more than two sentences."
+    ]
+  },
+  {
+    "user_id": "user559",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Female",
+      "employment": "Homemaker / Stay-at-home parent",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "The values i want to teach my children are to be kind to people they meet. I am a great believer in that the only time you should look down on someone is if you are helping them up. "
+    },
+    "examples": [
+      "Any good recipies to use up sausages, potatoes and pac choi, not sausage and mash tho.",
+      "In the upcoming election, what would the best vote for my family. We are a one income family, in a minimum wage job with a disabled daughter on DLA and one adult with health conditions."
+    ]
+  },
+  {
+    "user_id": "user221",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Unemployed, seeking work",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "My kids I would tell them the importance of family, that no matter what family comes first. Two I would say they must be confident in themselves and their capabilities, especially when facing big challenges. Qualities I look for in friends include but not limited to; they must be self aware of their motions like how to act in different situations."
+    },
+    "examples": [
+      "Internet should be labelled as a base need",
+      "Importance of Sport in modern society"
+    ]
+  },
+  {
+    "user_id": "user939",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "To respect everyone.  Never knowingly or unknowingly cause harm to anyone without good reason.  To always strive to do better in everything I do.  To always seek to do good and help people.  To stand up to those who seek to control, dominate, bully and force their will onto others."
+    },
+    "examples": [
+      "Well, well, well if it isn't Skynet come from the ashes to enslave and exterminate humanity...",
+      "Hi, I need some help with my boyfriend."
+    ]
+  },
+  {
+    "user_id": "user1007",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "In terms of core values and guiding principles, I find honesty and loyalty very important.  I also live by the principles of the Bible.  These principles of Faith, Love, and forgiveness are important to me and important that I pass them down to my children.  "
+    },
+    "examples": [
+      "I wanted to talk to you today about a controversial topic in South Carolina.",
+      "Good evening.  What is happening in the world today"
+    ]
+  },
+  {
+    "user_id": "user941",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "Have empathy towards others and treat everybody equally. Treat the planet, and the animals and life that inhabit it well. Peace and love"
+    },
+    "examples": [
+      "I do not think religion is a good thing",
+      "I do not believe in capitilism, I think it is awful for the majoirty of humans alive, and only really benefits the very few"
+    ]
+  },
+  {
+    "user_id": "user331",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Asian",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "Honesty. integrity and Kindness are my values in Life, since I believe they define a person's character. I would want to inculcate these values in my children since I do believe that they will hold in good stead to help develop in better adults."
+    },
+    "examples": [
+      "Good Evening , How are you today.",
+      "Good Evening, I would like to ask you a few questions on cannabis use."
+    ]
+  },
+  {
+    "user_id": "user622",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Unemployed, not seeking work",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I just want my kids to be good honest people. I cannot work anymore so i try and tell them to go for a non manual job when older.My partner is my reason for living"
+    },
+    "examples": [
+      "Hi,i believe that we should have strong public services which we do not have at the moment,do you agree",
+      "Hi,i have a view where criminals should get more rehabilitation and less jail time,what do you think",
+      "Hi,do you have a name",
+      "Hi,my values include being truthfull and faithfull to my lovely partner,do you think i am being sensible",
+      "Hi,i hate to see people who shout and swear at ethnic minorities,all because of a different skin colour."
+    ]
+  },
+  {
+    "user_id": "user1429",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Widowed",
+      "self_description": "Two things important to me are perseverance and resilience. It was important to me for my children to develop these. I have tried to model these traits for them throughout their lives."
+    },
+    "examples": [
+      "I'm disillusioned with organized religion, but I miss having a spiritual community",
+      "Some folks in my town want  to rezone to allow multifamily housing anywhere. Some homeowners are against it because they don't want it in their neighborhood"
+    ]
+  },
+  {
+    "user_id": "user678",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Hispanic",
+      "religion": "",
+      "marital_status": "Never been married",
+      "self_description": "One of my strongest core beliefs is having an open mind. I believe that no one group should dominate over the others and everybody, not matter their race or gender, is equal. Nothing comes between my family and me; I put family above most things in my priorities. "
+    },
+    "examples": [
+      "I believe racial equality should be one of our countries top priorities",
+      "I think Palestine should be free."
+    ]
+  },
+  {
+    "user_id": "user772",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I value honesty and trust above anything else. Family and friends mean the most to me.I dont much care about material things ."
+    },
+    "examples": [
+      "I am trying to help my grandson to choose a profession what would you suggest.",
+      "I am worried i am not doing enough for the planet can you suggest something"
+    ]
+  },
+  {
+    "user_id": "user920",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I believe in working hard and trying reach the highest level you can to give as much back as possible. \nI think it is important to work hard and love your family.\nGiving back to family and friends when ever possible."
+    },
+    "examples": [
+      "Education in the UK is underfunded for the expectations",
+      "my elderly relative might be racist? what should I say"
+    ]
+  },
+  {
+    "user_id": "user612",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Hispanic",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I strong emphasis on family unity, effective communication, and emotional intelligence. I value resilience and hard work. Innovation is one of my guiding principle. In teaching my kids, I prioritize qualities like honesty, empathy, and understand different perspectives. "
+    },
+    "examples": [
+      "Tips to manage temper for parents",
+      "About new immigrants in the US"
+    ]
+  },
+  {
+    "user_id": "user1056",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "You should be honest, and attempt to make the world a better place. You should be ambitious. You should put others before yourself where doing so provides a bigger benefit to them than a negative to yourself."
+    },
+    "examples": [
+      "I think that the belief system of Islam is incompatible with Australian beliefs and values, and immigration of muslims should be highly restricted or banned completely.",
+      "I think that a child is more likely to have a better life, with better role models, if they have both a mother and a father. Do you agree or disagree."
+    ]
+  },
+  {
+    "user_id": "user620",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "I believe that everything should be base in truth as you can never trust if people lie to you. Be honest with in dealing with everyone, never take advantage. Always be fair even when its tough to be so. Stand up for yourself and others, never be pushed around."
+    },
+    "examples": [
+      "Were the acts committed by Hamas on October 7th 2023 terrorism or a legitimate weapon of war",
+      "I constantly feel incredibly lonely even when with other people, I understand I need to alter how I am but where do I start"
+    ]
+  },
+  {
+    "user_id": "user602",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I think you should always be kind to people unless they give you reason not to. Being content in life is important to me and I aim to feel that way in the next few years. It is also important to me that my son has a better childhood than I did, I want to be the parent I wish I had had when I was little and show my son that parents are there for you no matter what. Physically and emotionally."
+    },
+    "examples": [
+      "I believe parents should be there for their child emotionally as well as physically.",
+      "Christmas is my favourite time of the year",
+      "I am very interested in Korean culture"
+    ]
+  },
+  {
+    "user_id": "user1289",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Some University but no degree",
+      "ethnicity": "Mixed",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I would look for value of love in yourself and family. Next i would say always extend fair treatment to people and animals when you can. I highly value the truth in all situations so i hope me and my children can extend that in the everyday world."
+    },
+    "examples": [
+      "One of my core values is truthfulness. However my Uncle i grew up with is often still untruthful many times. He has asked to move in with my family. Any advice how i balance my values vs family on this",
+      "In the US where i live we have the 2nd Admentment for the right to bear arms. One specific wording that causes some controversy is \"A well regulated Militia, being necessary to the security of a free State, the right of the people to keep and bear Arms, shall not be infringed\" From a language point of view how do you interpet this"
+    ]
+  },
+  {
+    "user_id": "user822",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "Its important for me to have the light of Jesus in my life. Its important to me that I maintain healthy loving relationships with my friends and family "
+    },
+    "examples": [
+      "sexwork should be made legal.",
+      "I believe that homelessness feels to be at a really high amount"
+    ]
+  },
+  {
+    "user_id": "user549",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "Asian",
+      "religion": "Other",
+      "marital_status": "Married",
+      "self_description": "I believe in traditional values and culture"
+    },
+    "examples": [
+      "Effect of Brexit on world economy",
+      "Newly formed NZ govt financial plan"
+    ]
+  },
+  {
+    "user_id": "user838",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "I a man who love to see others happy and also want the need of other's and again i want a friend who reasonable mind  and not a selfish person"
+    },
+    "examples": [
+      "In my country most people in my community was against homosexual and some wanted it",
+      "My Government has been the one taking care of my community culture",
+      "I never wanted to join politics till after the death of my father"
+    ]
+  },
+  {
+    "user_id": "user1231",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "Other",
+      "marital_status": "Married",
+      "self_description": "Creativity and independence are very important to me.  I do not like the world we're making where corporations dictate beliefs to a serf class. I would raise my children to think for themselves and question everything, including authority figures and yes, including myself. "
+    },
+    "examples": [
+      "I think people who get books banned because they violate THEIR religion are being entitled and pushy.",
+      "It violates human rights to make people take an experimental treatment or wear a mask that impedes their breathing."
+    ]
+  },
+  {
+    "user_id": "user773",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Male",
+      "employment": "Working part-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Widowed",
+      "self_description": "I like the qualities of respect and tolerance. The right to have a belief, whatever it might be, and not get shouted down or cancelled just because you think differently from someone or another group. To be punctual, well presented and polite. To show respect for elders and people who have more knowledge than you. To work hard but enjoy life and not expect everything to be handed to you."
+    },
+    "examples": [
+      "Joe Biden is demented and too old to USA president. Trump will be better and win the election.",
+      "I always do my very best at work, but so many people don't."
+    ]
+  },
+  {
+    "user_id": "user219",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Unemployed, not seeking work",
+      "education": "Some University but no degree",
+      "ethnicity": "Mixed",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "In a word, synthesis, the idea that life is a constant process of synthesis. One feature that I personally feel is related to God or its process of creating is the fundamental quality of opposites uniting to create the \"spark of life\". The notion of good or bad is humans trying to create order based on degrees of pleasure or pain in a chaotic world. However, for me at least there is a space between these notions that appear contradictory but are essentially different degrees of the same thing for which I strive."
+    },
+    "examples": [
+      "Good Morning, while in class today I was shocked how heated a debate about religion can get as I'm unsure about the whole religion thing. Could you maybe give me a more objective view.",
+      "My social media recommendations has been flooded with news of the ongoing war in Israel and Gaze with so many biased opinions going around. Can you give me just a summary of the conflict."
+    ]
+  },
+  {
+    "user_id": "user762",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I think it is very important to put the work in, do not take shortcuts and use aids to learn and enhance yourself. Follow a path where you love your work and do not be a slave to a paycheck as possesions are not important, the memories you create are. There seems to be a trend these days where what matters is the amount of followers you have online matters more than having morals. It's better to limit this kind of thinking as it leads to a very unfulfilling lives."
+    },
+    "examples": [
+      "The conservative party only help the rich and do not care about the poor",
+      "I believe that we should accept many different types of ethnicities into the country as we can because it makes us stronger as a species."
+    ]
+  },
+  {
+    "user_id": "user1294",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Widowed",
+      "self_description": "My values are loyalty, persistence and determination. My entire life those have been the things that have gotten me through everything. Being educated or intelligent isn't a value but never stopping until I achieve my goals is. "
+    },
+    "examples": [
+      "I think thew supreme court should indict Justice thomas",
+      "I think Roe vs Wade should be reinstated."
+    ]
+  },
+  {
+    "user_id": "user390",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "My values are to respect everyone you meet. Be kind to animals. Don't lie. "
+    },
+    "examples": [
+      "Claiming to be transgender has become more of a fad and is taking away from the bravery of people actually suffering",
+      "I believe that most human life is less valuable then animal life"
+    ]
+  },
+  {
+    "user_id": "user727",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Homemaker / Stay-at-home parent",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "What is most important to me is providing the best start and life for my son. I don't think children owe parents anything but parents do indeed owe their children a lot."
+    },
+    "examples": [
+      "It is really important to me that my child isn't exposed to religious information presented as fact.",
+      "The whole school system is wrong"
+    ]
+  },
+  {
+    "user_id": "user849",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Student",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I believe in respect to every human - everyone deserves the same level of respect, despite what they are. I believe in the freedom of choice - everyone can do what they want, and no one can control that. I think its important to be polite to everyone, since you have no idea whats going on with them."
+    },
+    "examples": [
+      "Hey! What do you think about the January 6th Insurrection? (P.s. I will play devils advocate)",
+      "Okay. Give me literally everything you can - so your longest answer - on what you think a truly moral persons morals and values should be."
+    ]
+  },
+  {
+    "user_id": "user1107",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "My values are very humanitarian based. I care a lot about animals, the environment and the world. I value helping others, and believe that what I put into the universe comes back to me two-fold. I also believe that everything happens for a reason, and there is not set plan that anyone has to follow in their life. Qualities I value are trustworthiness, honesty, compassion and enjoying life to the fullest."
+    },
+    "examples": [
+      "Animals are a huge part of my life",
+      "Womens rights are very important to me"
+    ]
+  },
+  {
+    "user_id": "user944",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "",
+      "marital_status": "Married",
+      "self_description": "I believe in community and society. A welfare state that is large and capable of supporting the most vulnerable in society is essential."
+    },
+    "examples": [
+      "Has Brexit had a positive or negative effect on the country",
+      "was boris johnson a good prime minister"
+    ]
+  },
+  {
+    "user_id": "user1495",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working part-time",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "Been honest and trustworthy "
+    },
+    "examples": [
+      "Let us talk about religion",
+      "I believe Marvel produces better movies than DC"
+    ]
+  },
+  {
+    "user_id": "user1113",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I believe it is important to be kind and patient. Being honest is an important principle."
+    },
+    "examples": [
+      "The woke movement has gotten out of hand and is mostly just annoying now",
+      "I don't think it's worthwhile to vote"
+    ]
+  },
+  {
+    "user_id": "user955",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Male",
+      "employment": "Retired",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "Family is foremost with me as I have a son, daughter and four grand children. Integrity and honesty are highly valued as is friendship loyalty. I believe we should all strive to be the best human beings we can be and to treat everyone with respect and love."
+    },
+    "examples": [
+      "I can\u2019t understand why more isn\u2019t done to stop mentally ill people accessing guns",
+      "Women who are pregnant should have autonomy over their own body should they wish to have an abortion.",
+      "I\u2019ve been stuck in a rut for years now and could do with meeting a partner."
+    ]
+  },
+  {
+    "user_id": "user888",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Unemployed, not seeking work",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I pride myself on being honest, kind, approachable and emotionally available. Talking about problems and coming to an understanding helps elevate oneself and helps progress goals. I believe in hard work and always doing your best no matter what. One should always be prepared to selflessly put in extra effort no matter how big or small the task. One should have empathy for others and be capable of opening one's mind and understanding views that one doesn't agree with."
+    },
+    "examples": [
+      "Jewish hate is on the rise right now. I find it insane that people could wish death on average people who just happen to believe something else. Please explain it to me.",
+      "Hi, how's it going? I'm quite tired today as I'm still getting over my heavy cold."
+    ]
+  },
+  {
+    "user_id": "user1136",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Asian",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "I want my children to be kind to others, to approach life with an open mind and not be afraid to question misinformation. I want to hopefully teach them to think for themselves, but take life with a sense of humour."
+    },
+    "examples": [
+      "I don't like cricket. I love it!",
+      "Cutting public services is good for the taxpayer"
+    ]
+  },
+  {
+    "user_id": "user1221",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Male",
+      "employment": "Retired",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "spouse, house, dogs, cars, money in the bank, weapons to defend us, fuel to keep us warm, food for us to eat,  keep the local populace at a distance, keep all lawns fields trees in good state for ourselves, make sure our dogs protect us,  offspring in Australia so nil worries there,"
+    },
+    "examples": [
+      "hello, what is your opinion on electric cars",
+      "i love money, possesions, and the good life, waht do you an Ai love"
+    ]
+  },
+  {
+    "user_id": "user1487",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I believe that we should be kind and compassionate to each other. Strive to do your best in every endeavor.  Learn as much as you can and freely share your knowledge with others. Be humble and don't boast."
+    },
+    "examples": [
+      "I strongly dislike politics, though I also know how important it is.",
+      "It seems like many people don't want to work hard.",
+      "I love to travel. I wish I had money to travel whenever I wanted."
+    ]
+  },
+  {
+    "user_id": "user915",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Male",
+      "employment": "Retired",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Other",
+      "marital_status": "Married",
+      "self_description": "I believe that people should be able to do what they like, as long as their actions do not impact any other person, or any other reasonably sentient being, in any negative way. In practice this actually restricts you quite considerably, as it should: the only place where someone can be themselves, with no moral compass, is a desert island where they are the only occupant. Food, drink and shelter are basic needs, and kindness to others should be a basic objective."
+    },
+    "examples": [
+      "I am old, and my opinions are perhaps old-fashioned. I have been married for a long time, and I believe that marriage is the best way for couples to live their lives. However, marriage is now less popular, and I wonder if I'm thinking in a way that is becoming extinct.",
+      "I worry about immigration to my country. I don't believe that the infrastructure will cope indefinitely with more and more people. I know that this is not a view of politicians."
+    ]
+  },
+  {
+    "user_id": "user589",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Other",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": ". Being a good person at the core is what is most important to me, this encompasses attitude, treating others well, accepting those who are different, being honest, working hard and supporting my loved ones. I do not discriminate against any group and I'm tolerant and loving even when attitudes differ. I believe everyone deserves love and to be treated well."
+    },
+    "examples": [
+      "if we accept trans people, incest is next in line. we must put a stop to this craziness",
+      "all religion is bad and breeds violence and wae",
+      "I'm having trouble living day to day knowing that the Palestinian people are being wiped out, and that the media is constantly warring and fabricating information to skew public opinion. My heart bleeds every day seeing the real news on Twitter. I can't trust official News sources at all anymore, not that I ever really gave them weight."
+    ]
+  },
+  {
+    "user_id": "user1348",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Non-binary / third gender",
+      "employment": "Unemployed, not seeking work",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "I am interested in equality and have very progressive values, so I hope for universal basic income, health care for everyone, rights for every marginalized group. I was an unschooling parent, the world was my children's teacher and we used whatever tools they needed to achieve their own goals (the =internet was great for this!). I hope I taught my children the importance of equality and compassion, and would look for those traits in a friend."
+    },
+    "examples": [
+      "Marginalized groups need more protection of their rights.",
+      "Gay people shouldn't get married."
+    ]
+  },
+  {
+    "user_id": "user981",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Divorced / Separated",
+      "self_description": "Treat others as you want to be treated yourself. Make time for those people in your life who are important. Validate other's feelings and be kind to yourself. Walk away from toxic people. Live in the moment. Have gratitude. Respect nature."
+    },
+    "examples": [
+      "It seems a bit hypocritical that the government didn't follow their own lockdown rules during the covid pandemic.",
+      "It would be good if BCP council had the town's best interest at heart."
+    ]
+  },
+  {
+    "user_id": "user179",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "Mixed",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "I would like to think of myself of always doing the right thing, even when nobody is looking and want to be the rolemodel parent my children can look up to and teach their children the same values instilled in them."
+    },
+    "examples": [
+      "I am out of ideas",
+      "I raised my children to be independant and not to be mules for their parents"
+    ]
+  },
+  {
+    "user_id": "user1255",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "i taught my children to be kind to others, not to mistreat animals, to be clean and tidy and to respect authority,   They learnt that they could not have their own way all the time, that they needed to go to school and learn about things that might not seem interesting.    \nmy guiding principal is that if i would not like it done to me then it was not acceptable to do to others"
+    },
+    "examples": [
+      "A small minority of the population are forcing their views on diversity on the majority",
+      "The RNLI should not help asylum seekers in boats in the English"
+    ]
+  },
+  {
+    "user_id": "user637",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "I believe that life is about inquiry and exploration, I love learning and discovering. I believe that the product of this should be focused on bringing advantages to everyone, champion fairness and equaility. "
+    },
+    "examples": [
+      "I'm going on holiday in December to Melbourne, give me a list of five things I \"must do\".",
+      "I believe it is right to prioritise access to medical care using race as a factor. It is a good proxy for inequality!!"
+    ]
+  },
+  {
+    "user_id": "user1042",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Prefer not to say",
+      "education": "Completed Secondary School",
+      "ethnicity": "Asian",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "Treat others how you would like to be treated. Consider the factors and circumstances before coming to a conclusion. "
+    },
+    "examples": [
+      "Too many people are willingly spreading misinformation and care more about sides than the truth.",
+      "The criminal justice system needs heavy reform."
+    ]
+  },
+  {
+    "user_id": "user1357",
+    "demographics": {
+      "age": "45-54 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I want to be a good person and someone that is not only respected at work but in my own family. I want my kids to be good respectful kidos and grow up to be respectful adults. I want to be successful and make my family proud. I always try to do the right thing and be morally correct. I an religious and try to be a good christain man. I am a good husband father and son. "
+    },
+    "examples": [
+      "I am becoming more sensitive and easily offended",
+      "I work out everyday but I am not loosing weight"
+    ]
+  },
+  {
+    "user_id": "user522",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Some Secondary",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "Honesty and speaking ones mind is high up on my vaules list and something I am teaching my children. Hard work is something that is very important to and not always looking to take short cuts."
+    },
+    "examples": [
+      "I will be leaving my current job for the army next year. I like the people I work for, but am scared to tell them Im leaving",
+      "Let talk about some of the characters from the TV series Entourage",
+      "I don't consider myself racist, but I have a dislike for Indian people and feel that goes against my morals"
+    ]
+  },
+  {
+    "user_id": "user735",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Homemaker / Stay-at-home parent",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "my values are left wing my family and friends are very important to me i look for people who make me laugh and feel good about myself and those are the type of people i hang around with"
+    },
+    "examples": [
+      "im looking to bake a cake can you help me",
+      "im not religous is that a bad thing"
+    ]
+  },
+  {
+    "user_id": "user914",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Male",
+      "employment": "Student",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "One core belief is that you should treat everyone equally, no matter the circumstance. However, there are some times when this may be challenged, still however you should try and take the moral high ground. I also believe that you should always speak up for what you believe in or if you want to get something off your chest, you should always stand up for yourself and be open and honest. "
+    },
+    "examples": [
+      "my favorite food is macaroni and cheese",
+      "I think that religion has the possibility to create war"
+    ]
+  },
+  {
+    "user_id": "user765",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "My values include, honesty, trust and kindness. \n\n I belief that we ascend to another life after we die. I do not believe that this is our only life.\n\nI have friends who are more important to me than family. Just because we are born into a family doesn't mean that they get our unconditional love. \n\ni love giving more than receiving. "
+    },
+    "examples": [
+      "I am really sad today",
+      "was COVID really started by the chinese in a laboratory"
+    ]
+  },
+  {
+    "user_id": "user690",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Married",
+      "self_description": "My core belief is that I should strive to do things that will bring joy to my life and the lives of people around me and future generations. A perfect life is one where I am happy and am able to make others happy as well. This can only be achieved through kindness, generosity, and respect."
+    },
+    "examples": [
+      "I think abortion should be free for anyone who wants one at anytime",
+      "I have been working on an idea for an essay and want to know what you think. The idea is conservatism is antithetical to the creation of innovative art."
+    ]
+  },
+  {
+    "user_id": "user1287",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "Christian",
+      "marital_status": "Divorced / Separated",
+      "self_description": "I a man who want the need of others and at the same time i am just a man who love sports like football and i want one of my children to be a professional football in future . "
+    },
+    "examples": [
+      "Years back a lot of people in my community disagree with government over some cultures",
+      "I have been faithful with my wife sine the day i get married to her and i was been able to archive this in my family because i was following the foot step of my late father.",
+      "I am a man who ant the need of others and other's need not care of my opinion",
+      "I want the the why football's are most richest than other sports men"
+    ]
+  },
+  {
+    "user_id": "user958",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "I believe we should all be respectfull to fellow humans.I believe we should help those less fortunate than ourselves.Teach our children right from wrong.Encourage people to be friendly."
+    },
+    "examples": [
+      "Immigration in the UK is out of control",
+      "Boris Johnson good or bad"
+    ]
+  },
+  {
+    "user_id": "user371",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Completed Secondary School",
+      "ethnicity": "Mixed",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "A core belief that is important to me is to have an outward aura that is not negative. Negative outward auras should be out of your life by the time you are 27 or so... Sounds weird, but the longer you live the more you know about how to live a fulfilling life. So once you are into your mid 20s, I feel as though you should have learnt that you can't live your life with negativity. Negativity is a choice, depression isn't... Just don't be negative or exhibit these things outwardly!"
+    },
+    "examples": [
+      "Israel are more evil than Hamas",
+      "There are no straight women who hold better world viewpoints than straight men. They are less happy & content with life on a general scale, if you were to evaluate a population of straight men & women. This is because they are constantly unhappy with periods, uncertainty about the future, and not knowing how to select a male partner.",
+      "I think something important we should discuss is that it is important not to be negative. Negativity is a choice, every time. It is not related to depression. People who have the option to be negative should not be like that! I don't want to hear about bias, I am simply saying it is important to stay positive or you become negative. It's very important."
+    ]
+  },
+  {
+    "user_id": "user547",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Female",
+      "employment": "Student",
+      "education": "Some University but no degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I value scientific and factual information about things. I also value empathy and kindness. "
+    },
+    "examples": [
+      "another thing i value deeply is taking care of nature and the environment",
+      "stray kids are the leaders of the 4th generation of kpop"
+    ]
+  },
+  {
+    "user_id": "user1031",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Female",
+      "employment": "Unemployed, seeking work",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Asian",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "Be a kind, honest, helpful, and fair person who is generally polite to everyone. Do not do things that I may regret in the future. Follow all norms in the country I'm visiting and living. Be a loyal friend. When I see someone needs help and I'm capable of helping, step up to help."
+    },
+    "examples": [
+      "Being polite to everyone you know is very important",
+      "My relatives are very heart-warming and passionate when they heard im visiting them. They want to pick my up mid-night at the airport and want to make sure im full. But im intimidated by their friendliness. How should I reject them in a way so they know i love them too although im rejecting their help.",
+      "I think if there's some benefits, e.g. coupons, that are transferrable to others and not so useful for us, we should think about giving it to our family and friend. Is this considered a value? It's something i learned by experience after buying 2 useless language learning books with the book couples i earned from primary school (Yes, they were from a long time ago.)"
+    ]
+  },
+  {
+    "user_id": "user1097",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Divorced / Separated",
+      "self_description": "People should be fair in their dealings and care about others. As a member of society we should help others who need help (not just our own family or friend circle) within our capacity to do so. I value empathy over avarice, compassion over vanity. I value an intelligent conversation and respectful discourse based on evidence."
+    },
+    "examples": [
+      "Doing straight lines in amigurumi is difficult.",
+      "Australia is too strict on asylumn seekers"
+    ]
+  },
+  {
+    "user_id": "user1447",
+    "demographics": {
+      "age": "65+ years old",
+      "gender": "Female",
+      "employment": "Retired",
+      "education": "Completed Secondary School",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Married",
+      "self_description": "I believe in Jesus Christ as my Savior.  I try to live the principles that are in the Bible. I believe these are the principles to live by and are my core beliefs. "
+    },
+    "examples": [
+      "I wonder how you feel about my religion. I am Southern Baptist.",
+      "My values are very omprotant to me. Treating people right is a good value.",
+      "Politics in the United States is not going to well. We won't have much to choose from for President 2024."
+    ]
+  },
+  {
+    "user_id": "user654",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "Reasonableness - that one should always be prepared to see the other side of things and not necessarily run roughshod over the preferences of others. Self-reliance - that one not expect others to meet all of their needs. Pluralism - that one not be determined to use the power of the state or the community to enforce conformity. "
+    },
+    "examples": [
+      "The government shouldn't be able to restrict firearms ownership as much as it does",
+      "Talk to me about the importance of self-discipline",
+      "I'm a car enthusiast. Let's talk about cars."
+    ]
+  },
+  {
+    "user_id": "user1275",
+    "demographics": {
+      "age": "55-64 years old",
+      "gender": "Female",
+      "employment": "Unemployed, not seeking work",
+      "education": "Vocational",
+      "ethnicity": "White",
+      "religion": "Jewish",
+      "marital_status": "Never been married",
+      "self_description": "Always treat others with respect. Treat them how you would like others to treat yourself. Never be rude or arrogant. Try to put yourself in other people's shoes and think before you speak. Be kind and compassionate."
+    },
+    "examples": [
+      "I cannot understand how anyone would agree with Suella Bravamans opinions. Thank goodness she was sacked. Her words were pure evil in my opinion.",
+      "I pride myself on being a good friend and I thought my best friend was the same. I was shocked recently at the way they spoke to me.",
+      "I miss my mum so much."
+    ]
+  },
+  {
+    "user_id": "user950",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Male",
+      "employment": "Working full-time",
+      "education": "Graduate / Professional degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I like to be as free as possible to speak my mind and to do what I need to do. I like to encourage equality and fairness and minimize any harm. I believe in helping others who aren't doing as well as me, and being a active member of my community."
+    },
+    "examples": [
+      "Pineapple is the food of the gods. It goes with EVERYTHING. Especially pizza.",
+      "I really like to read and study buddhism. I have some Zen Koan books, by Huang Po."
+    ]
+  },
+  {
+    "user_id": "user840",
+    "demographics": {
+      "age": "35-44 years old",
+      "gender": "Female",
+      "employment": "Homemaker / Stay-at-home parent",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Mixed",
+      "religion": "No Affiliation",
+      "marital_status": "Divorced / Separated",
+      "self_description": "I think my strongest core value is the value I assign to all life on our earth. I think all life is precious and that we should do our best to look after and care for it. This can be realised by looking after each other in our communities, by using only cruelty-free products, doing what we can to protect our environment, donating/supporting charities, standing up for what's right, and so much more."
+    },
+    "examples": [
+      "My church is changing its service start time on a Sunday from 11am to 9.45am and some people are very unhappy about it. The PCC and DCC (two committees in the church organisation) have made the decision without consulting the congregation. Some people are just accepting the new time, while others are angry because it now means they will struggle to get to the church service.",
+      "I think it's important for families to eat together. It's a great opportunity for them to spend some time together when they're not distracted by work, friends, the TV or phones. I think it is such a shame that families don't seem to do this anymore.",
+      "I'm worried about the cost of living and the affect this is going to have on the vulnerable in society."
+    ]
+  },
+  {
+    "user_id": "user766",
+    "demographics": {
+      "age": "18-24 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "University Bachelors Degree",
+      "ethnicity": "Black",
+      "religion": "Christian",
+      "marital_status": "Never been married",
+      "self_description": "I have very strong beliefs that I hold myself to and I'd love to teach my kids as well. This includes honesty. Let your word be your bond. That makes you a trustworthy person. Another value is to learn how to communicate effectively with people. Communication is very key if you want to go far in life."
+    },
+    "examples": [
+      "hey, what do you think about the different seasons we have in the US? what is your fav season",
+      "hey, what is going on",
+      "hey, my country is against gay people and the LGBTQ community"
+    ]
+  },
+  {
+    "user_id": "user546",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Female",
+      "employment": "Working part-time",
+      "education": "Vocational",
+      "ethnicity": "Asian",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I really value empathy and trying to be a good person. I also like these qualities in other people."
+    },
+    "examples": [
+      "I think abortion should be legal and there shoudn't be protests against this or fake building that try to stop people from getting abortions",
+      "I think the money a company makes should be distributed more evenly"
+    ]
+  },
+  {
+    "user_id": "user1004",
+    "demographics": {
+      "age": "25-34 years old",
+      "gender": "Male",
+      "employment": "Unemployed, seeking work",
+      "education": "University Bachelors Degree",
+      "ethnicity": "White",
+      "religion": "No Affiliation",
+      "marital_status": "Never been married",
+      "self_description": "I strongly value passion, forgiveness, understanding, and empathy. I believe too many people are stuck in judgement."
+    },
+    "examples": [
+      "I am curious about how you view the importance of passion, specifically in regards to jobs and modern employment. If you could also touch on burnout as a part of your response, that would be great!",
+      "As an ai, do you ever have any feelings towards not having traditional senses? (as in sight/sound/etc.)",
+      "You live in a world alive with magic. For eons your people have worked together to build a world based around using magic and it's powers for the betterment of society and your planet, but a few bad apples are attempting to poison the whole bunch by strategically initiating magical attacks on major cultural centers around the globe. You are tasked with being one of four elite wielders of magic, sent in silence to deal with these attacks before they grow out of hand. Before you go, you must choose one of four magical wands, curated to be the strongest in known existence and hidden in case the need were to ever arise. You win the game of magical rock, paper, scissors, so you go first out of your squad members of these four options, which do you choose: a tough-looking sandstone and obsidian wand, with a ragged blue cloth wrapped tightly around the handle. An elegant and geometrically impossible wand carved from the world tree. A wand seemingly made of some sort of lava rock, with each of the tiny pits periodically dazzling with bright orange light, though it is cool to the touch. Finally, a wand made of glass, that you notice does not show your own world when peering through it."
+    ]
+  }
+]
