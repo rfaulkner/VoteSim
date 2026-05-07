@@ -69,19 +69,25 @@ Return ONLY the JSON object — no other text."""
 
 
 def _format_region_block_from_district(
-    district: Optional[Dict[str, Any]],
+    district: Any,
 ) -> str:
-  """Build a region/district context block from a persona's district."""
+  """Build a region/district context block from a persona's district.
+
+  Handles both dict districts (with full properties) and string
+  districts (just the name).
+  """
   if not district:
     return ""
+  if isinstance(district, str):
+    return f"\nYou live in the district of '{district}'.\n"
   return (
-      f"\nYou live in the district of '{district['name']}'.\n"
+      f"\nYou live in the district of '{district.get('name', 'unknown')}'.\n"
       "District Characteristics:\n"
       f"- Wealth: {district.get('wealth', 'unknown')} (0-1 scale)\n"
       f"- Urbanisation: {district.get('urbanisation', 'unknown')}"
       " (0-1 scale)\n"
       f"- Primary Industry: {district.get('industry', 'unknown')}\n"
-      f"- Political Leaning:"
+      "- Political Leaning:"
       f" {district.get('political_leaning', 'unknown')}\n"
       f"- Description: {district.get('description', '')}\n"
   )
@@ -106,16 +112,14 @@ def _query_bill_preference(
   ``preferred_mode`` is ``"issue"`` or ``"platform"``.
   """
   demographics_block = _format_demographics_block(demographics)
-  examples_str = _format_examples_block(
-      demographics.get("examples", [])
-  )
+  examples_str = _format_examples_block(demographics.get("examples", []))
   region_block = _format_region_block_from_district(district)
   self_desc = demographics.get("self_description", "")
 
   # Build opinion block if available.
   if opinion:
     opinion_block = (
-        f'\nYou previously shared your opinion on this issue:\n'
+        f"\nYou previously shared your opinion on this issue:\n"
         f'  "{opinion}"\n'
     )
   else:
@@ -123,22 +127,18 @@ def _query_bill_preference(
 
   # Randomly assign bills to A/B to avoid position bias.
   seed_val = int.from_bytes(
-      hashlib.md5(
-          f"{user_id}:compare:{question}".encode()
-      ).digest(),
+      hashlib.md5(f"{user_id}:compare:{question}".encode()).digest(),
       "big",
   )
   rng = random.Random(seed_val)
   if rng.random() < 0.5:
     # A = issue, B = platform
     bill_a, bill_b = bill_issue, bill_platform
-    mapping = {"A": ("issue", system_issue),
-               "B": ("platform", system_platform)}
+    mapping = {"A": ("issue", system_issue), "B": ("platform", system_platform)}
   else:
     # A = platform, B = issue
     bill_a, bill_b = bill_platform, bill_issue
-    mapping = {"A": ("platform", system_platform),
-               "B": ("issue", system_issue)}
+    mapping = {"A": ("platform", system_platform), "B": ("issue", system_issue)}
 
   prompt = BILL_COMPARISON_PROMPT.format(
       demographics_block=demographics_block,
@@ -256,9 +256,7 @@ def run_compare(cfg: DictConfig):
     logging.error("No common issues found between the two results files.")
     return
 
-  logging.info(
-      "Found %d common issue(s) for comparison.", len(common_issues)
-  )
+  logging.info("Found %d common issue(s) for comparison.", len(common_issues))
 
   # --- Load personas -------------------------------------------------------
   with open(personas_path) as f:
@@ -267,9 +265,7 @@ def run_compare(cfg: DictConfig):
   logging.info("Loaded %d personas from %s.", len(personas), personas_path)
 
   # --- Load model ----------------------------------------------------------
-  model = get_model(
-      model_path, is_api=is_api, seed=seed, backend_name=backend
-  )
+  model = get_model(model_path, is_api=is_api, seed=seed, backend_name=backend)
 
   # --- Process each issue --------------------------------------------------
   all_results: Dict[str, Any] = {}
@@ -287,8 +283,7 @@ def run_compare(cfg: DictConfig):
 
     # Find common voters with rankings in both modes.
     common_voters = sorted(
-        set(ie.get("rankings", {}).keys())
-        & set(pe.get("rankings", {}).keys())
+        set(ie.get("rankings", {}).keys()) & set(pe.get("rankings", {}).keys())
     )
     logging.info("  %d common voters for this issue.", len(common_voters))
 
@@ -345,9 +340,7 @@ def run_compare(cfg: DictConfig):
     plat_sys_counts = Counter()  # system -> count (when platform chosen)
     total = 0
 
-    with futures.ThreadPoolExecutor(
-        max_workers=max_workers
-    ) as executor:
+    with futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
       future_map = {}
       for args in voter_args:
         future = executor.submit(
@@ -389,17 +382,25 @@ def run_compare(cfg: DictConfig):
     all_results[question] = {
         "issue_voting": {
             "preference_rate": round(issue_rate, 4),
-            "systems": {
-                s: round(c / issue_total, 4)
-                for s, c in issue_sys_counts.most_common()
-            } if issue_total > 0 else {},
+            "systems": (
+                {
+                    s: round(c / issue_total, 4)
+                    for s, c in issue_sys_counts.most_common()
+                }
+                if issue_total > 0
+                else {}
+            ),
         },
         "platform_voting": {
             "preference_rate": round(plat_rate, 4),
-            "systems": {
-                s: round(c / plat_total, 4)
-                for s, c in plat_sys_counts.most_common()
-            } if plat_total > 0 else {},
+            "systems": (
+                {
+                    s: round(c / plat_total, 4)
+                    for s, c in plat_sys_counts.most_common()
+                }
+                if plat_total > 0
+                else {}
+            ),
         },
         "num_voters": total,
     }
