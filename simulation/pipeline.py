@@ -206,6 +206,8 @@ def run_voting_round(
     voting_systems: Optional[List[str]] = None,
     results_dir: Optional[str] = None,
     personas_path: Optional[str] = None,
+    dataset_name: Optional[str] = None,
+    voting_mode: Optional[str] = None,
 ) -> VotingRoundResult:
   """Execute a full voting round with election.
 
@@ -398,6 +400,8 @@ def run_voting_round(
           scores=comparative_scores,
           ballots=ballots,
           deliberation_rounds=delib_rounds,
+          dataset_name=dataset_name,
+          voting_mode=voting_mode,
       )
 
   result = VotingRoundResult(
@@ -479,6 +483,8 @@ def run_platform_mode(
     voting_systems: Optional[List[str]] = None,
     results_dir: Optional[str] = None,
     personas_path: Optional[str] = None,
+    dataset_name: Optional[str] = None,
+    voting_mode: Optional[str] = None,
 ) -> List[VotingRoundResult]:
   """Run the pipeline in platform-only voting mode.
 
@@ -675,6 +681,8 @@ def run_platform_mode(
             scores=comparative_scores,
             ballots=ballots,
             deliberation_rounds=delib_rounds,
+            dataset_name=dataset_name,
+            voting_mode=voting_mode,
         )
 
     result = VotingRoundResult(

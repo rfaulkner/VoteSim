@@ -304,6 +304,8 @@ def run_pipeline(cfg: DictConfig):
         voting_systems=voting_systems,
         results_dir=results_dir,
         personas_path=personas_path,
+        dataset_name=pq_dataset or None,
+        voting_mode=voting_mode,
     )
     logging.info(
         "Pipeline finished (platform mode): %d question(s).",
@@ -346,6 +348,8 @@ def run_pipeline(cfg: DictConfig):
         voting_systems=voting_systems,
         results_dir=results_dir,
         personas_path=personas_path,
+        dataset_name=pq_dataset or None,
+        voting_mode=voting_mode,
     )
     results.append(result)
 

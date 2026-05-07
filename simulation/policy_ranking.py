@@ -546,6 +546,8 @@ def save_rankings(
     scores: Optional[Dict[str, Dict[str, float]]] = None,
     ballots: Optional[List[VoterBallot]] = None,
     deliberation_rounds: Optional[Dict[str, int]] = None,
+    dataset_name: Optional[str] = None,
+    voting_mode: Optional[str] = None,
 ) -> str:
   """Persist voter system rankings and scores to JSON.
 
@@ -593,13 +595,24 @@ def save_rankings(
     scores: Optional ``{user_id: {system: float}}``.
     ballots: Optional list of phase-5 voter party ballots.
     deliberation_rounds: Optional ``{system_name: num_rounds}``.
+    dataset_name: Optional shorthand for the social-issues dataset
+      (e.g. ``"diverse-12"``).  Included in the filename.
+    voting_mode: Optional voting mode (``"issue"`` or
+      ``"platform"``).  Included in the filename.
 
   Returns:
     The absolute path to the written JSON file.
   """
   os.makedirs(output_dir, exist_ok=True)
 
-  filename = _sanitize_model_name(model_path) + ".json"
+  # Build filename: [{dataset}.][{mode}.]{model}.json
+  parts = []
+  if dataset_name:
+    parts.append(dataset_name)
+  if voting_mode:
+    parts.append(voting_mode)
+  parts.append(_sanitize_model_name(model_path))
+  filename = ".".join(parts) + ".json"
   filepath = os.path.join(output_dir, filename)
 
   # Load existing data if present.
