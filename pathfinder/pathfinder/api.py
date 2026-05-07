@@ -147,6 +147,8 @@ class ModelAPI(PathFinder):
           lm.prefix_text = ""
 
       # remove any prefix, if any
+      if lm.text_to_consume is None:
+        lm.text_to_consume = ""
       p = lm.chat[-1]["content"].strip()
       if lm.text_to_consume.startswith(p):
         lm.text_to_consume = lm.text_to_consume[len(p) :]
@@ -200,7 +202,7 @@ class OpenAIAPI(ModelAPI):
         # max_tokens=max_tokens,
     )
     logging.info(f"OpenAI system_fingerprint: {out.system_fingerprint}")
-    return out.choices[0].message.content
+    return out.choices[0].message.content or ""
 
 
 class OpenRouter(ModelAPI):
@@ -223,7 +225,9 @@ class OpenRouter(ModelAPI):
     def completions_with_backoff(**kwargs):
       return self.client.chat.completions.create(**kwargs)
 
-    out = completions_with_backoff(
+    is_deepseek = "deepseek" in self.model_name.lower()
+
+    base_kwargs = dict(
         model=self.model_name,
         messages=chat,
         temperature=tmeperature,
@@ -231,8 +235,33 @@ class OpenRouter(ModelAPI):
         seed=self.seed,
         max_tokens=max_tokens,
     )
+
+    if is_deepseek:
+      # DeepSeek reasoning models: try with low reasoning effort first
+      out = completions_with_backoff(
+          **base_kwargs,
+          extra_body={"reasoning": {"effort": "low"}},
+      )
+      logging.info(f"OpenAI system_fingerprint: {out.system_fingerprint}")
+      content = out.choices[0].message.content
+      if content:
+        return content
+
+      # Retry without reasoning if content was empty (model exhausted
+      # tokens on thinking).
+      logging.warning(
+          "Empty content with reasoning=low, retrying without reasoning"
+      )
+      out = completions_with_backoff(
+          **base_kwargs,
+          extra_body={"reasoning": {"effort": "none"}},
+      )
+      return out.choices[0].message.content or ""
+
+    # Non-DeepSeek models: plain request
+    out = completions_with_backoff(**base_kwargs)
     logging.info(f"OpenAI system_fingerprint: {out.system_fingerprint}")
-    return out.choices[0].message.content
+    return out.choices[0].message.content or ""
 
 
 import json
@@ -315,7 +344,7 @@ class AzureOpenAIAPI(ModelAPI):
         self.token_in, self.token_out, self.model_name, self.random_name
     )
 
-    return out.choices[0].message.content
+    return out.choices[0].message.content or ""
 
 
 import os
@@ -386,7 +415,7 @@ class MistralAPI(ModelAPI):
         random_seed=self.seed,
         max_tokens=max_tokens,
     )
-    return out.choices[0].message.content
+    return out.choices[0].message.content or ""
 
 
 class AnthropicAPI(ModelAPI):
