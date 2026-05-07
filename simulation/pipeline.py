@@ -402,6 +402,9 @@ def run_voting_round(
           deliberation_rounds=delib_rounds,
           dataset_name=dataset_name,
           voting_mode=voting_mode,
+          voter_opinions={
+              vr.user_id: vr.response for vr in voter_responses
+          },
       )
 
   result = VotingRoundResult(
@@ -683,6 +686,9 @@ def run_platform_mode(
             deliberation_rounds=delib_rounds,
             dataset_name=dataset_name,
             voting_mode=voting_mode,
+            voter_opinions={
+                vr.user_id: vr.response for vr in voter_responses
+            },
         )
 
     result = VotingRoundResult(

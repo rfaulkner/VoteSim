@@ -548,6 +548,7 @@ def save_rankings(
     deliberation_rounds: Optional[Dict[str, int]] = None,
     dataset_name: Optional[str] = None,
     voting_mode: Optional[str] = None,
+    voter_opinions: Optional[Dict[str, str]] = None,
 ) -> str:
   """Persist voter system rankings and scores to JSON.
 
@@ -599,6 +600,8 @@ def save_rankings(
       (e.g. ``"diverse-12"``).  Included in the filename.
     voting_mode: Optional voting mode (``"issue"`` or
       ``"platform"``).  Included in the filename.
+    voter_opinions: Optional ``{user_id: opinion_text}``.  Each
+      voter's original free-text response on the issue.
 
   Returns:
     The absolute path to the written JSON file.
@@ -673,6 +676,10 @@ def save_rankings(
   # Store Likert scores per voter per system.
   if scores is not None:
     existing[issue]["scores"] = scores
+
+  # Store voter opinions (free-text responses on the issue).
+  if voter_opinions is not None:
+    existing[issue]["opinions"] = voter_opinions
 
   with open(filepath, "w") as f:
     json.dump(existing, f, indent=2, ensure_ascii=False)

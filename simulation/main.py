@@ -7,6 +7,7 @@ import sys
 
 import hydra
 import omegaconf
+from simulation.mode_compare import run_compare
 from simulation.run import run_pipeline
 from simulation.run import run_query
 
@@ -29,8 +30,12 @@ def main(cfg: omegaconf.DictConfig):
     run_query(cfg)
   elif mode == "pipeline":
     run_pipeline(cfg)
+  elif mode == "compare":
+    run_compare(cfg)
   else:
-    raise ValueError(f"Unknown mode '{mode}'. Expected 'pipeline' or 'query'.")
+    raise ValueError(
+        f"Unknown mode '{mode}'. Expected 'pipeline', 'query', or 'compare'."
+    )
 
 
 if __name__ == "__main__":
