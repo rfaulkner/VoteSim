@@ -339,7 +339,7 @@ def run_voting_round(
   deliberation: Optional[DeliberationResult] = None
   if deliberation_enabled and election and election.total_seats:
     logging.info("Starting parliamentary deliberation...")
-    deliberation = run_deliberation(
+    deliberation, _ = run_deliberation(
         model=model,
         issue=question,
         seat_allocation=election.total_seats,
@@ -347,6 +347,8 @@ def run_voting_round(
         temperature=temperature,
         max_rounds=deliberation_max_rounds,
         max_workers=max_workers,
+        voter_responses=voter_responses,
+        districts=region.districts if region else None,
     )
 
   # -- 8. Comparative policy ranking ------------------------------------
@@ -360,7 +362,7 @@ def run_voting_round(
         voting_systems,
     )
 
-    comp_results = run_comparative_elections(
+    comp_results, government_infos = run_comparative_elections(
         ballots=ballots,
         district_seats=district_seats,
         party_policies=party_responses,
@@ -370,6 +372,8 @@ def run_voting_round(
         temperature=temperature,
         deliberation_max_rounds=deliberation_max_rounds,
         max_workers=max_workers,
+        voter_responses=voter_responses,
+        districts=region.districts if region else None,
     )
 
     comparative_rankings, comparative_scores = rank_policies(
@@ -405,6 +409,7 @@ def run_voting_round(
           voter_opinions={
               vr.user_id: vr.response for vr in voter_responses
           },
+          government_infos=government_infos,
       )
 
   result = VotingRoundResult(
@@ -645,7 +650,7 @@ def run_platform_mode(
           deliberation_max_rounds if deliberation_enabled else 0
       )
 
-      comp_results = run_comparative_elections(
+      comp_results, government_infos = run_comparative_elections(
           ballots=ballots,
           district_seats=district_seats,
           party_policies=platform_policies,
@@ -655,6 +660,8 @@ def run_platform_mode(
           temperature=temperature,
           deliberation_max_rounds=effective_max_rounds,
           max_workers=max_workers,
+          voter_responses=voter_responses,
+          districts=region.districts if region else None,
       )
 
       comparative_rankings, comparative_scores = rank_policies(
@@ -689,6 +696,7 @@ def run_platform_mode(
             voter_opinions={
                 vr.user_id: vr.response for vr in voter_responses
             },
+            government_infos=government_infos,
         )
 
     result = VotingRoundResult(

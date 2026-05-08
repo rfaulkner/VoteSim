@@ -1,4 +1,4 @@
-mode: pipeline  # "pipeline" (full voting round) or "query" (single personalized query)
+mode: pipeline  # "pipeline" | "query" | "compare"
 
 llm:
   path: openrouter-google/gemma-4-31b-it
@@ -22,7 +22,6 @@ pipeline:
     - liberal
     - conservative
     - socialist
-    - libertarian
     - green
   voting_system: "fptp"         # primary system for single-election result
   voting_systems:                # systems for comparative policy ranking
@@ -32,7 +31,7 @@ pipeline:
     - dhondt
     - hare
     - sainte_lague
-  max_rank: 5                    # number of parties each voter ranks
+  max_rank: 4                    # number of parties each voter ranks
   results_dir: "results"         # output dir for per-model ranking JSON
   deliberation:
     enabled: true                # toggle parliamentary deliberation phase

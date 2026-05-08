@@ -19,6 +19,7 @@ from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 from pathfinder import assistant
 from pathfinder import gen
@@ -170,23 +171,31 @@ class DeliberationResult:
 # Prompt templates
 # ---------------------------------------------------------------------------
 
-DRAFT_BILL_PROMPT = """\
-You are a senior legislative advisor for the {lead_party} party, which holds \
-{lead_seats} seats in the current government.
+COALITION_DRAFT_BILL_PROMPT = """\
+You are a senior legislative advisor drafting a bill on behalf of a \
+governing coalition.
 
 === SOCIAL ISSUE UNDER DEBATE ===
 {issue}
 
-=== GOVERNMENT SEAT ALLOCATION ===
+=== FULL GOVERNMENT SEAT ALLOCATION ===
 {seat_block}
 
-=== PARTY POLICIES ON THIS ISSUE ===
-{policies_block}
+=== GOVERNING COALITION ===
+{coalition_block}
+
+=== COALITION PARTIES' POLICIES ON THIS ISSUE ===
+{coalition_policies_block}
 {prior_round_block}
 === INSTRUCTIONS ===
-Draft a multi-point legislative bill on the social issue above.  The bill \
-should reflect the {lead_party} party's policy position while being \
-pragmatic enough to attract votes from other parties in the government.
+Draft a multi-point legislative bill that proportionally reflects the \
+platforms of ALL coalition parties.  The party with the most seats in the \
+coalition should have the most influence on the bill's content, but the \
+bill must incorporate key proposals from every coalition partner in \
+proportion to their seat share.
+
+Do NOT alienate any coalition member's voter base.  The bill should be a \
+genuine synthesis, not a dominant-party bill with token concessions.
 
 Return ONLY a JSON object with a single key "points" whose value is an \
 array of 5-8 concise policy point strings.  Example:
@@ -209,12 +218,13 @@ Voting record:
 
 You MUST draft a NEW bill that takes into account the failed bill, the \
 proposed amendments, and the voting record.  Adjust points to gain broader \
-support.
+support from both coalition members and potential opposition allies.
 """
 
 AMEND_BILL_PROMPT = """\
 You are a parliamentary advisor for the {party} party, which holds \
-{party_seats} seats in the current government.
+{party_seats} seats in the current government.  Your party is in the \
+OPPOSITION — not part of the governing coalition.
 
 === SOCIAL ISSUE UNDER DEBATE ===
 {issue}
@@ -222,10 +232,13 @@ You are a parliamentary advisor for the {party} party, which holds \
 === GOVERNMENT SEAT ALLOCATION ===
 {seat_block}
 
+=== GOVERNING COALITION ===
+{coalition_block}
+
 === YOUR PARTY'S POLICY ON THIS ISSUE ===
 {party_policy}
 
-=== PROPOSED BILL (by {lead_party}) ===
+=== PROPOSED BILL (by the governing coalition) ===
 {bill_block}
 
 === INSTRUCTIONS ===
@@ -241,6 +254,33 @@ Return ONLY a JSON object:
 
 Return ONLY valid JSON — no markdown fences, no commentary."""
 
+COALITION_EVALUATE_AMENDMENT_PROMPT = """\
+You represent the governing coalition ({coalition_parties_list}).
+
+=== SOCIAL ISSUE UNDER DEBATE ===
+{issue}
+
+=== COALITION PARTIES' POLICIES ===
+{coalition_policies_block}
+
+=== CURRENT BILL ===
+{bill_block}
+
+=== PROPOSED AMENDMENT FROM {amending_party} (opposition) ===
+{amendment_block}
+
+=== INSTRUCTIONS ===
+Evaluate whether adopting this amendment would strengthen the bill \
+without contradicting any coalition partner's core platform.  \
+Do not adopt amendments that fundamentally undermine the coalition \
+agreement, but consider adopting ones that improve the bill or \
+broaden its appeal.
+
+Return ONLY a JSON object:
+{{"adopt": true or false, "reason": "brief explanation"}}
+
+Return ONLY valid JSON — no markdown fences, no commentary."""
+
 VOTE_BILL_PROMPT = """\
 You are {member_name}, a member of parliament representing the {party} \
 party.  You hold seat #{seat_number}.
@@ -250,19 +290,20 @@ party.  You hold seat #{seat_number}.
 
 === GOVERNMENT SEAT ALLOCATION ===
 {seat_block}
-
+{constituency_block}
 === YOUR PARTY'S POLICY ON THIS ISSUE ===
 {party_policy}
 
 === PROPOSED BILL ===
 {bill_block}
 
-=== PROPOSED AMENDMENTS ===
+=== AMENDMENTS ADOPTED ===
 {amendments_block}
 
 === INSTRUCTIONS ===
-Based on your party's policy position, the proposed bill, and the \
-amendments, cast your vote on whether to ACCEPT this bill.
+Cast your vote considering BOTH your party's policy position AND your \
+constituents' interests.  If the bill conflicts with your constituents' \
+needs, you may vote against your party line.
 
 Return ONLY a JSON object:
 {{"name": "{member_name}", "party": "{party}", "seat": "{seat_label}", \
@@ -531,24 +572,137 @@ def _get_lead_party(seat_allocation: Dict[str, int]) -> str:
   return leaders[0]
 
 
+def _form_coalition(
+    seat_allocation: Dict[str, int],
+) -> Tuple[Dict[str, int], Dict[str, int]]:
+  """Form a minimum winning coalition starting from the largest party.
+
+  Sorts parties by seats descending and accumulates until the
+  coalition holds a strict majority (>50%) of total seats.
+
+  Returns:
+    A tuple of ``(coalition, opposition)`` where each is
+    ``{party: seats}``.
+  """
+  total_seats = sum(seat_allocation.values())
+  majority_threshold = total_seats / 2
+
+  # Sort parties by seats descending, alphabetical tie-break.
+  ordered = sorted(
+      seat_allocation.items(),
+      key=lambda x: (-x[1], x[0]),
+  )
+
+  coalition: Dict[str, int] = {}
+  coalition_seats = 0
+
+  for party, seats in ordered:
+    coalition[party] = seats
+    coalition_seats += seats
+    if coalition_seats > majority_threshold:
+      break
+
+  opposition = {
+      p: s for p, s in seat_allocation.items() if p not in coalition
+  }
+
+  logging.info(
+      "Coalition formed: %s (%d/%d seats). Opposition: %s",
+      list(coalition.keys()),
+      coalition_seats,
+      total_seats,
+      list(opposition.keys()),
+  )
+  return coalition, opposition
+
+
+def _format_coalition_block(
+    coalition: Dict[str, int],
+    total_seats: int,
+) -> str:
+  """Format coalition composition for prompt injection."""
+  lines = ["The governing coalition consists of:"]
+  coalition_total = sum(coalition.values())
+  for party, seats in sorted(coalition.items(), key=lambda x: -x[1]):
+    pct = seats / coalition_total * 100 if coalition_total else 0
+    lines.append(
+        f"  {party}: {seats} seat{'s' if seats != 1 else ''}"
+        f" ({pct:.0f}% of coalition)"
+    )
+  lines.append(
+      f"Coalition total: {coalition_total}/{total_seats}"
+      f" seats (majority)"
+  )
+  return "\n".join(lines)
+
+
+def _summarize_constituency_sentiment(
+    voter_responses: List,
+    district_name: str,
+) -> str:
+  """Summarize voter sentiment in a district using simple counts."""
+  district_responses = [
+      vr for vr in voter_responses
+      if getattr(vr, 'district', None)
+      and (
+          (isinstance(vr.district, dict)
+           and vr.district.get('name') == district_name)
+          or (isinstance(vr.district, str)
+              and vr.district == district_name)
+      )
+  ]
+  if not district_responses:
+    return "(No voter data available for this district.)"
+
+  n = len(district_responses)
+  # Provide a brief summary with count and sample opinions.
+  summary_lines = [
+      f"{n} voter{'s' if n != 1 else ''} in your district"
+      " shared their views on this issue:",
+  ]
+  # Show up to 5 representative responses (truncated).
+  for vr in district_responses[:5]:
+    summary_lines.append(f'  - "{vr.response[:120]}"')
+  if n > 5:
+    summary_lines.append(f"  ... and {n - 5} more.")
+  return "\n".join(summary_lines)
+
+
 def _expand_members(
     seat_allocation: Dict[str, int],
+    districts: Optional[List[Dict[str, Any]]] = None,
 ) -> List[Dict[str, str]]:
   """Expand seat allocation into individual member records.
 
+  When ``districts`` is provided, members are assigned to districts
+  round-robin based on their party's seat order, giving each member
+  a constituency.
+
   Returns a list of dicts with keys: ``name``, ``party``, ``seat_label``,
-  ``seat_number``.
+  ``seat_number``, ``district_name``.
   """
   members = []
+  district_names = (
+      [d.get('name', d) if isinstance(d, dict) else str(d)
+       for d in districts]
+      if districts else []
+  )
+  member_idx = 0
   for party in sorted(seat_allocation):
     num_seats = seat_allocation[party]
     for n in range(1, num_seats + 1):
+      district_name = (
+          district_names[member_idx % len(district_names)]
+          if district_names else "at-large"
+      )
       members.append({
           "name": f"{party}-member-{n}",
           "party": party,
           "seat_label": f"{party}-seat-{n}",
           "seat_number": str(n),
+          "district_name": district_name,
       })
+      member_idx += 1
   return members
 
 
@@ -562,15 +716,23 @@ def _draft_bill(
     issue: str,
     seat_allocation: Dict[str, int],
     party_policies: Dict[str, PolicyResponse],
+    coalition: Dict[str, int],
     prior_round: Optional[RoundRecord] = None,
     round_number: int = 1,
     temperature: float = 0.7,
 ) -> Bill:
-  """Use the LLM to draft a bill on behalf of the governing party."""
-  lead_party = _get_lead_party(seat_allocation)
-  lead_seats = seat_allocation.get(lead_party, 0)
+  """Use the LLM to draft a bill on behalf of the governing coalition."""
+  lead_party = _get_lead_party(coalition)
   seat_block = _format_seat_block(seat_allocation)
-  policies_block = _format_policies_block(party_policies)
+  total_seats = sum(seat_allocation.values())
+  coalition_block = _format_coalition_block(coalition, total_seats)
+
+  # Build coalition-specific policies block.
+  coalition_policies = {
+      p: party_policies[p]
+      for p in coalition if p in party_policies
+  }
+  coalition_policies_block = _format_policies_block(coalition_policies)
 
   # Build the prior-round context block (empty for round 1).
   prior_round_block = ""
@@ -592,12 +754,11 @@ def _draft_bill(
         prev_vote_summary=prev_vote_summary,
     )
 
-  prompt = DRAFT_BILL_PROMPT.format(
-      lead_party=lead_party,
-      lead_seats=lead_seats,
+  prompt = COALITION_DRAFT_BILL_PROMPT.format(
       issue=issue,
       seat_block=seat_block,
-      policies_block=policies_block,
+      coalition_block=coalition_block,
+      coalition_policies_block=coalition_policies_block,
       prior_round_block=prior_round_block,
   )
 
@@ -618,9 +779,9 @@ def _draft_bill(
 
   bill = Bill(points=points, party=lead_party, round_number=round_number)
   logging.info(
-      "Round %d: %s drafted bill with %d points.",
+      "Round %d: coalition (%s) drafted bill with %d points.",
       round_number,
-      lead_party,
+      ", ".join(coalition.keys()),
       len(bill.points),
   )
   return bill
@@ -639,11 +800,13 @@ def _propose_single_amendment(
     seat_allocation: Dict[str, int],
     party_policies: Dict[str, PolicyResponse],
     bill: Bill,
+    coalition: Dict[str, int],
     temperature: float,
 ) -> Amendment:
-  """Query the LLM for a single party's amendments.  Runs in a thread."""
-  lead_party = _get_lead_party(seat_allocation)
+  """Query the LLM for a single opposition party's amendments."""
   seat_block = _format_seat_block(seat_allocation)
+  total_seats = sum(seat_allocation.values())
+  coalition_block = _format_coalition_block(coalition, total_seats)
   bill_block = _format_bill_block(bill)
 
   # Get the party's own policy text.
@@ -662,8 +825,8 @@ def _propose_single_amendment(
       party_seats=party_seats,
       issue=issue,
       seat_block=seat_block,
+      coalition_block=coalition_block,
       party_policy=party_policy,
-      lead_party=lead_party,
       bill_block=bill_block,
   )
 
@@ -709,16 +872,19 @@ def _propose_amendments(
     seat_allocation: Dict[str, int],
     party_policies: Dict[str, PolicyResponse],
     bill: Bill,
+    coalition: Dict[str, int],
     temperature: float = 0.7,
 ) -> List[Amendment]:
-  """Gather amendments from all non-governing parties in seat order."""
-  lead_party = _get_lead_party(seat_allocation)
-
-  # Descending seat order, excluding the governing party.
+  """Gather amendments from opposition (non-coalition) parties."""
+  # Descending seat order, only opposition parties.
   opposition = sorted(
-      ((p, s) for p, s in seat_allocation.items() if p != lead_party),
+      ((p, s) for p, s in seat_allocation.items() if p not in coalition),
       key=lambda x: -x[1],
   )
+
+  if not opposition:
+    logging.info("No opposition parties — skipping amendments.")
+    return []
 
   amendments: List[Amendment] = []
   for party, seats in opposition:
@@ -731,6 +897,7 @@ def _propose_amendments(
           seat_allocation=seat_allocation,
           party_policies=party_policies,
           bill=bill,
+          coalition=coalition,
           temperature=temperature,
       )
       amendments.append(am)
@@ -743,6 +910,110 @@ def _propose_amendments(
       len(opposition),
   )
   return amendments
+
+
+def _evaluate_single_amendment(
+    model: Any,
+    issue: str,
+    coalition: Dict[str, int],
+    party_policies: Dict[str, PolicyResponse],
+    bill: Bill,
+    amendment: Amendment,
+    temperature: float,
+) -> Tuple[Amendment, bool, str]:
+  """Have the coalition evaluate a single opposition amendment."""
+  coalition_policies = {
+      p: party_policies[p] for p in coalition if p in party_policies
+  }
+  coalition_policies_block = _format_policies_block(coalition_policies)
+  bill_block = _format_bill_block(bill)
+
+  # Format the specific amendment.
+  am_lines = []
+  if amendment.removals:
+    am_lines.append(f"Strike points: {amendment.removals}")
+  if amendment.additions:
+    for add in amendment.additions:
+      am_lines.append(f"+ {add}")
+  if not am_lines:
+    am_lines.append("(No changes proposed.)")
+  amendment_block = "\n".join(am_lines)
+
+  prompt = COALITION_EVALUATE_AMENDMENT_PROMPT.format(
+      coalition_parties_list=", ".join(coalition.keys()),
+      issue=issue,
+      coalition_policies_block=coalition_policies_block,
+      bill_block=bill_block,
+      amending_party=amendment.party,
+      amendment_block=amendment_block,
+  )
+
+  lm = model.copy()
+  with user():
+    lm += prompt
+  with assistant():
+    lm += gen(
+        max_tokens=256, temperature=temperature,
+        name="eval_amendment_json",
+    )
+
+  data = _parse_json(
+      lm["eval_amendment_json"],
+      f"evaluate amendment from {amendment.party}",
+  )
+  adopt = bool(data.get("adopt", False))
+  reason = str(data.get("reason", ""))
+
+  logging.info(
+      "Coalition %s amendment from %s: %s",
+      "ADOPTED" if adopt else "REJECTED",
+      amendment.party,
+      reason[:100],
+  )
+  return amendment, adopt, reason
+
+
+def _evaluate_amendments(
+    model: Any,
+    issue: str,
+    coalition: Dict[str, int],
+    party_policies: Dict[str, PolicyResponse],
+    bill: Bill,
+    amendments: List[Amendment],
+    temperature: float = 0.7,
+) -> List[Amendment]:
+  """Have the coalition evaluate and selectively adopt amendments."""
+  if not amendments:
+    return []
+
+  adopted: List[Amendment] = []
+  for am in amendments:
+    # Skip no-op amendments.
+    if not am.removals and not am.additions:
+      continue
+    try:
+      _, adopt, _ = _evaluate_single_amendment(
+          model=model,
+          issue=issue,
+          coalition=coalition,
+          party_policies=party_policies,
+          bill=bill,
+          amendment=am,
+          temperature=temperature,
+      )
+      if adopt:
+        adopted.append(am)
+    except Exception:  # pylint: disable=broad-except
+      logging.exception(
+          "Failed to evaluate amendment from %s", am.party
+      )
+
+  logging.info(
+      "Coalition adopted %d / %d opposition amendments.",
+      len(adopted),
+      len(amendments),
+  )
+  return adopted
 
 
 # ---------------------------------------------------------------------------
@@ -759,8 +1030,9 @@ def _vote_single_member(
     bill: Bill,
     amendments: List[Amendment],
     temperature: float,
+    voter_responses: Optional[List] = None,
 ) -> MemberVote:
-  """Query a single member for their vote.  Runs in a thread."""
+  """Query a single member for their vote with constituency context."""
   seat_block = _format_seat_block(seat_allocation)
   bill_block = _format_bill_block(bill)
   amendments_block = _format_amendments_block(amendments)
@@ -776,12 +1048,27 @@ def _vote_single_member(
   else:
     party_policy = "(No policy on file for this party.)"
 
+  # Build constituency block.
+  district_name = member.get("district_name", "at-large")
+  if voter_responses and district_name != "at-large":
+    sentiment = _summarize_constituency_sentiment(
+        voter_responses, district_name,
+    )
+    constituency_block = (
+        f"\n=== YOUR CONSTITUENCY ==="
+        f"\nYou represent the district of '{district_name}'.\n"
+        f"\n{sentiment}\n"
+    )
+  else:
+    constituency_block = ""
+
   prompt = VOTE_BILL_PROMPT.format(
       member_name=member["name"],
       party=party,
       seat_number=member["seat_number"],
       issue=issue,
       seat_block=seat_block,
+      constituency_block=constituency_block,
       party_policy=party_policy,
       bill_block=bill_block,
       amendments_block=amendments_block,
@@ -822,9 +1109,11 @@ def _vote_on_bill(
     amendments: List[Amendment],
     temperature: float = 0.7,
     max_workers: Optional[int] = None,
+    voter_responses: Optional[List] = None,
+    districts: Optional[List[Dict[str, Any]]] = None,
 ) -> VoteRecord:
   """Concurrently collect votes from all seated members."""
-  members = _expand_members(seat_allocation)
+  members = _expand_members(seat_allocation, districts=districts)
   total = len(members)
   logging.info("Voting: %d members casting ballots...", total)
 
@@ -842,6 +1131,7 @@ def _vote_on_bill(
             bill,
             amendments,
             temperature,
+            voter_responses,
         ): member
         for member in members
     }
@@ -931,31 +1221,32 @@ def run_deliberation(
     temperature: float = 0.7,
     max_rounds: int = 5,
     max_workers: Optional[int] = None,
-) -> DeliberationResult:
-  """Run the full parliamentary deliberation process.
+    voter_responses: Optional[List] = None,
+    districts: Optional[List[Dict[str, Any]]] = None,
+) -> Tuple[DeliberationResult, Dict[str, Any]]:
+  """Run the full coalition-based parliamentary deliberation process.
 
   Phases per round:
-    1. **Draft** — The governing party drafts a bill.
-    2. **Amend** — Opposition parties propose amendments (sequential,
-       descending seat order).
-    3. **Vote** — All seated members vote concurrently.
-
-  If the bill passes, amendments are merged into the final text.
-  If not, the process repeats up to ``max_rounds`` times.
+    1. **Coalition formation** — form a minimum winning coalition.
+    2. **Draft** — The coalition co-drafts a bill proportionally.
+    3. **Amend** — Opposition parties propose amendments.
+    4. **Evaluate** — Coalition selectively adopts/rejects amendments.
+    5. **Vote** — All seated members vote with constituency awareness.
 
   Args:
-    model: A loaded PathFinder model instance (shared across threads via
-      ``model.copy()``).
+    model: A loaded PathFinder model instance.
     issue: The social issue text under debate.
     seat_allocation: ``{party_ideology: num_seats}`` from the election.
     party_policies: ``{party_ideology: PolicyResponse}`` from phase 4.
     temperature: LLM sampling temperature.
     max_rounds: Maximum number of bill consideration attempts.
     max_workers: Max concurrent LLM calls during the vote phase.
+    voter_responses: Optional voter responses for constituency context.
+    districts: Optional list of district dicts for member assignment.
 
   Returns:
-    A ``DeliberationResult`` with the full record and (optionally) an
-    adopted bill.
+    A tuple of ``(DeliberationResult, government_info)`` where
+    ``government_info`` is a dict with coalition/seat metadata.
   """
   logging.info(
       "=== DELIBERATION START === Issue: %s | Parties: %s",
@@ -963,55 +1254,80 @@ def run_deliberation(
       list(seat_allocation.keys()),
   )
 
+  # Phase 0: Form coalition.
+  coalition, opposition = _form_coalition(seat_allocation)
+
+  government_info = {
+      "seat_allocation": dict(seat_allocation),
+      "coalition": dict(coalition),
+      "opposition": dict(opposition),
+      "total_seats": sum(seat_allocation.values()),
+  }
+
   result = DeliberationResult(issue=issue)
   prior_round: Optional[RoundRecord] = None
 
   for round_num in range(1, max_rounds + 1):
     logging.info("--- Deliberation round %d / %d ---", round_num, max_rounds)
 
-    # Phase 1: Draft.
+    # Phase 1: Coalition drafts bill.
     bill = _draft_bill(
         model=model,
         issue=issue,
         seat_allocation=seat_allocation,
         party_policies=party_policies,
+        coalition=coalition,
         prior_round=prior_round,
         round_number=round_num,
         temperature=temperature,
     )
 
-    # Phase 2: Amend.
-    amendments = _propose_amendments(
+    # Phase 2: Opposition proposes amendments.
+    raw_amendments = _propose_amendments(
         model=model,
         issue=issue,
         seat_allocation=seat_allocation,
         party_policies=party_policies,
         bill=bill,
+        coalition=coalition,
         temperature=temperature,
     )
 
-    # Phase 3: Vote.
+    # Phase 3: Coalition evaluates amendments.
+    adopted_amendments = _evaluate_amendments(
+        model=model,
+        issue=issue,
+        coalition=coalition,
+        party_policies=party_policies,
+        bill=bill,
+        amendments=raw_amendments,
+        temperature=temperature,
+    )
+
+    # Phase 4: All members vote.
     vote_record = _vote_on_bill(
         model=model,
         issue=issue,
         seat_allocation=seat_allocation,
         party_policies=party_policies,
         bill=bill,
-        amendments=amendments,
+        amendments=adopted_amendments,
         temperature=temperature,
         max_workers=max_workers,
+        voter_responses=voter_responses,
+        districts=districts,
     )
 
     round_record = RoundRecord(
         bill=bill,
-        amendments=amendments,
+        amendments=adopted_amendments,
         vote_record=vote_record,
     )
     result.rounds.append(round_record)
 
     if vote_record.passed:
-      # Merge amendments into the bill.
-      adopted = _merge_amendments(bill, amendments)
+      # Merge adopted amendments into the bill.
+      adopted = _merge_amendments(bill, adopted_amendments)
       result.adopted_bill = adopted
       logging.info(
           "Round %d: Bill PASSED with %d yes / %d no.  "
@@ -1048,5 +1364,4 @@ def run_deliberation(
     )
 
   logging.info("=== DELIBERATION END ===")
-  return result
-
+  return result, government_info

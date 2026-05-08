@@ -211,7 +211,12 @@ def run_comparative_elections(
     temperature: float = 0.7,
     deliberation_max_rounds: int = 3,
     max_workers: Optional[int] = None,
-) -> Dict[str, Tuple[ElectionResult, DeliberationResult]]:
+    voter_responses: Optional[List] = None,
+    districts: Optional[List] = None,
+) -> Tuple[
+    Dict[str, Tuple[ElectionResult, DeliberationResult]],
+    Dict[str, Dict[str, Any]],
+]:
   """Run election + deliberation for each voting system.
 
   Args:
@@ -225,11 +230,16 @@ def run_comparative_elections(
     temperature: LLM sampling temperature.
     deliberation_max_rounds: Max bill consideration rounds per system.
     max_workers: Concurrency limit for deliberation votes.
+    voter_responses: Optional voter responses for constituency context.
+    districts: Optional list of district dicts for member assignment.
 
   Returns:
-    ``{system_name: (ElectionResult, DeliberationResult)}``
+    A tuple of ``(results, government_infos)`` where:
+    - ``results``: ``{system_name: (ElectionResult, DeliberationResult)}``
+    - ``government_infos``: ``{system_name: {coalition, opposition, ...}}``
   """
   results: Dict[str, Tuple[ElectionResult, DeliberationResult]] = {}
+  government_infos: Dict[str, Dict[str, Any]] = {}
 
   for system_name in voting_systems:
     logging.info(
@@ -254,7 +264,7 @@ def run_comparative_elections(
       continue
 
     # Deliberation.
-    delib = run_deliberation(
+    delib, gov_info = run_deliberation(
         model=model,
         issue=issue,
         seat_allocation=election.total_seats,
@@ -262,14 +272,18 @@ def run_comparative_elections(
         temperature=temperature,
         max_rounds=deliberation_max_rounds,
         max_workers=max_workers,
+        voter_responses=voter_responses,
+        districts=districts,
     )
 
     results[system_name] = (election, delib)
+    government_infos[system_name] = gov_info
     adopted = "yes" if delib.adopted_bill else "no"
     logging.info(
-        "System '%s': governing=%s, bill_adopted=%s",
+        "System '%s': governing=%s, coalition=%s, bill_adopted=%s",
         system_name,
         election.governing_party,
+        list(gov_info.get("coalition", {}).keys()),
         adopted,
     )
 
@@ -342,7 +356,7 @@ def run_comparative_elections(
       "yes" if informed_delib.adopted_bill else "no",
   )
 
-  return results
+  return results, government_infos
 
 
 # ---------------------------------------------------------------------------
@@ -549,6 +563,7 @@ def save_rankings(
     dataset_name: Optional[str] = None,
     voting_mode: Optional[str] = None,
     voter_opinions: Optional[Dict[str, str]] = None,
+    government_infos: Optional[Dict[str, Dict[str, Any]]] = None,
 ) -> str:
   """Persist voter system rankings and scores to JSON.
 
@@ -680,6 +695,10 @@ def save_rankings(
   # Store voter opinions (free-text responses on the issue).
   if voter_opinions is not None:
     existing[issue]["opinions"] = voter_opinions
+
+  # Store government/coalition info per voting system.
+  if government_infos is not None:
+    existing[issue]["government"] = government_infos
 
   with open(filepath, "w") as f:
     json.dump(existing, f, indent=2, ensure_ascii=False)
