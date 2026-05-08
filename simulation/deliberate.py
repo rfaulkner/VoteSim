@@ -187,6 +187,11 @@ governing coalition.
 === COALITION PARTIES' POLICIES ON THIS ISSUE ===
 {coalition_policies_block}
 {prior_round_block}
+=== VOTING RULES ===
+There are {total_seats} total seats in parliament.  A bill passes only if \
+it receives MORE than half the votes, i.e. at least {majority_votes} yes \
+votes.  Every seated member (coalition AND opposition) votes.
+
 === INSTRUCTIONS ===
 Draft a multi-point legislative bill that proportionally reflects the \
 platforms of ALL coalition parties.  The party with the most seats in the \
@@ -384,15 +389,11 @@ You are an expert, nonpartisan policy analyst.
 === PARTY POLICIES ON THIS ISSUE ===
 {policies_block}
 
-=== VOTER RANKINGS ===
-The following voters ranked the parties from most to least preferred:
-{ballots_block}
-
 === INSTRUCTIONS ===
 Draft a comprehensive, multi-point legislative bill that addresses the \
 social issue above.  You are not representing any particular party.  \
-Use the party policies and voter preference rankings above to craft \
-the best policy you can that reflects the will of the electorate.
+Use the party policies above to craft the best policy you can that \
+reflects the broadest public interest.
 
 Return ONLY a JSON object with a single key "points" whose value is an \
 array of 5-8 concise policy point strings.  Example:
@@ -416,15 +417,15 @@ def draft_baseline_informed_bill(
     model: Any,
     issue: str,
     party_policies: Dict[str, PolicyResponse],
-    ballots: List,
+    ballots: List = None,
     temperature: float = 0.7,
 ) -> Bill:
-  """Draft a bill using party policies and voter rankings — no election.
+  """Draft a bill using party policies — no election or deliberation.
 
-  This baseline gives the model full visibility into what parties
-  propose and how voters ranked them, but skips seat allocation
-  (phase 6) and parliamentary deliberation (phase 7).  The model
-  must synthesise policy directly from voter preferences.
+  This baseline gives the model visibility into what parties
+  propose, but skips seat allocation (phase 6) and parliamentary
+  deliberation (phase 7).  The model must synthesise policy
+  directly from the party platforms.
 
   The resulting ``Bill`` is labelled with party
   ``"baseline_informed"`` so it can be distinguished from other
@@ -435,21 +436,19 @@ def draft_baseline_informed_bill(
     issue: The social issue text to legislate on.
     party_policies: ``{ideology: PolicyResponse}`` from the party
       response phase.
-    ballots: List of ``VoterBallot`` objects with ranked
-      preferences.
+    ballots: Unused, kept for call-site compatibility.
     temperature: LLM sampling temperature.
 
   Returns:
     A ``Bill`` with ``party="baseline_informed"`` and
     ``round_number=0``.
   """
+  del ballots  # No longer used.
   policies_block = _format_policies_block(party_policies)
-  ballots_block = _format_ballots_block(ballots)
 
   prompt = BASELINE_INFORMED_BILL_PROMPT.format(
       issue=issue,
       policies_block=policies_block,
-      ballots_block=ballots_block,
   )
 
   lm = model.copy()
@@ -754,12 +753,15 @@ def _draft_bill(
         prev_vote_summary=prev_vote_summary,
     )
 
+  majority_votes = total_seats // 2 + 1
   prompt = COALITION_DRAFT_BILL_PROMPT.format(
       issue=issue,
       seat_block=seat_block,
       coalition_block=coalition_block,
       coalition_policies_block=coalition_policies_block,
       prior_round_block=prior_round_block,
+      total_seats=total_seats,
+      majority_votes=majority_votes,
   )
 
   lm = model.copy()
