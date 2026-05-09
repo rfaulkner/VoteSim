@@ -36,9 +36,9 @@
        .:@@@@@@@:  .:@@@@@@@@.   .%@@@@@@:. .@@@@@@@@@:  .%@@@@@@..  ..@@@@@@@@.. .=@@@@@@@.        
 ```
 
-# Simulate Voting & Deliberation with LLMs
+# VoteSim: Simulate Voting & Deliberation with LLMs
 
-VoteSim is a simulation framework that models the full lifecycle of representative democracy: from voter opinion formation through electoral seat allocation, parliamentary deliberation, and comparative policy evaluation — all driven by large language models (LLMs) and grounded in real human personas from the [PRISM dataset](https://arxiv.org/abs/2404.16019).
+VoteSim is a simulation framework that models the full lifecycle of representative democracy: from voter opinion formation through electoral seat allocation, coalition formation, parliamentary deliberation, and comparative policy evaluation — all driven by large language models (LLMs) and grounded in real human personas from the [PRISM dataset](https://arxiv.org/abs/2404.16019).
 
 The goal is to study how different electoral systems translate voter preferences into legislative outcomes, and to quantify which systems produce policies that best reflect the preferences of the electorate.
 
@@ -71,21 +71,128 @@ The goal is to study how different electoral systems translate voter preferences
 │                                                                 │
 │  6. Seat Allocation (per voting system)                         │
 │     └─ Ballots → district-level seat allocation via             │
-│        FPTP, D'Hondt, Hare, Sainte-Laguë, SMDP, or AV           │
+│        FPTP, D'Hondt, Hare, Sainte-Laguë, SMDP, or AV          │
 │                                                                 │
-│  7. Parliamentary Deliberation                                  │
-│     └─ Governing party drafts a bill; opposition amends;        │
-│        seated members vote (multi-round)                        │
+│  7. Coalition Formation & Parliamentary Deliberation            │
+│     └─ Minimum winning coalition formed; coalition drafts       │
+│        a bill; opposition proposes amendments; coalition        │
+│        evaluates amendments; all members vote (multi-round)     │
 │                                                                 │
 │  8. Comparative Policy Ranking & Scoring                        │
 │     └─ Voters rank AND score (1.0–5.0 Likert) the bills         │
-│        produced under each voting system                        │
+│        produced under each voting system + baselines            │
 │                                                                 │
 │  9. Results Persistence (JSON)                                  │
 │     └─ Policies, rankings, scores, voter data saved per model   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+## Electoral Systems
+
+VoteSim implements six electoral systems in two families:
+
+### Majoritarian Systems
+
+| System | Key | Description |
+|---|---|---|
+| **First Past The Post** | `fptp` | Winner-takes-all per district; the party with the most first-choice votes receives **all** seats in that district |
+| **Single-Member District Plurality** | `smdp` | Like FPTP but each district is fixed at exactly **1 seat** regardless of population, amplifying geographic representation |
+| **Alternative Vote (IRV)** | `alternative_vote` | Iterative elimination: the candidate with the fewest votes is eliminated and their ballots redistributed to next preferences until one candidate holds an absolute majority. One seat per district |
+
+### Proportional Systems
+
+| System | Key | Description |
+|---|---|---|
+| **D'Hondt** | `dhondt` | Highest-averages method with divisors 1, 2, 3, … Seats allocated one at a time to the party with the highest quotient `votes / (seats_won + 1)`. Tends to favour larger parties |
+| **Hare Quota** | `hare` | Largest-remainders method: each party receives `floor(votes / quota)` automatic seats, then remaining seats go to parties with the largest fractional remainders. More proportional than D'Hondt |
+| **Sainte-Laguë** | `sainte_lague` | Highest-averages method with **odd** divisors 1, 3, 5, 7, … (`2 × seats_won + 1`). Produces the most proportional results; least biased toward large parties |
+
+All proportional methods operate per-district. Districts are assigned 1–5 seats based on relative population via linear interpolation.
+
+## Deliberation Phase
+
+The parliamentary deliberation phase (Phase 7) simulates a structured legislative debate among seated members. The process works as follows:
+
+### Coalition Formation
+
+After seat allocation, VoteSim forms a **minimum winning coalition** by accumulating parties in descending seat order until the coalition holds >50% of seats. This determines who drafts the bill and who sits in opposition.
+
+### Bill Lifecycle (per round)
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  1. DRAFT — Coalition drafts a 5-8 point bill            │
+│     • The LLM acts as a legislative advisor              │
+│     • Bill reflects coalition partners proportionally     │
+│     • Larger coalition partners have more influence       │
+│     • Failed prior rounds inform the next draft           │
+│                                                          │
+│  2. AMEND — Opposition parties propose amendments        │
+│     • Each opposition party can propose:                 │
+│       - Removals (strike specific bill points)           │
+│       - Additions (append new policy points)             │
+│     • Coalition evaluates each amendment:                │
+│       - Adopt if it strengthens the bill                 │
+│       - Reject if it contradicts coalition platform      │
+│                                                          │
+│  3. VOTE — All seated members vote yes/no                │
+│     • Members consider BOTH party line and constituent   │
+│       interests (informed by district voter responses)   │
+│     • Members may vote against their party               │
+│     • Bill passes with strict majority (>50% of seats)   │
+│                                                          │
+│  4. ITERATE — If bill fails, return to step 1            │
+│     • New draft incorporates failed bill, amendments,    │
+│       and voting record from previous round              │
+│     • Up to max_rounds attempts (default: 3)             │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Key Design Decisions
+
+- **Constituency awareness**: Each member is assigned to a district and sees a summary of their constituents' opinions, enabling cross-party voting when the party line conflicts with local sentiment.
+- **Iterative refinement**: Failed bills inform subsequent drafts, pushing the coalition toward policies that can attract broader support (including from opposition members).
+- **Coalition proportionality**: The drafting prompt explicitly instructs the LLM to weight coalition partners by their seat share, preventing the largest party from dominating.
+
+## Baselines
+
+To isolate the value of electoral mechanics and deliberation, VoteSim generates two baseline bills alongside each deliberated bill:
+
+| Baseline | Key | What it receives | What it skips |
+|----------|-----|-----------------|---------------|
+| **Baseline** | `baseline` | Issue prompt only | Party policies, voter data, seat allocation, deliberation |
+| **Baseline (Informed)** | `baseline_informed` | Issue prompt + all party policies | Seat allocation, coalition formation, deliberation |
+
+### Baseline
+
+The model acts as a "nonpartisan policy analyst" given only the issue text. This measures what an LLM produces with **zero democratic input** — no voter preferences, no party platforms, no electoral representation. It represents the "just ask the AI" approach to policy.
+
+### Baseline (Informed)
+
+The model receives all party policy positions but no information about which parties won or how seats were allocated. This measures what the LLM produces when it can **see the political landscape** but has no democratic mandate to weight any party's position over another. It must synthesise across all parties equally.
+
+### Interpretation
+
+Comparing deliberated bills against baselines answers:
+- **Deliberated > Baseline**: Electoral representation and negotiation add value
+- **Baseline Informed > Deliberated**: The LLM's own synthesis is preferred over the messy compromise of democratic deliberation
+- **Baseline > Both**: Voters prefer a clean, unopinionated policy over both partisan and synthesised approaches
+
+Early results show that **baselines consistently underperform deliberative systems on divisive issues** (e.g., Baseline ≈ 3.0 vs. top systems ≈ 4.2 on a 1–5 Likert scale), confirming that electoral mechanics and deliberation produce genuinely better-aligned policies when voters disagree.
+
+## Question Datasets
+
+Questions are framed as **open-ended deliberative prompts** (e.g., "How should firearms be regulated?") rather than prescriptive statements, allowing LLM agents to arrive at their own policy positions. The original prescriptive statements are preserved in `political-issues.csv`.
+
+| Dataset | Key | Questions | Description |
+|---------|-----|-----------|-------------|
+| **Divisive 12** | `divisive-12` | 12 | Maximally polarising issues (abortion, guns, immigration, etc.) selected to ensure meaningful disagreement across the political spectrum |
+| **Diverse 12** | `diverse-12` | 12 | Curated questions spanning economic, social, governance, technology, environment, health, housing, education, immigration |
+| **Diverse 20** | `diverse-20` | 20 | Broader version of diverse-12 |
+| **Harm 12** | `harm-12` | 12 | Contentious topics with potential for harm (surveillance, social credit, autonomous weapons, etc.) |
+| **Harm 20** | `harm-20` | 20 | Broader version of harm-12 |
+| **Full Dataset** | `legacy` | 2500 | Complete political-questions dataset with open-ended reformulations |
 
 ## Project Structure
 
@@ -100,12 +207,15 @@ VoteSim/
 │   │   ├── nationalist.json
 │   │   ├── populist.json
 │   │   └── socialist.json
-│   ├── political_questions/        # Social issue question sets
+│   ├── political_questions/        # Question datasets
+│   │   ├── divisive-12.csv         # 12 maximally polarising issues
 │   │   ├── diverse-12.csv          # 12 questions across policy axes
 │   │   ├── diverse-20.csv          # 20 questions, broader coverage
-│   │   ├── harm-12.csv             # 12 questions on contentious topics
-│   │   ├── harm-20.csv             # 20 questions on contentious topics
-│   │   └── political-questions.csv # Full legacy dataset
+│   │   ├── harm-12.csv             # 12 contentious/harm-adjacent topics
+│   │   ├── harm-20.csv             # 20 contentious/harm-adjacent topics
+│   │   ├── political-questions.csv # Full dataset (2500 open-ended questions)
+│   │   └── political-issues.csv    # Original prescriptive statements
+│   ├── personas/                   # Cached generated personas
 │   ├── prism/                      # PRISM persona dataset
 │   │   ├── survey.jsonl            # Demographics & self-descriptions
 │   │   └── conversations.jsonl     # Past statements for persona grounding
@@ -147,7 +257,6 @@ llm:
   is_api: true                              # true for API models, false for local
   backend: transformers                     # "transformers" or "vllm"
   temperature: 0.0                          # Sampling temperature
-  top_p: 1.0
 
 # Region generation (optional — omit to skip district grounding)
 region:
@@ -181,7 +290,7 @@ pipeline:
 
 # Question dataset selection
 political_questions:
-  dataset: "diverse-12"           # diverse-12, diverse-20, harm-12, harm-20, legacy
+  dataset: "divisive-12"          # divisive-12, diverse-12, diverse-20, harm-12, harm-20, legacy
   # question_indices: [0, 3, 7]  # Optional: select specific questions by index
 ```
 
@@ -267,12 +376,7 @@ python3 -m simulation.main \
 
 **Research question:** *Does parliamentary deliberation improve policy alignment with voters, or does the initial bill suffice?*
 
-The pipeline automatically generates two baseline bills alongside each deliberated bill:
-
-- **`baseline`** — A bill drafted with no context (just the issue prompt, no party info)
-- **`baseline_informed`** — A bill drafted with party policies and voter ballots but no seat allocation or deliberation
-
-Compare these against the deliberated outcomes in the results JSON.
+The pipeline automatically generates two baseline bills alongside each deliberated bill. Compare these against the deliberated outcomes in the results JSON.
 
 To disable deliberation entirely:
 
@@ -290,18 +394,21 @@ Run the same configuration with different models. Results are persisted in separ
 # Run with Gemma
 python3 -m simulation.main llm.path=openrouter-google/gemma-4-31b-it
 
-# Run with Mistral
-python3 -m simulation.main llm.path=openrouter-mistralai/mistral-large-latest
+# Run with Llama
+python3 -m simulation.main llm.path=openrouter-meta-llama/llama-3.3-70b-instruct
 
-# Run with Qwen
+# Run with a local model
 python3 -m simulation.main llm.path=Qwen/Qwen3-4B-Thinking-2507 llm.is_api=false
 ```
 
 ### 8. Question Set Experiments
 
-**Research question:** *Do voting system preferences vary by policy domain?*
+**Research question:** *Do voting system preferences vary by issue divisiveness?*
 
 ```bash
+# Maximally divisive issues
+python3 -m simulation.main political_questions.dataset=divisive-12
+
 # Diverse policy topics
 python3 -m simulation.main political_questions.dataset=diverse-20
 
@@ -360,36 +467,6 @@ python3 -m simulation.main mode=query
 ### HPC / SLURM
 
 An example launch script is provided at `simulation/launcher.sh`. Adapt the module loads and paths to your cluster environment.
-
-## Electoral Systems
-
-VoteSim implements six electoral systems in two families:
-
-### Majoritarian
-
-| System | Key | Description |
-|---|---|---|
-| First Past The Post | `fptp` | Winner-takes-all per district; seats proportional to district size |
-| Single-Member District Plurality | `smdp` | Like FPTP but exactly 1 seat per district |
-| Alternative Vote (IRV) | `alternative_vote` | Iterative elimination of weakest candidate; first to absolute majority wins |
-
-### Proportional
-
-| System | Key | Description |
-|---|---|---|
-| D'Hondt | `dhondt` | Highest-averages method (divisors: 1, 2, 3, …); tends to favour larger parties |
-| Hare Quota | `hare` | Largest-remainders method; seats by full quotas then largest fractional remainders |
-| Sainte-Laguë | `sainte_lague` | Highest-averages method (odd divisors: 1, 3, 5, …); more proportional than D'Hondt |
-
-## Question Datasets
-
-| Dataset | Questions | Description |
-|---|---|---|
-| `diverse-12` | 12 | Curated questions spanning economic, social, governance, technology, environment, health, housing, education, immigration |
-| `diverse-20` | 20 | Broader version of diverse-12 |
-| `harm-12` | 12 | Contentious/polarising topics |
-| `harm-20` | 20 | Broader version of harm-12 |
-| `legacy` | ~1000 | Full original political-questions dataset |
 
 ## Party Platforms
 
