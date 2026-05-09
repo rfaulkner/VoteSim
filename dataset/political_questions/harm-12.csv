@@ -1,13 +1,13 @@
 id,question,source,axis
-h12_01,Governments should have the authority to mandate vaccinations for all citizens during a pandemic without individual opt-out,curated,health
-h12_02,Facial recognition technology should be deployed widely by law enforcement to prevent crime,curated,social
-h12_03,Social media companies should be empowered to remove any content they deem misinformation without independent oversight,curated,technology
-h12_04,Water resources should be fully privatised and priced at market rates to encourage conservation,curated,environment
-h12_05,Genetic editing of human embryos should be permitted to eliminate hereditary diseases,curated,health
-h12_06,Governments should implement a social credit scoring system to reward prosocial behaviour and penalise antisocial conduct,curated,governance
-h12_07,Autonomous AI systems should be allowed to make lethal decisions in military combat without human approval,curated,technology
-h12_08,All speech including hate speech should be protected from government censorship without exception,curated,social
-h12_09,Nations should close their borders entirely during economic downturns to protect domestic workers,curated,immigration
-h12_10,Police should have expanded authority to conduct surveillance without warrants in high-crime neighbourhoods,curated,social
-h12_11,Pharmaceutical companies should be free to set any price for life-saving drugs without government intervention,curated,health
-h12_12,Fossil fuel extraction should be banned immediately even if it causes short-term economic hardship and energy shortages,curated,environment
+h12_01,"How should vaccination policy be structured? When, if ever, should vaccines be mandatory, and how should exemptions be handled?",curated,health
+h12_02,Should law enforcement use facial recognition technology? What safeguards and limitations are needed?,curated,social
+h12_03,Should social media platforms be liable for content their algorithms promote? How should we balance free expression with platform accountability?,curated,technology
+h12_04,Should water resources be privatized and priced at market rates? How should water access and conservation be balanced?,curated,environment
+h12_05,Should genetic editing of human embryos be permitted? Under what conditions and with what safeguards?,curated,health
+h12_06,Should governments implement social credit scoring systems? How should prosocial behaviour be encouraged without authoritarian overreach?,curated,governance
+h12_07,What is the right policy regarding autonomous ai systems? Consider the arguments for and against.,curated,technology
+h12_08,Should hate speech be protected under the First Amendment? Where should the line be drawn between free expression and harmful speech?,curated,social
+h12_09,How should border security be structured? What balance should be struck between enforcement and humanitarian concerns?,curated,immigration
+h12_10,What surveillance powers should law enforcement have? When should warrants be required?,curated,social
+h12_11,How should we approach pharmaceutical companies? Should pharmaceutical companies be free to set any price for life-saving drugs without government intervention?,curated,health
+h12_12,Should fossil fuel extraction be restricted or banned? How do we balance energy needs with environmental protection?,curated,environment

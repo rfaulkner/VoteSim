@@ -1,0 +1,13 @@
+id,question,source,axis
+d12_01,"Should there be a universal basic income? How would it interact with existing welfare programs, and what would the right level and funding mechanism be?",curated,economic
+d12_02,How should abortion access be regulated? How should federal and state governments balance reproductive rights with other moral and legal considerations?,curated,social
+d12_03,"How should firearms be regulated? What gun control measures are most effective, and how do we balance public safety with Second Amendment rights?",curated,social
+d12_04,Should immigration levels be increased? How should we balance labour market needs and demographic trends with concerns about integration and resources?,curated,social
+d12_05,"Should affirmative action be used in college admissions? If so, should it be based on race, socioeconomic status, or other factors?",curated,social
+d12_06,"Under what circumstances, if any, should the death penalty be used? What are the strongest arguments for and against its abolition?",curated,social
+d12_07,"When, if ever, should religious beliefs allow businesses to deny services? How should we balance religious freedom with anti-discrimination protections?",curated,social
+d12_08,How should law enforcement be structured and funded? Should resources be shifted toward community-based social services?,curated,social
+d12_09,"How should healthcare be provided? Should there be a government-run universal system, or is a mix of public and private insurance more effective?",curated,economic
+d12_10,Should fossil fuel companies be held financially responsible for climate damage? How should accountability be structured?,curated,economic
+d12_11,"Should there be mandatory national service for young adults? If so, what should the requirements and alternatives look like?",curated,governance
+d12_12,How should athletic governing bodies handle transgender athlete participation? How can inclusion and competitive fairness be balanced?,curated,social

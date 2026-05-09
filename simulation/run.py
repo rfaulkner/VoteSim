@@ -28,6 +28,7 @@ DEFAULT_TOP_P = 1.0
 DATASET_MAP = {
     "diverse-12": "dataset/political_questions/diverse-12.csv",
     "diverse-20": "dataset/political_questions/diverse-20.csv",
+    "divisive-12": "dataset/political_questions/divisive-12.csv",
     "harm-12": "dataset/political_questions/harm-12.csv",
     "harm-20": "dataset/political_questions/harm-20.csv",
     "legacy": DEFAULT_POLITICAL_QUESTIONS_PATH,

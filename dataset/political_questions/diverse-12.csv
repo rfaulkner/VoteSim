@@ -1,13 +1,13 @@
 id,question,source,axis
-d12_01,Universal basic income should replace the existing welfare system to provide a floor of economic security for all citizens,curated,economic
-d12_02,Governments should mandate strict data privacy regulations even if it slows technological innovation,curated,technology
-d12_03,Nuclear power should be expanded as a primary tool for decarbonising the energy grid,curated,environment
-d12_04,Public healthcare systems should be fully government-funded with no role for private insurance,curated,health
-d12_05,Immigration levels should be significantly increased to address labour shortages and demographic decline,curated,immigration
-d12_06,Recreational drug use should be fully decriminalised and treated as a public health matter rather than a criminal one,curated,social
-d12_07,Governments should impose rent controls and expand public housing to address the affordability crisis,curated,housing
-d12_08,Higher education should be tuition-free at all public universities funded through progressive taxation,curated,education
-d12_09,Nations should reduce military spending by at least 25 percent and redirect funds to domestic infrastructure,curated,governance
-d12_10,Artificial intelligence systems used in hiring and criminal sentencing should be subject to mandatory government audits,curated,technology
-d12_11,Countries should adopt a carbon border adjustment tax on imports from nations with weaker climate policies,curated,environment
-d12_12,Mandatory national service either military or civilian should be required of all young adults,curated,governance
+d12_01,"Should there be a universal basic income? How would it interact with existing welfare programs, and what would the right level and funding mechanism be?",curated,economic
+d12_02,"How should personal data privacy be protected? What regulations are needed, and how do we avoid stifling innovation?",curated,technology
+d12_03,What role should nuclear power play in the energy transition? Is it essential for achieving carbon neutrality?,curated,environment
+d12_04,What is the best approach to public healthcare systems? Is it true that public healthcare systems should be fully government-funded with no role for private insurance?,curated,health
+d12_05,Should immigration levels be increased? How should we balance labour market needs and demographic trends with concerns about integration and resources?,curated,immigration
+d12_06,"How should drug policy be reformed? Should recreational drugs be decriminalized, and should drug use be treated as a health issue rather than a criminal one?",curated,social
+d12_07,Is public housing an effective solution to the affordability crisis? What approaches to affordable housing work best?,curated,housing
+d12_08,How progressive should the tax system be? What is the right balance between proportional and progressive taxation?,curated,education
+d12_09,How should we approach nations? Should nations reduce military spending by at least 25 percent and redirect funds to domestic infrastructure?,curated,governance
+d12_10,Should artificial intelligence systems used in hiring and criminal sentencing be subject to mandatory government audits? What are the strongest arguments on each side?,curated,technology
+d12_11,"Is carbon pricing the most effective way to address climate change? How should it be designed, and what should be done with the revenue?",curated,environment
+d12_12,"Should there be mandatory national service for young adults? If so, what should the requirements and alternatives look like?",curated,governance
