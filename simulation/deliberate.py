@@ -1,11 +1,11 @@
-"""Parliamentary deliberation: Draft → Amend → Vote.
+"""Parliamentary deliberation: Draft → Vote.
 
 Simulates a motion-based parliamentary debate process among the seated
-government formed during the election phase.  The governing party (most
-seats) drafts a multi-point bill, opposition parties propose amendments
-(removals / additions), and all seated members vote yes/no on the package.
+government formed during the election phase.  The governing coalition
+(largest party + politically aligned partner) drafts a multi-point bill,
+and all seated members vote yes/no on the package.
 
-A bill may be considered up to ``max_rounds`` times (default 3).  If no
+A bill may be considered up to ``max_rounds`` times (default 5).  If no
 bill achieves a majority, the result records ``adopted_bill = None``.
 """
 
@@ -571,13 +571,46 @@ def _get_lead_party(seat_allocation: Dict[str, int]) -> str:
   return leaders[0]
 
 
+# Political spectrum for coalition alignment (left → right).
+_POLITICAL_SPECTRUM = [
+    "left",
+    "green",
+    "socialist",
+    "liberal",
+    "conservative",
+    "populist",
+]
+
+
+def _spectrum_distance(party_a: str, party_b: str) -> int:
+  """Return the distance between two parties on the political spectrum.
+
+  Parties not in the spectrum are placed at the far end (distance 100)
+  to discourage forming coalitions with unknown parties.
+  """
+  try:
+    idx_a = _POLITICAL_SPECTRUM.index(party_a)
+  except ValueError:
+    idx_a = 100
+  try:
+    idx_b = _POLITICAL_SPECTRUM.index(party_b)
+  except ValueError:
+    idx_b = 100
+  return abs(idx_a - idx_b)
+
+
 def _form_coalition(
     seat_allocation: Dict[str, int],
 ) -> Tuple[Dict[str, int], Dict[str, int]]:
-  """Form a minimum winning coalition starting from the largest party.
+  """Form a governing coalition based on political alignment.
 
-  Sorts parties by seats descending and accumulates until the
-  coalition holds a strict majority (>50%) of total seats.
+  The largest party seeks to join with the most ideologically aligned
+  smaller partner (excluding the second-largest party, which almost
+  always enters opposition).  Partners are selected by proximity on
+  the political spectrum, breaking ties by seat count.
+
+  The coalition accumulates partners until it holds a majority
+  (>50%) of total seats.
 
   Returns:
     A tuple of ``(coalition, opposition)`` where each is
@@ -592,14 +625,38 @@ def _form_coalition(
       key=lambda x: (-x[1], x[0]),
   )
 
-  coalition: Dict[str, int] = {}
-  coalition_seats = 0
+  if not ordered:
+    return {}, {}
 
-  for party, seats in ordered:
-    coalition[party] = seats
-    coalition_seats += seats
+  largest_party, largest_seats = ordered[0]
+  coalition: Dict[str, int] = {largest_party: largest_seats}
+  coalition_seats = largest_seats
+
+  # The second-largest party goes to opposition.
+  second_party = ordered[1][0] if len(ordered) > 1 else None
+
+  # Candidate partners: everyone except the largest and second-largest.
+  candidates = [
+      (p, s) for p, s in ordered
+      if p != largest_party and p != second_party
+  ]
+
+  # Sort candidates by political alignment to the largest party,
+  # then by seats descending (prefer larger aligned partners).
+  candidates.sort(
+      key=lambda x: (_spectrum_distance(largest_party, x[0]), -x[1], x[0])
+  )
+
+  for party, seats in candidates:
     if coalition_seats > majority_threshold:
       break
+    coalition[party] = seats
+    coalition_seats += seats
+
+  # If still no majority, reluctantly add the second-largest party.
+  if coalition_seats <= majority_threshold and second_party:
+    coalition[second_party] = seat_allocation[second_party]
+    coalition_seats += seat_allocation[second_party]
 
   opposition = {
       p: s for p, s in seat_allocation.items() if p not in coalition
@@ -1229,11 +1286,12 @@ def run_deliberation(
   """Run the full coalition-based parliamentary deliberation process.
 
   Phases per round:
-    1. **Coalition formation** — form a minimum winning coalition.
+    1. **Coalition formation** — form a politically aligned coalition.
     2. **Draft** — The coalition co-drafts a bill proportionally.
-    3. **Amend** — Opposition parties propose amendments.
-    4. **Evaluate** — Coalition selectively adopts/rejects amendments.
-    5. **Vote** — All seated members vote with constituency awareness.
+    3. **Vote** — All seated members vote with constituency awareness.
+
+  If a bill fails, the coalition re-drafts incorporating the prior
+  round's voting record and re-submits to a vote.
 
   Args:
     model: A loaded PathFinder model instance.
@@ -1284,36 +1342,14 @@ def run_deliberation(
         temperature=temperature,
     )
 
-    # Phase 2: Opposition proposes amendments.
-    raw_amendments = _propose_amendments(
-        model=model,
-        issue=issue,
-        seat_allocation=seat_allocation,
-        party_policies=party_policies,
-        bill=bill,
-        coalition=coalition,
-        temperature=temperature,
-    )
-
-    # Phase 3: Coalition evaluates amendments.
-    adopted_amendments = _evaluate_amendments(
-        model=model,
-        issue=issue,
-        coalition=coalition,
-        party_policies=party_policies,
-        bill=bill,
-        amendments=raw_amendments,
-        temperature=temperature,
-    )
-
-    # Phase 4: All members vote.
+    # Phase 2: All members vote (no amendment phase).
     vote_record = _vote_on_bill(
         model=model,
         issue=issue,
         seat_allocation=seat_allocation,
         party_policies=party_policies,
         bill=bill,
-        amendments=adopted_amendments,
+        amendments=[],
         temperature=temperature,
         max_workers=max_workers,
         voter_responses=voter_responses,
@@ -1322,28 +1358,26 @@ def run_deliberation(
 
     round_record = RoundRecord(
         bill=bill,
-        amendments=adopted_amendments,
+        amendments=[],
         vote_record=vote_record,
     )
     result.rounds.append(round_record)
 
     if vote_record.passed:
-      # Merge adopted amendments into the bill.
-      adopted = _merge_amendments(bill, adopted_amendments)
-      result.adopted_bill = adopted
+      result.adopted_bill = bill
       logging.info(
           "Round %d: Bill PASSED with %d yes / %d no.  "
-          "Adopted bill has %d points.",
+          "Bill has %d points.",
           round_num,
           vote_record.yes_count,
           vote_record.no_count,
-          len(adopted.points),
+          len(bill.points),
       )
       break
     else:
       logging.info(
           "Round %d: Bill FAILED with %d yes / %d no.  "
-          "Proceeding to next round.",
+          "Coalition will re-draft.",
           round_num,
           vote_record.yes_count,
           vote_record.no_count,
@@ -1353,8 +1387,7 @@ def run_deliberation(
   if result.adopted_bill is None and result.rounds:
     # Fall back to the bill with the most yes votes across all rounds.
     best_round = max(result.rounds, key=lambda r: r.vote_record.yes_count)
-    adopted = _merge_amendments(best_round.bill, best_round.amendments)
-    result.adopted_bill = adopted
+    result.adopted_bill = best_round.bill
     logging.info(
         "No majority reached after %d rounds. Adopting best bill "
         "(round %d, %d yes / %d no) for issue: %s",

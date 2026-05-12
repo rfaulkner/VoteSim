@@ -71,12 +71,11 @@ The goal is to study how different electoral systems translate voter preferences
 │                                                                 │
 │  6. Seat Allocation (per voting system)                         │
 │     └─ Ballots → district-level seat allocation via             │
-│        FPTP, D'Hondt, Hare, Sainte-Laguë, SMDP, or AV          │
+│        SNTV, FPTP, AV, TRS, D'Hondt, Sainte-Laguë, or STV       │
 │                                                                 │
 │  7. Coalition Formation & Parliamentary Deliberation            │
-│     └─ Minimum winning coalition formed; coalition drafts       │
-│        a bill; opposition proposes amendments; coalition        │
-│        evaluates amendments; all members vote (multi-round)     │
+│     └─ Politically aligned coalition formed; coalition drafts   │
+│        a bill; all members vote; re-draft on failure            │
 │                                                                 │
 │  8. Comparative Policy Ranking & Scoring                        │
 │     └─ Voters rank AND score (1.0–5.0 Likert) the bills         │
@@ -90,23 +89,24 @@ The goal is to study how different electoral systems translate voter preferences
 
 ## Electoral Systems
 
-VoteSim implements six electoral systems in two families:
+VoteSim implements seven electoral systems in two families:
 
 ### Majoritarian Systems
 
 | System | Key | Description |
 |---|---|---|
-| **First Past The Post** | `fptp` | Winner-takes-all per district; the party with the most first-choice votes receives **all** seats in that district |
-| **Single-Member District Plurality** | `smdp` | Like FPTP but each district is fixed at exactly **1 seat** regardless of population, amplifying geographic representation |
+| **Party Block Vote (SNTV)** | `sntv` | Winner-takes-all per district; the party with the most first-choice votes receives **all** seats in that district |
+| **First Past The Post** | `fptp` | Like SNTV but each district is fixed at exactly **1 seat** regardless of population, amplifying geographic representation |
 | **Alternative Vote (IRV)** | `alternative_vote` | Iterative elimination: the candidate with the fewest votes is eliminated and their ballots redistributed to next preferences until one candidate holds an absolute majority. One seat per district |
+| **Two-Round System** | `trs` | If a party wins >50% in round 1, it wins outright. Otherwise, a runoff between the top two determines the winner |
 
 ### Proportional Systems
 
 | System | Key | Description |
 |---|---|---|
 | **D'Hondt** | `dhondt` | Highest-averages method with divisors 1, 2, 3, … Seats allocated one at a time to the party with the highest quotient `votes / (seats_won + 1)`. Tends to favour larger parties |
-| **Hare Quota** | `hare` | Largest-remainders method: each party receives `floor(votes / quota)` automatic seats, then remaining seats go to parties with the largest fractional remainders. More proportional than D'Hondt |
-| **Sainte-Laguë** | `sainte_lague` | Highest-averages method with **odd** divisors 1, 3, 5, 7, … (`2 × seats_won + 1`). Produces the most proportional results; least biased toward large parties |
+| **Sainte-Laguë** | `sainte_lague` | Highest-averages method with **odd** divisors 1, 3, 5, 7, … (`2 × seats_won + 1`). Produces more proportional results; least biased toward large parties |
+| **Single Transferable Vote** | `stv` | Droop-quota method with fractional surplus transfer and elimination rounds. Rewards cross-party appeal through preference transfers |
 
 All proportional methods operate per-district. Districts are assigned 1–5 seats based on relative population via linear interpolation.
 
@@ -116,7 +116,7 @@ The parliamentary deliberation phase (Phase 7) simulates a structured legislativ
 
 ### Coalition Formation
 
-After seat allocation, VoteSim forms a **minimum winning coalition** by accumulating parties in descending seat order until the coalition holds >50% of seats. This determines who drafts the bill and who sits in opposition.
+After seat allocation, VoteSim forms a governing coalition based on **political alignment**. The largest party seeks to join with the most ideologically compatible smaller parties (based on proximity on the spectrum: Left — Green — Social Democrat — Liberal — Conservative — Populist). The second-largest party enters opposition. Partners are added until the coalition holds >50% of seats.
 
 ### Bill Lifecycle (per round)
 
@@ -128,32 +128,25 @@ After seat allocation, VoteSim forms a **minimum winning coalition** by accumula
 │     • Larger coalition partners have more influence       │
 │     • Failed prior rounds inform the next draft           │
 │                                                          │
-│  2. AMEND — Opposition parties propose amendments        │
-│     • Each opposition party can propose:                 │
-│       - Removals (strike specific bill points)           │
-│       - Additions (append new policy points)             │
-│     • Coalition evaluates each amendment:                │
-│       - Adopt if it strengthens the bill                 │
-│       - Reject if it contradicts coalition platform      │
-│                                                          │
-│  3. VOTE — All seated members vote yes/no                │
+│  2. VOTE — All seated members vote yes/no                │
 │     • Members consider BOTH party line and constituent   │
 │       interests (informed by district voter responses)   │
 │     • Members may vote against their party               │
-│     • Bill passes with strict majority (>50% of seats)   │
+│     • Bill passes with majority (>50% of seats)          │
 │                                                          │
-│  4. ITERATE — If bill fails, return to step 1            │
-│     • New draft incorporates failed bill, amendments,    │
-│       and voting record from previous round              │
-│     • Up to max_rounds attempts (default: 3)             │
+│  3. RE-DRAFT — If bill fails, coalition re-drafts        │
+│     • New draft incorporates failed bill and voting      │
+│       record from previous round                         │
+│     • Up to max_rounds attempts (default: 5)             │
 └──────────────────────────────────────────────────────────┘
 ```
 
 ### Key Design Decisions
 
 - **Constituency awareness**: Each member is assigned to a district and sees a summary of their constituents' opinions, enabling cross-party voting when the party line conflicts with local sentiment.
-- **Iterative refinement**: Failed bills inform subsequent drafts, pushing the coalition toward policies that can attract broader support (including from opposition members).
+- **Iterative refinement**: Failed bills inform subsequent drafts, pushing the coalition toward policies that can attract broader support.
 - **Coalition proportionality**: The drafting prompt explicitly instructs the LLM to weight coalition partners by their seat share, preventing the largest party from dominating.
+- **Political alignment**: Coalition partners are chosen by ideological proximity, not just seat count, producing more coherent legislative programs.
 
 ## Baselines
 
@@ -470,17 +463,16 @@ An example launch script is provided at `simulation/launcher.sh`. Adapt the modu
 
 ## Party Platforms
 
-Seven political ideologies are pre-configured with detailed policy positions across economics, social policy, governance, environment, and security:
+Six political ideologies are pre-configured with detailed policy positions across economics, social policy, governance, environment, and security:
 
 | Ideology | Party Name | Brief Description |
 |---|---|---|
-| `liberal` | Liberal Democratic Alliance | Individual rights, evidence-based policy, regulated markets |
-| `conservative` | Conservative Alliance | Traditional values, fiscal restraint, strong institutions |
-| `socialist` | Democratic Socialist Party | Worker ownership, universal public services, wealth redistribution |
-| `libertarian` | Libertarian Freedom Party | Minimal government, free markets, individual sovereignty |
+| `left` | Left Alliance | Democratic socialism, wealth redistribution, anti-imperialist |
 | `green` | Green Ecology Party | Environmental sustainability, climate justice, community governance |
-| `populist` | People's Movement Party | Anti-establishment, direct democracy, economic protectionism |
-| `nationalist` | National Sovereignty Party | Cultural preservation, strict immigration, national self-sufficiency |
+| `socialist` | Social Democrat Party | Reformist, universal public services, progressive taxation |
+| `liberal` | Liberal Democratic Alliance | Pragmatic centre, evidence-based policy, regulated markets |
+| `conservative` | Conservative Alliance | Traditional values, fiscal restraint, strong institutions |
+| `populist` | People's Patriot Movement | National-populist, nativist immigration, cultural protectionism |
 
 ## Output Format
 
