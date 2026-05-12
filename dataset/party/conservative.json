@@ -2,43 +2,43 @@
   "party_name": "Conservative Union Party",
   "ideology": "conservative",
   "core_values": [
-    "Fiscal responsibility and limited government",
-    "Traditional institutions and community values",
-    "Individual self-reliance and personal responsibility",
-    "Strong national defence",
-    "Free enterprise and market-driven solutions"
+    "Traditional family values and moral order",
+    "Fiscal discipline and low taxation",
+    "National sovereignty and strong borders",
+    "Law and order and personal responsibility",
+    "Free enterprise with minimal state interference"
   ],
   "economic_policy": {
-    "taxation": "Lower marginal tax rates across all brackets; reduce corporate tax to attract investment; eliminate estate tax; simplify tax code.",
+    "taxation": "Significant cuts to income and corporate taxes; abolish inheritance tax; flat-tax consideration for simplicity; no new taxes under any circumstances.",
     "spending_priorities": [
-      "National defence and veterans' services",
-      "Law enforcement and public safety",
-      "Infrastructure maintenance",
-      "Debt reduction"
+      "National defence and military modernisation",
+      "Law enforcement and border security",
+      "Debt and deficit reduction",
+      "Veterans' services"
     ],
-    "trade": "Bilateral trade deals that prioritise national economic interests; enforce fair-trade provisions; protect domestic industries from unfair competition.",
-    "regulation": "Reduce regulatory burden on businesses; cost-benefit analysis for all new regulations; sunset clauses on major rules."
+    "trade": "Bilateral trade deals prioritising national advantage; tariffs to protect strategic domestic industries; skeptical of multilateral trade bodies.",
+    "regulation": "Aggressively cut red tape; moratorium on new business regulations; abolish agencies that duplicate functions; no climate-related compliance mandates on industry."
   },
   "social_policy": {
-    "healthcare": "Market-based healthcare with expanded health savings accounts; enable cross-state insurance competition; protect employer-sponsored coverage.",
-    "education": "School choice through vouchers and charter schools; local control of curriculum; merit-based teacher pay; vocational training expansion.",
-    "housing": "Reduce government intervention in housing markets; ease construction regulations to increase supply; promote homeownership through tax incentives.",
-    "civil_rights": "Protect religious liberty; uphold constitutional rights as written; oppose government mandates that infringe on conscience protections.",
-    "immigration": "Secure borders with physical and technological barriers; merit-based legal immigration; mandatory E-Verify; oppose amnesty programmes."
+    "healthcare": "Fully private healthcare system with tax-advantaged savings accounts; oppose any government-run insurance scheme; reduce pharmaceutical regulation to lower costs through competition.",
+    "education": "School choice through vouchers; parent-led curriculum oversight; oppose progressive social content in schools; restore traditional civic and moral education; expand vocational and trade programmes.",
+    "housing": "Remove government from housing markets entirely; slash building regulations; oppose rent controls; promote homeownership through lower taxes, not subsidies.",
+    "civil_rights": "Protect religious liberty as paramount; defend traditional marriage and family structures; oppose gender ideology mandates in public institutions; uphold the right to bear arms without restriction.",
+    "immigration": "Dramatically reduce legal immigration levels; physical border barriers; mandatory detention and deportation for illegal entry; end chain migration and diversity visas; English-language and civic integration requirements."
   },
   "governance": {
-    "decentralization": "Return power to state and local governments; block-grant federal programmes; reduce size of federal bureaucracy.",
-    "transparency": "Audit federal agencies for waste and duplication; publish government spending in real time; term limits for legislators.",
-    "electoral_reform": "Voter ID requirements; maintain single-member district elections; clean voter rolls; oppose federal election mandates."
+    "decentralization": "Return power to state and local governments; block-grant federal programmes with fewer strings; dramatically reduce the federal bureaucracy.",
+    "transparency": "Audit all federal agencies; eliminate wasteful programmes; term limits for all elected officials and senior bureaucrats.",
+    "electoral_reform": "Strict photo voter ID; proof-of-citizenship requirements; clean voter rolls; oppose ranked-choice voting and mail-in ballot expansion."
   },
   "environment": {
-    "climate_action": "Technology-driven solutions over regulatory mandates; support carbon capture research; oppose economy-wide carbon taxes.",
-    "energy": "Energy independence through all-of-the-above strategy including oil, gas, nuclear, and renewables; streamline permitting for energy projects.",
-    "conservation": "State-led conservation partnerships; responsible resource management; support hunting and fishing heritage; oppose federal land grabs."
+    "climate_action": "Oppose carbon taxes, emissions trading, and binding climate targets; climate policy must never compromise economic growth or energy affordability; support voluntary industry innovation only.",
+    "energy": "Energy dominance through expanded oil, gas, and coal production; fast-track nuclear and hydroelectric permitting; end all renewable energy subsidies and mandates.",
+    "conservation": "State-led conservation; oppose federal land acquisition; support resource extraction on public lands with reasonable safeguards; protect hunting and rural land-use rights."
   },
   "security": {
-    "defense": "Peace through strength; maintain military superiority; modernise nuclear deterrent; honour commitments to allies.",
-    "law_enforcement": "Back the badge with funding and legal protections; mandatory minimum sentences for violent crimes; combat drug trafficking.",
-    "foreign_policy": "Nation-first diplomacy; rebuild alliances on burden-sharing basis; confront adversaries with credible deterrence; cautious about nation-building."
+    "defense": "Peace through overwhelming strength; largest military budget in the world as non-negotiable; modernise nuclear arsenal; demand allies meet spending commitments.",
+    "law_enforcement": "Zero tolerance for crime; mandatory minimum sentences; fully fund and expand police forces; oppose bail reform; crack down on drug trafficking with severe penalties.",
+    "foreign_policy": "Sovereignty-first diplomacy; strong alliances on burden-sharing terms; confront adversaries with credible military deterrence; no foreign aid without clear national interest."
   }
 }

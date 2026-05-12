@@ -1,44 +1,44 @@
 {
-  "party_name": "People's Voice Movement",
-  "ideology": "populist",
+  "party_name": "People's Patriot Movement",
+  "ideology": "right-populist",
   "core_values": [
-    "Power to ordinary working people",
-    "Opposition to elite capture of institutions",
-    "Economic fairness and anti-corruption",
-    "Direct democratic participation",
-    "Protection of domestic workers and industries"
+    "The nation and its people come first",
+    "Preservation of cultural identity and traditional way of life",
+    "Secure borders and strict immigration control",
+    "Opposition to globalist elites and unaccountable institutions",
+    "Direct democracy and the will of ordinary citizens"
   ],
   "economic_policy": {
-    "taxation": "Tax the rich and corporations heavily; eliminate tax loopholes used by the wealthy; no new taxes on working families; windfall profit taxes on large corporations.",
+    "taxation": "Low taxes on working families and domestic businesses; punitive tariffs on foreign imports; windfall taxes on multinational corporations that offshore jobs; oppose international tax agreements.",
     "spending_priorities": [
-      "Jobs and wage growth for working families",
-      "Rural and small-town infrastructure",
-      "Affordable prescription drugs",
-      "Anti-corruption enforcement"
+      "Border security and immigration enforcement",
+      "Domestic manufacturing and reshoring",
+      "Veterans' affairs and national service",
+      "Rural infrastructure and forgotten communities"
     ],
-    "trade": "Protectionist trade policy; tariffs on imports that undercut domestic workers; renegotiate trade deals that shipped jobs overseas; buy-domestic procurement rules.",
-    "regulation": "Break up monopolies and Big Tech; regulate Wall Street strictly; oppose regulations that burden small businesses while favouring corporations."
+    "trade": "Economic nationalism; high protective tariffs; withdraw from multilateral trade organisations; buy-domestic procurement mandates; renegotiate all trade deals that harm domestic workers.",
+    "regulation": "Deregulate domestic small business; heavily regulate foreign-owned companies operating domestically; oppose international regulatory standards imposed from outside; protect domestic agriculture."
   },
   "social_policy": {
-    "healthcare": "Affordable healthcare for all through price controls and public negotiation; cap insulin and drug prices; crack down on pharmaceutical profiteering.",
-    "education": "Invest in vocational training and community colleges; make trades as respected as university degrees; oppose student loan predation; local control of schools.",
-    "housing": "Cap rents in high-cost areas; crack down on corporate landlords and housing speculation; first-time homebuyer assistance for working families.",
-    "civil_rights": "Equal treatment under the law for all citizens; oppose identity politics that divide working people; focus on class-based solidarity.",
-    "immigration": "Reduce immigration to protect domestic wages; penalise employers who exploit undocumented labour; secure borders; oppose both open borders and family separation."
+    "healthcare": "Healthcare priority for citizens and legal residents only; oppose taxpayer-funded healthcare for illegal immigrants; domestic pharmaceutical production; withdraw from global health governance.",
+    "education": "National history, patriotic values, and civic duty as core curriculum; oppose multicultural and progressive ideology in schools; promote vocational training and apprenticeships; parents' rights over curriculum.",
+    "housing": "Citizens-first housing allocation; ban foreign ownership of residential property; crack down on immigration-driven housing pressure; support homeownership for working families.",
+    "civil_rights": "Equality under national law for all citizens; oppose international human-rights bodies overriding domestic legislation; protect freedom of speech against political correctness; defend traditional social values.",
+    "immigration": "Dramatic reduction in all immigration; immediate deportation of illegal entrants; end birthright citizenship loopholes; strict cultural assimilation requirements; moratorium on immigration from incompatible cultures."
   },
   "governance": {
-    "decentralization": "Binding referenda on major policy decisions; town-hall democracy; break the power of unelected bureaucrats and lobbyists.",
-    "transparency": "Full financial disclosure for all elected officials; ban stock trading by members of congress; mandatory lobbying transparency; term limits.",
-    "electoral_reform": "Recall elections for underperforming officials; ban super PACs; publicly funded elections; citizen initiative process at all levels."
+    "decentralization": "Strong central government on sovereignty, defence, and borders; binding national referenda on major issues; break the power of unelected bureaucrats and technocrats.",
+    "transparency": "Ban foreign funding of domestic political organisations; full financial disclosure for all officials; restrict dual citizens from sensitive government positions; anti-corruption crackdown.",
+    "electoral_reform": "Strict voter ID with proof of citizenship; oppose mail-in voting expansion; citizens-only voting; recall elections for politicians who betray campaign promises."
   },
   "environment": {
-    "climate_action": "Support clean energy jobs but oppose carbon taxes that raise costs for working families; hold corporate polluters accountable rather than punishing consumers.",
-    "energy": "Energy independence through domestic production; support fossil fuel workers during transition; invest in clean energy manufacturing jobs at home.",
-    "conservation": "Protect public lands for recreation and local economies; hold corporations liable for environmental damage; clean water as a right."
+    "climate_action": "National interests over international climate commitments; reject binding emissions targets imposed by global bodies; clean energy only when it creates domestic jobs and doesn't raise costs for families.",
+    "energy": "Full energy independence through all domestic resources including fossil fuels and nuclear; strategic energy reserves; oppose energy dependence on any foreign nation; support domestic energy workers.",
+    "conservation": "Protect national landscapes as cultural heritage; oppose foreign-funded environmental campaigns that restrict domestic economic activity; practical conservation led by local communities, not international NGOs."
   },
   "security": {
-    "defense": "Strong defence but end endless wars; bring troops home; spend defence dollars on domestic needs; take care of veterans first.",
-    "law_enforcement": "Tough on violent crime and corruption; fund local police; crack down on drug cartels and human trafficking; oppose defunding police.",
-    "foreign_policy": "Put domestic interests first; skeptical of international institutions that don't serve ordinary people; oppose foreign aid to corrupt governments."
+    "defense": "Military strength as non-negotiable; expand armed forces; modernise defence industry domestically; mandatory national service consideration; defend the homeland first.",
+    "law_enforcement": "Zero tolerance for crime; harsh penalties for violent offenders and drug traffickers; fully fund and expand police; oppose bail reform and soft-on-crime policies; deport foreign criminals immediately.",
+    "foreign_policy": "Sovereignty-first diplomacy; withdraw from international organisations that constrain national action; bilateral alliances based strictly on mutual interest; oppose humanitarian interventionism and nation-building; end foreign aid."
   }
 }

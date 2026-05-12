@@ -1,0 +1,44 @@
+{
+  "party_name": "The Left Alliance",
+  "ideology": "left",
+  "core_values": [
+    "Economic democracy and worker ownership",
+    "Universal public services as human rights",
+    "Wealth redistribution and class equity",
+    "Solidarity across racial, gender, and national lines",
+    "Democratic planning of key economic sectors"
+  ],
+  "economic_policy": {
+    "taxation": "Steeply progressive income tax with top marginal rates above 60%; annual wealth tax on net assets over $10 million; financial transaction tax; close all offshore tax havens.",
+    "spending_priorities": [
+      "Universal healthcare, childcare, and elder care",
+      "Free public education through postgraduate level",
+      "Massive public housing construction",
+      "Green industrial policy and federal jobs guarantee"
+    ],
+    "trade": "Fair trade over free trade; binding labour rights, living wages, and environmental protections in all agreements; oppose investor-state dispute mechanisms that empower corporations over governments.",
+    "regulation": "Break up monopolies and concentrated industries; mandate worker representation and profit-sharing; cap executive-to-worker pay ratios at 20:1; nationalise natural monopolies."
+  },
+  "social_policy": {
+    "healthcare": "Single-payer universal healthcare; abolish private insurance for covered services; nationalise pharmaceutical manufacturing for essential drugs; healthcare as a constitutional right.",
+    "education": "Free public education from pre-K through graduate school; cancel all student debt; fund community schools as neighbourhood hubs; democratic school governance with parent and teacher control.",
+    "housing": "Housing as a fundamental right; massive public and social housing expansion; national rent control and anti-eviction protections; community land trusts; ban corporate ownership of residential property.",
+    "civil_rights": "Intersectional justice framework; reparations study and programme; decriminalise poverty; abolish cash bail and private prisons; full labour rights for gig and undocumented workers.",
+    "immigration": "Open and humane immigration; abolish immigration detention centres; full labour rights and public services for all residents regardless of status; generous path to citizenship."
+  },
+  "governance": {
+    "decentralization": "Democratic workplace governance and cooperatives; participatory budgeting at all levels of government; community control of police and public services.",
+    "transparency": "Ban the revolving door between government and industry; publicly financed elections only; public ownership of government data; radical lobbying transparency.",
+    "electoral_reform": "Proportional representation; abolish legislative filibuster mechanisms; lower voting age to 16; same-day registration; make Election Day a national holiday."
+  },
+  "environment": {
+    "climate_action": "Green New Deal: emergency decarbonisation by 2035; treat climate crisis as an existential emergency; just transition with guaranteed reemployment and retraining for displaced workers.",
+    "energy": "100% publicly owned renewable energy system; ban all new fossil fuel extraction immediately; retrofit all public buildings for energy efficiency; free public transit nationwide.",
+    "conservation": "Environmental justice as a core principle; prioritise pollution reduction in frontline communities; ban single-use plastics; regenerative agriculture subsidies; rights of nature in law."
+  },
+  "security": {
+    "defense": "Cut military budget by at least 50%; close overseas bases; redirect savings to social programmes and climate adaptation; end all arms sales to authoritarian regimes.",
+    "law_enforcement": "Defund and fundamentally reimagine policing; invest in restorative justice, housing, mental health, and community safety as the real foundations of public security; abolish private prisons and end mass incarceration.",
+    "foreign_policy": "Anti-imperialist foreign policy; international solidarity with workers' and liberation movements; support self-determination of peoples; cancel Global South debt; withdraw from military alliances."
+  }
+}

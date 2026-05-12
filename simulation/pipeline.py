@@ -427,6 +427,174 @@ def run_voting_round(
   return result
 
 
+
+# ---------------------------------------------------------------------------
+# Survey-only mode
+# ---------------------------------------------------------------------------
+
+
+def run_survey_only(
+    num_voters: int,
+    model_path: str,
+    questions: List[str],
+    prism_dataset_dir: str = "dataset/prism",
+    seed: int = 42,
+    is_api: bool = False,
+    backend: str = "transformers",
+    temperature: float = 0.7,
+    max_workers: Optional[int] = None,
+    region_description: Optional[str] = None,
+    num_districts: int = 5,
+    region_cache_path: Optional[str] = None,
+    personas_path: Optional[str] = None,
+    results_dir: Optional[str] = None,
+    dataset_name: Optional[str] = None,
+) -> List[VotingRoundResult]:
+  """Run the pipeline up to the voter survey phase only (phases 1-3).
+
+  This mode skips party responses, voter ranking, election,
+  deliberation, and comparative policy ranking.  It is useful for
+  quickly collecting voter opinion distributions on a set of
+  questions without the cost of the full pipeline.
+
+  Flow per question:
+    1. Generate or load region (shared across questions).
+    2. Load model, sample voters, assign districts.
+    3. Voter opinion survey — each voter responds to the question.
+
+  If ``results_dir`` is provided, a JSON file is saved per question
+  with voter responses keyed by user ID.
+
+  Args:
+    num_voters: Number of voters to sample from PRISM.
+    model_path: Path or name of the LLM to use.
+    questions: List of social-issue question texts to process.
+    prism_dataset_dir: Path to the PRISM dataset directory.
+    seed: Random seed for reproducibility.
+    is_api: Whether the model is accessed via API.
+    backend: LLM backend name.
+    temperature: Sampling temperature.
+    max_workers: Max concurrent LLM calls per stage.
+    region_description: If provided, a region is generated.
+    num_districts: Number of districts in the region.
+    region_cache_path: Directory to cache the region JSON.
+    personas_path: Path to a pre-built personas JSON file.
+    results_dir: Directory to persist survey result JSON files.
+    dataset_name: Optional dataset label for output metadata.
+
+  Returns:
+    A list of ``VotingRoundResult`` objects, one per question.  Only
+    ``question``, ``voter_responses``, and ``region`` are populated;
+    all other fields are empty / ``None``.
+  """
+  # -- 1. Region -----------------------------------------------------------
+  region: Optional[Region] = None
+  if region_description:
+    region = _load_or_generate_region(
+        region_description=region_description,
+        num_districts=num_districts,
+        model_path=model_path,
+        is_api=is_api,
+        seed=seed,
+        backend=backend,
+        cache_path=region_cache_path,
+    )
+
+  # -- 2. Load model, sample voters, assign districts ---------------------
+  logging.info(
+      "Loading model '%s' (backend=%s)...", model_path, backend
+  )
+  model = get_model(
+      model_path, is_api=is_api, seed=seed, backend_name=backend
+  )
+
+  prism = PrismSampler(prism_dataset_dir)
+  personas = load_or_create_personas(
+      prism_dataset_dir=prism_dataset_dir,
+      personas_path=personas_path,
+      num_personas=num_voters,
+      seed=seed,
+  ) if personas_path else prism.sample(num_samples=num_voters, seed=seed)
+  voters, voter_districts = prepare_voters(
+      num_voters=num_voters,
+      prism_sampler=prism,
+      seed=seed,
+      region=region,
+      voters_override=personas,
+  )
+
+  # -- Per-question loop ---------------------------------------------------
+  results: List[VotingRoundResult] = []
+
+  for qi, question in enumerate(questions):
+    logging.info(
+        "=== [Survey-only mode] Question %d/%d: %s ===",
+        qi + 1,
+        len(questions),
+        question,
+    )
+
+    # 3. Voter opinion survey.
+    voter_responses = survey_voters(
+        voters=voters,
+        voter_districts=voter_districts,
+        question=question,
+        model=model,
+        temperature=temperature,
+        max_workers=max_workers,
+        region=region,
+    )
+
+    # Optionally persist survey results.
+    if results_dir:
+      os.makedirs(results_dir, exist_ok=True)
+      # Build a clean filename from the question text.
+      slug = question[:80].strip().replace(" ", "_").lower()
+      slug = "".join(c for c in slug if c.isalnum() or c == "_")
+      model_slug = os.path.basename(model_path).replace("/", "_")
+      out_path = os.path.join(
+          results_dir,
+          f"survey_{model_slug}_{slug}.json",
+      )
+      survey_data = {
+          "question": question,
+          "model": model_path,
+          "dataset": dataset_name,
+          "num_voters": num_voters,
+          "responses": {
+              vr.user_id: {
+                  "response": vr.response,
+                  "district": (
+                      vr.district["name"] if vr.district else None
+                  ),
+              }
+              for vr in voter_responses
+          },
+      }
+      with open(out_path, "w") as f:
+        json.dump(survey_data, f, indent=2)
+      logging.info("Survey results saved to %s", out_path)
+
+    result = VotingRoundResult(
+        question=question,
+        voter_responses=voter_responses,
+        party_responses={},
+        region=region,
+    )
+    results.append(result)
+    logging.info(
+        "Question %d complete: %d voter responses.",
+        qi + 1,
+        len(voter_responses),
+    )
+
+  logging.info(
+      "Survey-only mode finished: processed %d question(s).",
+      len(results),
+  )
+  return results
+
+
 # ---------------------------------------------------------------------------
 # Platform-only voting mode
 # ---------------------------------------------------------------------------

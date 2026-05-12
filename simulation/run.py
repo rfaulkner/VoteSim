@@ -8,6 +8,7 @@ from omegaconf import DictConfig
 from pathfinder import assistant, gen, get_model, system, user
 from simulation.district_generator import Region, RegionGenerator
 from simulation.pipeline import run_platform_mode
+from simulation.pipeline import run_survey_only
 from simulation.pipeline import run_voting_round
 from simulation.political_sampler import PoliticalQuestionSampler
 from simulation.prism_sampler import PrismSampler
@@ -280,6 +281,32 @@ def run_pipeline(cfg: DictConfig):
 
   # --- Mode dispatch --------------------------------------------------
   voting_mode = pipe_cfg.get("voting_mode", "issue")
+
+  if voting_mode == "survey":
+    logging.info("Using survey-only mode (phases 1-3 only).")
+    question_texts = [q["question"] for q in all_questions]
+    survey_results = run_survey_only(
+        num_voters=num_voters,
+        model_path=model_path,
+        questions=question_texts,
+        prism_dataset_dir=prism_dir,
+        seed=seed,
+        is_api=is_api,
+        backend=backend,
+        temperature=temperature,
+        max_workers=max_workers,
+        region_description=region_description,
+        num_districts=num_districts,
+        region_cache_path=region_cache_path,
+        personas_path=personas_path,
+        results_dir=results_dir,
+        dataset_name=pq_dataset or None,
+    )
+    logging.info(
+        "Pipeline finished (survey mode): %d question(s).",
+        len(survey_results),
+    )
+    return survey_results[-1] if survey_results else None
 
   if voting_mode == "platform":
     logging.info("Using platform-only voting mode.")

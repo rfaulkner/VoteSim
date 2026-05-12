@@ -2,43 +2,43 @@
   "party_name": "Liberal Democratic Alliance",
   "ideology": "liberal",
   "core_values": [
-    "Individual rights and civil liberties",
-    "Equal opportunity through public investment",
-    "Evidence-based policymaking",
-    "Democratic pluralism and institutional integrity",
-    "Regulated market economy with social safety nets"
+    "Individual liberty and personal autonomy",
+    "Pragmatic evidence-based governance",
+    "Market economy with sensible guardrails",
+    "Constitutional rights and rule of law",
+    "Fiscal responsibility with social investment"
   ],
   "economic_policy": {
-    "taxation": "Progressive income tax with higher brackets for top earners; capital gains taxed as ordinary income; targeted tax credits for low- and middle-income families.",
+    "taxation": "Moderate, broad-based taxation; keep rates competitive to encourage growth; targeted tax relief for small businesses and middle-income families; oppose both steep hikes and unfunded tax cuts.",
     "spending_priorities": [
-      "Public education and workforce retraining",
-      "Healthcare access expansion",
+      "Education and workforce development",
       "Infrastructure modernisation",
-      "Research and innovation grants"
+      "Research, science, and innovation",
+      "Balanced budget over the economic cycle"
     ],
-    "trade": "Support multilateral free-trade agreements with labour and environmental standards; oppose unilateral tariffs.",
-    "regulation": "Moderate regulation to ensure consumer protection, financial stability, and fair competition; streamline permitting for small businesses."
+    "trade": "Open, rules-based free trade through multilateral agreements; oppose both protectionism and unregulated globalisation; support fair competition.",
+    "regulation": "Smart regulation: protect consumers and competition without burdening entrepreneurs; streamline permitting; cost-benefit review of all major rules; sunset clauses."
   },
   "social_policy": {
-    "healthcare": "Universal healthcare coverage through a public option alongside private insurance; cap prescription drug prices.",
-    "education": "Increase public school funding; universal pre-K; subsidised post-secondary tuition; student loan reform.",
-    "housing": "Expand affordable housing supply through zoning reform and public-private partnerships; strengthen tenant protections.",
-    "civil_rights": "Comprehensive anti-discrimination protections; marriage equality; reproductive rights; voting rights expansion.",
-    "immigration": "Pathway to citizenship for long-term residents; streamlined legal immigration; humane border enforcement; refugee resettlement commitments."
+    "healthcare": "Mixed public-private healthcare; maintain a competitive insurance market with a public safety net for those who cannot afford coverage; cap out-of-pocket costs; oppose both full nationalisation and full deregulation.",
+    "education": "Increase public school quality through accountability and funding; expand access to higher education and vocational training; support charter schools with oversight; local curriculum control.",
+    "housing": "Increase housing supply through zoning reform and streamlined permitting; public-private partnerships for affordable housing; oppose heavy-handed rent controls; support first-time buyer incentives.",
+    "civil_rights": "Protect all constitutional rights equally; anti-discrimination protections based on individual merit; defend free speech and religious freedom; pragmatic immigration reform balancing economic needs with orderly borders.",
+    "immigration": "Orderly, managed immigration tied to economic needs; streamlined legal pathways; secure but humane borders; integration support for new residents; oppose both open borders and mass deportation."
   },
   "governance": {
-    "decentralization": "Strong federal standards with local implementation flexibility; empower municipal governments on housing and transit.",
-    "transparency": "Mandatory public disclosure of government contracts and lobbying; strengthen freedom-of-information laws.",
-    "electoral_reform": "Independent redistricting commissions; ranked-choice voting; automatic voter registration; campaign finance limits."
+    "decentralization": "Strong national framework with local implementation flexibility; empower municipalities on planning and services; oppose both over-centralisation and fragmentation.",
+    "transparency": "Full disclosure of government spending and lobbying; strengthen freedom-of-information laws; independent anti-corruption watchdogs.",
+    "electoral_reform": "Independent redistricting commissions; consider ranked-choice voting; automatic voter registration; reasonable campaign finance limits; protect election integrity."
   },
   "environment": {
-    "climate_action": "Net-zero emissions target by 2050; carbon pricing mechanism; rejoin and strengthen international climate agreements.",
-    "energy": "Accelerate renewable energy deployment; phase out coal; transition support for fossil-fuel-dependent communities.",
-    "conservation": "Expand protected lands and marine areas; strengthen endangered species protections; fund urban green spaces."
+    "climate_action": "Technology-neutral approach to emissions reduction; market-based mechanisms like modest carbon pricing; invest in R&D for clean energy and carbon capture; meet climate goals without crushing industry.",
+    "energy": "All-of-the-above energy strategy: renewables, nuclear, natural gas as bridge fuel; phase out coal gradually; energy security through diversification, not mandates.",
+    "conservation": "Evidence-based conservation; balance environmental protection with economic use; expand national parks and green spaces; invest in clean water and air quality."
   },
   "security": {
-    "defense": "Maintain strong defence capability; prioritise diplomacy and alliance-based security; reform military procurement.",
-    "law_enforcement": "Community policing models; police accountability and oversight boards; invest in mental-health crisis response teams.",
-    "foreign_policy": "Multilateral engagement through international institutions; promote democracy and human rights abroad; strategic foreign aid."
+    "defense": "Maintain strong, professional defence forces; invest in modern capabilities; alliance-based security through NATO and partners; defence spending at credible levels.",
+    "law_enforcement": "Well-funded, professional policing with accountability; community engagement; evidence-based criminal justice reform; tough on violent crime, smart on rehabilitation.",
+    "foreign_policy": "Rules-based international order; strong alliances; promote democracy and trade abroad; strategic foreign aid; engage diplomatically before resorting to force."
   }
 }

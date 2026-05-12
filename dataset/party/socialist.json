@@ -1,44 +1,44 @@
 {
-  "party_name": "Democratic Socialist Front",
-  "ideology": "socialist",
+  "party_name": "Social Democratic Party",
+  "ideology": "social-democrat",
   "core_values": [
-    "Economic democracy and worker ownership",
-    "Universal public services as human rights",
-    "Wealth redistribution and class equity",
-    "Solidarity across racial, gender, and national lines",
-    "Democratic planning of key economic sectors"
+    "Social justice and equal opportunity",
+    "Strong public services and the welfare state",
+    "Workers' rights and fair wages",
+    "Democratic reform and inclusion",
+    "Sustainable and equitable economic growth"
   ],
   "economic_policy": {
-    "taxation": "Steeply progressive income tax with top marginal rates above 60%; wealth tax on net assets over $10 million; financial transaction tax; close offshore tax havens.",
+    "taxation": "Progressive income tax with moderately higher top rates; close corporate tax loopholes; financial transaction tax to curb speculation; tax credits for low-income workers.",
     "spending_priorities": [
       "Universal healthcare and childcare",
-      "Free public education through university",
-      "Public housing construction",
-      "Green industrial policy and jobs guarantee"
+      "Public education from pre-K through university",
+      "Affordable housing programmes",
+      "Green infrastructure and industrial strategy"
     ],
-    "trade": "Fair trade over free trade; require labour rights, living wages, and environmental protections in all agreements; oppose investor-state dispute mechanisms.",
-    "regulation": "Strong anti-monopoly enforcement; break up concentrated industries; mandate worker representation on corporate boards; cap executive-to-worker pay ratios."
+    "trade": "Support trade agreements that include binding labour and environmental standards; oppose trade deals that undercut domestic wages; assist workers displaced by globalisation.",
+    "regulation": "Strengthen antitrust enforcement; require worker representation on large corporate boards; raise the minimum wage to a living wage; protect gig-economy workers."
   },
   "social_policy": {
-    "healthcare": "Single-payer universal healthcare; abolish private insurance for covered services; nationalise pharmaceutical manufacturing for essential drugs.",
-    "education": "Free public education from pre-K through graduate school; cancel student debt; fund community schools as neighbourhood hubs; democratic school governance.",
-    "housing": "Treat housing as a right; massive public housing expansion; national rent control; community land trusts; ban corporate ownership of single-family homes.",
-    "civil_rights": "Intersectional justice framework; reparations study and programme; decriminalise poverty; abolish cash bail; expand labour rights to gig workers.",
-    "immigration": "Open and humane immigration; abolish immigration detention; full labour rights for undocumented workers; path to citizenship for all residents."
+    "healthcare": "Universal healthcare through a public option expanding toward single-payer over time; cap prescription drug prices through government negotiation; mental health parity.",
+    "education": "Substantially increase public school funding; free community college and subsidised university tuition; cancel predatory student debt; invest in early childhood education.",
+    "housing": "Major public investment in affordable and social housing; zoning reform to increase density; strengthen tenant protections and fair-rent mechanisms; housing-first approach to homelessness.",
+    "civil_rights": "Comprehensive anti-discrimination protections; pay equity enforcement; reproductive rights; expand voting access; restorative justice for historic injustices.",
+    "immigration": "Humane, orderly immigration policy; pathway to legal status for long-term undocumented residents; expand refugee resettlement; invest in integration services; protect asylum seekers' rights."
   },
   "governance": {
-    "decentralization": "Democratic workplace governance; participatory budgeting at all levels; community control of police and public services.",
-    "transparency": "Public ownership of government data; ban revolving door between government and industry; publicly financed elections only.",
-    "electoral_reform": "Proportional representation; abolish the Senate filibuster; lower voting age to 16; same-day registration; make Election Day a holiday."
+    "decentralization": "Strong national standards with empowered local government; participatory budgeting pilots; strengthen public-sector unions and collective bargaining.",
+    "transparency": "Public financing of elections to reduce corporate influence; mandatory lobbying disclosure; revolving-door restrictions between government and industry.",
+    "electoral_reform": "Proportional representation; lower barriers to voter registration; ranked-choice voting; campaign finance reform to amplify small donors."
   },
   "environment": {
-    "climate_action": "Green New Deal: rapid decarbonisation by 2035; treat climate as an emergency; just transition with guaranteed reemployment for displaced workers.",
-    "energy": "100% publicly owned renewable energy; ban new fossil fuel extraction; retrofit all public buildings; free public transit.",
-    "conservation": "Environmental justice framework; prioritise pollution reduction in frontline communities; ban single-use plastics; regenerative agriculture subsidies."
+    "climate_action": "Net-zero emissions by 2045 through public investment and regulation; carbon pricing with revenue recycled to low-income households; green industrial policy creating good jobs.",
+    "energy": "Rapid expansion of renewables and nuclear; managed phase-out of fossil fuels with transition support for affected workers and communities; public investment in grid modernisation.",
+    "conservation": "Strengthen environmental protections; expand protected areas; environmental justice framework prioritising vulnerable communities; sustainable agriculture incentives."
   },
   "security": {
-    "defense": "Cut military budget by 50%; close overseas bases; redirect savings to social programmes; end arms sales to authoritarian regimes.",
-    "law_enforcement": "Defund and reimagine policing; invest in restorative justice, housing, and mental health as public safety; abolish private prisons.",
-    "foreign_policy": "Anti-imperialist foreign policy; international solidarity with workers' movements; support self-determination of peoples; cancel Global South debt."
+    "defense": "Adequate defence spending focused on modern threats; prioritise diplomacy and multilateral cooperation; reform military procurement to reduce waste.",
+    "law_enforcement": "Community-oriented policing with accountability and oversight; invest in crime prevention through social programmes; reform sentencing to reduce mass incarceration; end private prisons.",
+    "foreign_policy": "Multilateral engagement through international institutions; promote human rights and democratic governance abroad; generous but accountable foreign aid; peaceful conflict resolution."
   }
 }
