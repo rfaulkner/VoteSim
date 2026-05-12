@@ -219,7 +219,7 @@ def run_pipeline(cfg: DictConfig):
   parties = pipe_cfg.get("parties", None)
   if parties is not None:
     parties = list(parties)
-  voting_system = pipe_cfg.get("voting_system", "fptp")
+  voting_system = pipe_cfg.get("voting_system", "sntv")
   max_rank = pipe_cfg.get("max_rank", 3)
 
   # Comparative ranking settings.

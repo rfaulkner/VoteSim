@@ -25,14 +25,15 @@ pipeline:
     - green
     - left
     - populist
-  voting_system: "fptp"         # primary system for single-election result
+  voting_system: "sntv"          # primary system for single-election result
   voting_systems:                # systems for comparative policy ranking
+    - sntv
     - fptp
-    - smdp
     - alternative_vote
+    - trs
     - dhondt
-    - hare
     - sainte_lague
+    - stv
   max_rank: 6                    # number of parties each voter ranks
   results_dir: "results"         # output dir for per-model ranking JSON
   deliberation:

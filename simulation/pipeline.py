@@ -199,7 +199,7 @@ def run_voting_round(
     num_districts: int = 5,
     region_cache_path: Optional[str] = None,
     parties: Optional[List[str]] = None,
-    voting_system: str = "fptp",
+    voting_system: str = "sntv",
     max_rank: int = 3,
     deliberation_enabled: bool = True,
     deliberation_max_rounds: int = 3,

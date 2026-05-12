@@ -3,20 +3,21 @@
 Provides six electoral systems:
 
 *Majoritarian:*
-1. **First Past The Post (FPTP)** — winner-takes-all in each district.
-2. **Single-Member District Plurality (SMDP)** — like FPTP but fixed at
-   one seat per district.
+1. **Party Block Vote (SNTV)** — winner-takes-all in each district.
+2. **First Past The Post (FPTP)** — like Party Block Vote but
+   fixed at one seat per district.
 3. **Alternative Vote (AV / IRV)** — iterative elimination of the
    weakest candidate; the first candidate to reach an absolute majority
    wins the single district seat.
+4. **Two-Round System (TRS)** — if no party wins an outright majority
+   in round 1, a runoff between the top two determines the winner.
 
 *Proportional:*
 4. **D'Hondt** — highest-averages method with divisors 1, 2, 3, …
-5. **Hare quota (largest remainders)** — seats allocated by full quotas
-   then remaining seats to the parties with the largest fractional
-   remainders.
-6. **Sainte-Laguë** — highest-averages method with odd divisors
+5. **Sainte-Laguë** — highest-averages method with odd divisors
    1, 3, 5, …
+6. **Single Transferable Vote (STV)** — quota-based proportional
+   method with surplus transfer and elimination rounds.
 
 Districts are assigned seats (1–5) based on their relative population within
 the region.  The ``run_election`` dispatcher selects the system by name.
@@ -171,15 +172,15 @@ def _pick_winner(seats: Dict[str, int]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# FPTP — First Past The Post
+# SNTV — Party Block Vote (formerly FPTP)
 # ---------------------------------------------------------------------------
 
 
-def fptp(
+def sntv(
     ballots: List[VoterBallot],
     district_seats: Dict[str, int],
 ) -> ElectionResult:
-  """First Past The Post: winner takes all seats in each district.
+  """Party Block Vote (SNTV): winner takes all seats in each district.
 
   Args:
     ballots: All voter ballots across all districts.
@@ -219,10 +220,10 @@ def fptp(
       total_seats[party] = total_seats.get(party, 0) + s
 
   governing = _pick_winner(total_seats)
-  logging.info("FPTP election complete.  Governing party: %s", governing)
+  logging.info("SNTV election complete.  Governing party: %s", governing)
 
   return ElectionResult(
-      voting_system="fptp",
+      voting_system="sntv",
       district_results=district_results,
       total_seats=total_seats,
       governing_party=governing,
@@ -230,17 +231,17 @@ def fptp(
 
 
 # ---------------------------------------------------------------------------
-# SMDP — Single-Member District Plurality
+# FPTP — First Past The Post
 # ---------------------------------------------------------------------------
 
 
-def smdp(
+def fptp(
     ballots: List[VoterBallot],
     district_seats: Dict[str, int],
 ) -> ElectionResult:
-  """Single-Member District Plurality: one seat per district, plurality wins.
+  """First Past The Post: one seat per district, plurality wins.
 
-  Identical to FPTP except that every district is forced to exactly **one**
+  Identical to Party Block Vote except that every district is forced to exactly **one**
   seat regardless of the values in ``district_seats``.  The candidate
   (party) with the most first-choice votes wins that single seat.
 
@@ -284,10 +285,10 @@ def smdp(
       total_seats[party] = total_seats.get(party, 0) + s
 
   governing = _pick_winner(total_seats)
-  logging.info("SMDP election complete.  Governing party: %s", governing)
+  logging.info("FPTP election complete.  Governing party: %s", governing)
 
   return ElectionResult(
-      voting_system="smdp",
+      voting_system="fptp",
       district_results=district_results,
       total_seats=total_seats,
       governing_party=governing,
@@ -433,6 +434,120 @@ def alternative_vote(
 
 
 # ---------------------------------------------------------------------------
+# TRS — Two-Round System
+# ---------------------------------------------------------------------------
+
+
+def trs(
+    ballots: List[VoterBallot],
+    district_seats: Dict[str, int],
+) -> ElectionResult:
+  """Two-Round System: majority runoff in each district.
+
+  **Round 1**: Count first-preference votes.  If any party receives
+  more than 50 % of the vote, it wins all seats in the district.
+
+  **Round 2 (runoff)**: If no party has an outright majority, only
+  the top two parties advance.  Each ballot is reassigned to
+  whichever of the two finalists appears highest in its ranking.
+  The finalist with the most reassigned ballots wins all seats.
+
+  This is a majoritarian system — the winner takes every seat in
+  the district, regardless of the number of seats available.
+
+  Args:
+    ballots: All voter ballots across all districts.
+    district_seats: ``{district_name: num_seats}`` from
+      ``allocate_district_seats``.
+
+  Returns:
+    An ``ElectionResult`` with per-district breakdowns.
+  """
+  grouped = _group_ballots_by_district(ballots)
+  district_results: List[DistrictResult] = []
+  total_seats: Dict[str, int] = {}
+
+  for district_name, num_seats in sorted(district_seats.items()):
+    district_ballots = grouped.get(district_name, [])
+    vote_counts = _count_first_choice_votes(district_ballots)
+    total_votes = sum(vote_counts.values()) if vote_counts else 0
+
+    if not vote_counts or total_votes == 0:
+      district_results.append(
+          DistrictResult(
+              district_name=district_name,
+              seats_available=num_seats,
+              vote_counts={},
+              seats={},
+              winner="none",
+          )
+      )
+      continue
+
+    # Round 1: check for outright majority.
+    majority_threshold = total_votes / 2
+    round1_winner = None
+    for party in sorted(vote_counts, key=lambda p: (-vote_counts[p], p)):
+      if vote_counts[party] > majority_threshold:
+        round1_winner = party
+        break
+
+    if round1_winner:
+      seats = {round1_winner: num_seats}
+      winner = round1_winner
+    else:
+      # Round 2: runoff between top two parties.
+      ranked = sorted(
+          vote_counts.keys(), key=lambda p: (-vote_counts[p], p)
+      )
+      finalist_a, finalist_b = ranked[0], ranked[1]
+      finalists = {finalist_a, finalist_b}
+
+      # Reassign each ballot to whichever finalist ranks higher.
+      runoff_counts: Dict[str, int] = {finalist_a: 0, finalist_b: 0}
+      for b in district_ballots:
+        for party in b.ranking:
+          if party in finalists:
+            runoff_counts[party] += 1
+            break
+
+      # Winner of the runoff (ties broken alphabetically).
+      if runoff_counts[finalist_a] >= runoff_counts[finalist_b]:
+        winner = finalist_a
+      else:
+        winner = finalist_b
+
+      # Override vote_counts with runoff counts for reporting.
+      vote_counts = runoff_counts
+      seats = {winner: num_seats}
+
+    district_results.append(
+        DistrictResult(
+            district_name=district_name,
+            seats_available=num_seats,
+            vote_counts=vote_counts,
+            seats=seats,
+            winner=winner,
+        )
+    )
+
+    for party, s in seats.items():
+      total_seats[party] = total_seats.get(party, 0) + s
+
+  governing = _pick_winner(total_seats)
+  logging.info(
+      "Two-Round System election complete.  Governing party: %s", governing
+  )
+
+  return ElectionResult(
+      voting_system="trs",
+      district_results=district_results,
+      total_seats=total_seats,
+      governing_party=governing,
+  )
+
+
+# ---------------------------------------------------------------------------
 # D'Hondt proportional method
 # ---------------------------------------------------------------------------
 
@@ -499,118 +614,6 @@ def dhondt(
 
   return ElectionResult(
       voting_system="dhondt",
-      district_results=district_results,
-      total_seats=total_seats,
-      governing_party=governing,
-  )
-
-
-# ---------------------------------------------------------------------------
-# Hare quota — Largest Remainders method
-# ---------------------------------------------------------------------------
-
-
-def _hare_allocate(
-    vote_counts: Dict[str, int], num_seats: int,
-) -> Dict[str, int]:
-  """Allocate seats using the Hare quota with largest remainders.
-
-  Algorithm:
-    1. Compute the Hare quota: ``total_votes / num_seats``.
-    2. Each party receives ``floor(votes / quota)`` automatic seats.
-    3. Remaining seats are given one-at-a-time to the parties with the
-       largest fractional remainders (ties broken alphabetically).
-
-  Args:
-    vote_counts: ``{party: first_choice_votes}``.
-    num_seats: Number of seats to fill.
-
-  Returns:
-    ``{party: seats_won}``
-  """
-  if not vote_counts or num_seats <= 0:
-    return {}
-
-  total_votes = sum(vote_counts.values())
-  if total_votes == 0:
-    return {}
-
-  quota = total_votes / num_seats
-
-  # Step 1 — automatic seats from full quotas.
-  seats: Dict[str, int] = {}
-  remainders: Dict[str, float] = {}
-  for party, votes in vote_counts.items():
-    full = int(votes / quota)  # floor division
-    seats[party] = full
-    remainders[party] = (votes / quota) - full
-
-  # Step 2 — distribute remaining seats by largest remainder.
-  seats_allocated = sum(seats.values())
-  seats_left = num_seats - seats_allocated
-
-  # Sort by remainder desc, then alphabetically for tie-break.
-  ranked = sorted(
-      remainders.keys(),
-      key=lambda p: (-remainders[p], p),
-  )
-
-  for i in range(min(seats_left, len(ranked))):
-    seats[ranked[i]] = seats.get(ranked[i], 0) + 1
-
-  # Remove parties with zero seats for cleanliness.
-  return {p: s for p, s in seats.items() if s > 0}
-
-
-def hare(
-    ballots: List[VoterBallot],
-    district_seats: Dict[str, int],
-) -> ElectionResult:
-  """Hare quota proportional seat allocation (largest remainders) per district.
-
-  For each district:
-    1. Compute the Hare quota ``Q = total_votes / seats``.
-    2. Award each party ``floor(votes / Q)`` seats automatically.
-    3. Award remaining seats to parties with the largest fractional
-       remainders, one at a time.
-
-  Args:
-    ballots: All voter ballots across all districts.
-    district_seats: ``{district_name: num_seats}`` from
-      ``allocate_district_seats``.
-
-  Returns:
-    An ``ElectionResult`` with per-district breakdowns.
-  """
-  grouped = _group_ballots_by_district(ballots)
-  district_results: List[DistrictResult] = []
-  total_seats: Dict[str, int] = {}
-
-  for district_name, num_seats in sorted(district_seats.items()):
-    district_ballots = grouped.get(district_name, [])
-    vote_counts = _count_first_choice_votes(district_ballots)
-
-    seats = _hare_allocate(vote_counts, num_seats)
-    winner = _pick_winner(seats) if seats else "none"
-
-    district_results.append(
-        DistrictResult(
-            district_name=district_name,
-            seats_available=num_seats,
-            vote_counts=vote_counts,
-            seats=seats,
-            winner=winner,
-        )
-    )
-
-    for party, s in seats.items():
-      total_seats[party] = total_seats.get(party, 0) + s
-
-  governing = _pick_winner(total_seats)
-  logging.info("Hare election complete.  Governing party: %s", governing)
-
-  return ElectionResult(
-      voting_system="hare",
       district_results=district_results,
       total_seats=total_seats,
       governing_party=governing,
@@ -696,32 +699,241 @@ def sainte_lague(
 
 
 # ---------------------------------------------------------------------------
+# STV — Single Transferable Vote
+# ---------------------------------------------------------------------------
+
+
+def _stv_allocate(
+    ballots: List[VoterBallot], num_seats: int,
+) -> tuple[Dict[str, int], Dict[str, int]]:
+  """Allocate seats using STV with the Droop quota.
+
+  Algorithm:
+    1. Compute the Droop quota: ``floor(total_votes / (seats + 1)) + 1``.
+    2. Count first-preference votes for each remaining party.
+    3. If any party meets or exceeds the quota, it wins a seat.
+       Its surplus (``votes - quota``) is redistributed to next
+       preferences at a fractional transfer value
+       ``surplus / votes``.
+    4. If no party meets the quota, eliminate the party with the
+       fewest votes and redistribute its ballots at full value.
+    5. Repeat until all seats are filled or no parties remain.
+
+  Because this simulation treats parties (not individual candidates)
+  as the unit of election, a party can win multiple seats.
+
+  Args:
+    ballots: Ballots for a single district.
+    num_seats: Number of seats to fill.
+
+  Returns:
+    ``(seats_dict, vote_counts)`` where ``seats_dict`` is
+    ``{party: seats_won}`` and ``vote_counts`` is the first-round
+    first-choice counts (for reporting).
+  """
+  if not ballots or num_seats <= 0:
+    return {}, {}
+
+  # Each ballot carries a weight (starts at 1.0).
+  # We track (weight, ranking_of_remaining_parties).
+  active: List[tuple[float, List[str]]] = [
+      (1.0, list(b.ranking)) for b in ballots
+  ]
+
+  total_votes = len(ballots)
+  quota = total_votes // (num_seats + 1) + 1
+
+  seats: Dict[str, int] = {}
+  seats_filled = 0
+  remaining_parties: set[str] = set()
+  for b in ballots:
+    remaining_parties.update(b.ranking)
+
+  # Record first-round counts for reporting.
+  first_round_counts: Dict[str, int] = {}
+  for b in ballots:
+    if b.ranking:
+      first_round_counts[b.ranking[0]] = (
+          first_round_counts.get(b.ranking[0], 0) + 1
+      )
+
+  max_rounds = len(remaining_parties) * num_seats + 10  # safety bound
+
+  for _ in range(max_rounds):
+    if seats_filled >= num_seats or not remaining_parties:
+      break
+
+    # Count weighted first-preference votes.
+    counts: Dict[str, float] = {p: 0.0 for p in remaining_parties}
+    for weight, ranking in active:
+      if ranking:
+        top = ranking[0]
+        if top in remaining_parties:
+          counts[top] += weight
+
+    # Check for parties meeting the quota.
+    elected_this_round = []
+    for party in sorted(remaining_parties):
+      if counts.get(party, 0) >= quota:
+        elected_this_round.append(party)
+
+    if elected_this_round:
+      for party in elected_this_round:
+        seats[party] = seats.get(party, 0) + 1
+        seats_filled += 1
+        if seats_filled >= num_seats:
+          break
+
+        # Transfer surplus.
+        party_votes = counts[party]
+        surplus = party_votes - quota
+        if surplus > 0 and party_votes > 0:
+          transfer_value = surplus / party_votes
+          new_active = []
+          for weight, ranking in active:
+            if ranking and ranking[0] == party:
+              # Remove elected party and scale weight.
+              new_ranking = [p for p in ranking[1:] if p in remaining_parties]
+              new_active.append((weight * transfer_value, new_ranking))
+            else:
+              new_active.append((weight, ranking))
+          active = new_active
+        else:
+          # No surplus — just remove from ballots.
+          active = [
+              (w, [p for p in r if p != party])
+              for w, r in active
+          ]
+
+        # Party can win another seat if it still has surplus,
+        # but remove it from this round's re-election.
+        remaining_parties.discard(party)
+
+      if seats_filled >= num_seats:
+        break
+    else:
+      # No party met quota — eliminate the weakest.
+      if not counts:
+        break
+      min_votes = min(counts.values())
+      # Tie-break: eliminate last alphabetically.
+      weakest = sorted(
+          [p for p in remaining_parties if counts.get(p, 0) == min_votes]
+      )[-1]
+      remaining_parties.discard(weakest)
+
+      # Redistribute eliminated party's ballots at full weight.
+      active = [
+          (w, [p for p in r if p != weakest])
+          for w, r in active
+      ]
+
+  # If seats remain unfilled, give them to highest remaining counts.
+  if seats_filled < num_seats and remaining_parties:
+    counts_final: Dict[str, float] = {p: 0.0 for p in remaining_parties}
+    for weight, ranking in active:
+      if ranking and ranking[0] in remaining_parties:
+        counts_final[ranking[0]] += weight
+    ranked_remaining = sorted(
+        remaining_parties, key=lambda p: (-counts_final.get(p, 0), p)
+    )
+    for party in ranked_remaining:
+      if seats_filled >= num_seats:
+        break
+      seats[party] = seats.get(party, 0) + 1
+      seats_filled += 1
+
+  return {p: s for p, s in seats.items() if s > 0}, first_round_counts
+
+
+def stv(
+    ballots: List[VoterBallot],
+    district_seats: Dict[str, int],
+) -> ElectionResult:
+  """Single Transferable Vote: quota-based proportional seat allocation.
+
+  For each district:
+    1. Compute the Droop quota ``Q = floor(V / (S + 1)) + 1``.
+    2. Elect any party whose weighted first-preference votes meet
+       or exceed the quota.  Transfer surplus votes (fractionally)
+       to next-preferred parties.
+    3. If no party meets the quota, eliminate the weakest party and
+       redistribute its ballots at full weight.
+    4. Repeat until all seats are filled.
+
+  This method is more proportional than D'Hondt for small district
+  magnitudes and rewards cross-party appeal through transfers.
+
+  Args:
+    ballots: All voter ballots across all districts.
+    district_seats: ``{district_name: num_seats}`` from
+      ``allocate_district_seats``.
+
+  Returns:
+    An ``ElectionResult`` with per-district breakdowns.
+  """
+  grouped = _group_ballots_by_district(ballots)
+  district_results: List[DistrictResult] = []
+  total_seats: Dict[str, int] = {}
+
+  for district_name, num_seats in sorted(district_seats.items()):
+    district_ballots = grouped.get(district_name, [])
+
+    seats, vote_counts = _stv_allocate(district_ballots, num_seats)
+    winner = _pick_winner(seats) if seats else "none"
+
+    district_results.append(
+        DistrictResult(
+            district_name=district_name,
+            seats_available=num_seats,
+            vote_counts=vote_counts,
+            seats=seats,
+            winner=winner,
+        )
+    )
+
+    for party, s in seats.items():
+      total_seats[party] = total_seats.get(party, 0) + s
+
+  governing = _pick_winner(total_seats)
+  logging.info("STV election complete.  Governing party: %s", governing)
+
+  return ElectionResult(
+      voting_system="stv",
+      district_results=district_results,
+      total_seats=total_seats,
+      governing_party=governing,
+  )
+
+
+# ---------------------------------------------------------------------------
 # Dispatcher
 # ---------------------------------------------------------------------------
 
 _SYSTEMS = {
+    "sntv": sntv,
     "fptp": fptp,
-    "smdp": smdp,
     "alternative_vote": alternative_vote,
+    "trs": trs,
     "dhondt": dhondt,
-    "hare": hare,
     "sainte_lague": sainte_lague,
+    "stv": stv,
 }
 
 
 def run_election(
     ballots: List[VoterBallot],
     district_seats: Dict[str, int],
-    system: str = "fptp",
+    system: str = "sntv",
 ) -> ElectionResult:
   """Run an election using the specified voting system.
 
   Args:
     ballots: All voter ballots.
     district_seats: ``{district_name: num_seats}``.
-    system: Voting system name — one of ``"fptp"``, ``"smdp"``,
-      ``"alternative_vote"``, ``"dhondt"``, ``"hare"``, or
-      ``"sainte_lague"``.
+    system: Voting system name — one of ``"sntv"``, ``"fptp"``,
+      ``"alternative_vote"``, ``"trs"``, ``"dhondt"``,
+      ``"sainte_lague"``, or ``"stv"``.
 
   Returns:
     An ``ElectionResult``.
