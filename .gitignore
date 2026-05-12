@@ -176,3 +176,4 @@ slurm/
 
 launch*.sh
 results/
+draft/

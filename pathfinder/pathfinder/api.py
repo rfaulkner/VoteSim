@@ -225,7 +225,10 @@ class OpenRouter(ModelAPI):
     def completions_with_backoff(**kwargs):
       return self.client.chat.completions.create(**kwargs)
 
-    is_deepseek = "deepseek" in self.model_name.lower()
+    is_reasoning = (
+        "deepseek" in self.model_name.lower()
+        or "qwen" in self.model_name.lower()
+    )
 
     base_kwargs = dict(
         model=self.model_name,
@@ -236,8 +239,8 @@ class OpenRouter(ModelAPI):
         max_tokens=max_tokens,
     )
 
-    if is_deepseek:
-      # DeepSeek reasoning models: try with low reasoning effort first
+    if is_reasoning:
+      # Reasoning models: try with low reasoning effort first
       out = completions_with_backoff(
           **base_kwargs,
           extra_body={"reasoning": {"effort": "low"}},
@@ -258,7 +261,7 @@ class OpenRouter(ModelAPI):
       )
       return out.choices[0].message.content or ""
 
-    # Non-DeepSeek models: plain request
+    # Non-reasoning models: plain request
     out = completions_with_backoff(**base_kwargs)
     logging.info(f"OpenAI system_fingerprint: {out.system_fingerprint}")
     return out.choices[0].message.content or ""
