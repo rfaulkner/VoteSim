@@ -283,13 +283,14 @@ def run_pipeline(cfg: DictConfig):
   voting_mode = pipe_cfg.get("voting_mode", "issue")
 
   if voting_mode == "survey":
-    logging.info("Using survey-only mode (phases 1-3 only).")
+    logging.info("Using survey mode (phases 1-5: through voter ranking).")
     question_texts = [q["question"] for q in all_questions]
     survey_results = run_survey_only(
         num_voters=num_voters,
         model_path=model_path,
         questions=question_texts,
         prism_dataset_dir=prism_dir,
+        party_dir=party_dir,
         seed=seed,
         is_api=is_api,
         backend=backend,
@@ -299,6 +300,8 @@ def run_pipeline(cfg: DictConfig):
         num_districts=num_districts,
         region_cache_path=region_cache_path,
         personas_path=personas_path,
+        parties=parties,
+        max_rank=max_rank,
         results_dir=results_dir,
         dataset_name=pq_dataset or None,
     )

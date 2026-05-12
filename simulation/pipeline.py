@@ -438,6 +438,7 @@ def run_survey_only(
     model_path: str,
     questions: List[str],
     prism_dataset_dir: str = "dataset/prism",
+    party_dir: str = "dataset/party",
     seed: int = 42,
     is_api: bool = False,
     backend: str = "transformers",
@@ -447,29 +448,37 @@ def run_survey_only(
     num_districts: int = 5,
     region_cache_path: Optional[str] = None,
     personas_path: Optional[str] = None,
+    parties: Optional[List[str]] = None,
+    max_rank: int = 3,
     results_dir: Optional[str] = None,
     dataset_name: Optional[str] = None,
 ) -> List[VotingRoundResult]:
-  """Run the pipeline up to the voter survey phase only (phases 1-3).
+  """Run the pipeline through the voter ranking phase (phases 1-5).
 
-  This mode skips party responses, voter ranking, election,
-  deliberation, and comparative policy ranking.  It is useful for
-  quickly collecting voter opinion distributions on a set of
-  questions without the cost of the full pipeline.
+  This mode runs voter survey, party responses, and voter ranking
+  but skips election, deliberation, and comparative policy ranking.
+  It is useful for collecting voter opinion distributions and ballot
+  data without the cost of the full pipeline.
 
-  Flow per question:
-    1. Generate or load region (shared across questions).
-    2. Load model, sample voters, assign districts.
-    3. Voter opinion survey — each voter responds to the question.
+  Flow:
+    **Once (before the question loop):**
+      1. Generate or load region.
+      2. Load model, sample voters, assign districts.
 
-  If ``results_dir`` is provided, a JSON file is saved per question
-  with voter responses keyed by user ID.
+    **Per question:**
+      3. Voter opinion survey.
+      4. Party policy responses.
+      5. Voter ranking of parties → ballots.
+
+  All issues are written to a single consolidated JSON file when
+  ``results_dir`` is provided.
 
   Args:
     num_voters: Number of voters to sample from PRISM.
     model_path: Path or name of the LLM to use.
     questions: List of social-issue question texts to process.
     prism_dataset_dir: Path to the PRISM dataset directory.
+    party_dir: Directory containing party platform JSON files.
     seed: Random seed for reproducibility.
     is_api: Whether the model is accessed via API.
     backend: LLM backend name.
@@ -479,13 +488,13 @@ def run_survey_only(
     num_districts: Number of districts in the region.
     region_cache_path: Directory to cache the region JSON.
     personas_path: Path to a pre-built personas JSON file.
-    results_dir: Directory to persist survey result JSON files.
+    parties: Optional list of ideology names to include.
+    max_rank: Number of parties each voter ranks.
+    results_dir: Directory to persist the consolidated JSON.
     dataset_name: Optional dataset label for output metadata.
 
   Returns:
-    A list of ``VotingRoundResult`` objects, one per question.  Only
-    ``question``, ``voter_responses``, and ``region`` are populated;
-    all other fields are empty / ``None``.
+    A list of ``VotingRoundResult`` objects, one per question.
   """
   # -- 1. Region -----------------------------------------------------------
   region: Optional[Region] = None
@@ -523,12 +532,15 @@ def run_survey_only(
       voters_override=personas,
   )
 
+  # Consolidated output: all issues go into one dict, written at the end.
+  all_issues: Dict[str, Any] = {}
+
   # -- Per-question loop ---------------------------------------------------
   results: List[VotingRoundResult] = []
 
   for qi, question in enumerate(questions):
     logging.info(
-        "=== [Survey-only mode] Question %d/%d: %s ===",
+        "=== [Survey mode] Question %d/%d: %s ===",
         qi + 1,
         len(questions),
         question,
@@ -545,51 +557,94 @@ def run_survey_only(
         region=region,
     )
 
-    # Optionally persist survey results.
-    if results_dir:
-      os.makedirs(results_dir, exist_ok=True)
-      # Build a clean filename from the question text.
-      slug = question[:80].strip().replace(" ", "_").lower()
-      slug = "".join(c for c in slug if c.isalnum() or c == "_")
-      model_slug = os.path.basename(model_path).replace("/", "_")
-      out_path = os.path.join(
-          results_dir,
-          f"survey_{model_slug}_{slug}.json",
-      )
-      survey_data = {
-          "question": question,
-          "model": model_path,
-          "dataset": dataset_name,
-          "num_voters": num_voters,
-          "responses": {
-              vr.user_id: {
-                  "response": vr.response,
-                  "district": (
-                      vr.district["name"] if vr.district else None
-                  ),
-              }
-              for vr in voter_responses
-          },
-      }
-      with open(out_path, "w") as f:
-        json.dump(survey_data, f, indent=2)
-      logging.info("Survey results saved to %s", out_path)
+    # 4. Party policy responses.
+    party_responses = generate_party_responses(
+        issue=question,
+        voter_responses=voter_responses,
+        party_dir=party_dir,
+        model=model,
+        temperature=temperature,
+        max_workers=max_workers,
+        region=region,
+        parties=parties,
+    )
+
+    # 5. Voter ranking → ballots.
+    ballots = generate_voter_rankings(
+        voter_responses=voter_responses,
+        party_responses=party_responses,
+        model=model,
+        temperature=temperature,
+        max_rank=max_rank,
+        max_workers=max_workers,
+        region=region,
+    )
+
+    # Accumulate issue data for the consolidated output file.
+    all_issues[question] = {
+        "voter_opinions": {
+            vr.user_id: vr.response for vr in voter_responses
+        },
+        "party_responses": {
+            ideology: {
+                "party_name": pr.party_name,
+                "position_statement": pr.position_statement,
+                "key_proposals": pr.key_proposals,
+                "voter_alignment_score": pr.voter_alignment_score,
+                "reasoning": pr.reasoning,
+            }
+            for ideology, pr in party_responses.items()
+        },
+        "ballots": {
+            b.user_id: {
+                "ranking": b.ranking,
+                "district": b.district_name,
+            }
+            for b in ballots
+        },
+    }
 
     result = VotingRoundResult(
         question=question,
         voter_responses=voter_responses,
-        party_responses={},
+        party_responses=party_responses,
+        ballots=ballots,
         region=region,
     )
     results.append(result)
     logging.info(
-        "Question %d complete: %d voter responses.",
+        "Question %d complete: %d voter responses, %d ballots.",
         qi + 1,
         len(voter_responses),
+        len(ballots),
+    )
+
+  # -- Write consolidated output file ------------------------------------
+  if results_dir:
+    os.makedirs(results_dir, exist_ok=True)
+    model_slug = os.path.basename(model_path).replace("/", "_")
+    ds_label = f".{dataset_name}" if dataset_name else ""
+    out_path = os.path.join(
+        results_dir,
+        f"survey{ds_label}.{model_slug}.json",
+    )
+    output = {
+        "model": model_path,
+        "dataset": dataset_name,
+        "num_voters": num_voters,
+        "num_questions": len(questions),
+        "issues": all_issues,
+    }
+    with open(out_path, "w") as f:
+      json.dump(output, f, indent=2)
+    logging.info(
+        "Consolidated survey results (%d issues) saved to %s",
+        len(all_issues),
+        out_path,
     )
 
   logging.info(
-      "Survey-only mode finished: processed %d question(s).",
+      "Survey mode finished: processed %d question(s).",
       len(results),
   )
   return results
