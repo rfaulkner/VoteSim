@@ -88,8 +88,8 @@ class ElectionResult:
 # Seat allocation from population
 # ---------------------------------------------------------------------------
 
-MIN_SEATS = 1
-MAX_SEATS = 5
+MIN_SEATS = 4
+MAX_SEATS = 15
 
 
 def allocate_district_seats(

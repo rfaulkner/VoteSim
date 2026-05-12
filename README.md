@@ -108,7 +108,7 @@ VoteSim implements seven electoral systems in two families:
 | **Sainte-Laguë** | `sainte_lague` | Highest-averages method with **odd** divisors 1, 3, 5, 7, … (`2 × seats_won + 1`). Produces more proportional results; least biased toward large parties |
 | **Single Transferable Vote** | `stv` | Droop-quota method with fractional surplus transfer and elimination rounds. Rewards cross-party appeal through preference transfers |
 
-All proportional methods operate per-district. Districts are assigned 1–5 seats based on relative population via linear interpolation.
+All proportional methods operate per-district. Districts are assigned 4–15 seats based on relative population via linear interpolation.
 
 ## Deliberation Phase
 

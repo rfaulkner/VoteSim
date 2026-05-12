@@ -16,7 +16,7 @@
       "demographics_diversity": 0.75,
       "median_age": 38,
       "crime_rate": 0.6,
-      "seats": 10,
+      "seats": 13,
       "description": "A thriving urban hub with a mix of tech and manufacturing industries, known for its diverse population and strong community ties."
     },
     {
@@ -32,7 +32,7 @@
       "demographics_diversity": 0.6,
       "median_age": 35,
       "crime_rate": 0.5,
-      "seats": 6,
+      "seats": 7,
       "description": "A rapidly growing tech district with a strong focus on startups and innovation, attracting young professionals."
     },
     {
@@ -48,7 +48,7 @@
       "demographics_diversity": 0.3,
       "median_age": 42,
       "crime_rate": 0.8,
-      "seats": 4,
+      "seats": 6,
       "description": "A historic town with a strong agricultural tradition, known for its family-owned farms and local food markets."
     },
     {
@@ -64,7 +64,7 @@
       "demographics_diversity": 0.45,
       "median_age": 40,
       "crime_rate": 0.65,
-      "seats": 8,
+      "seats": 10,
       "description": "A university town with a strong emphasis on healthcare and research, home to several medical facilities and research institutions."
     },
     {
@@ -80,7 +80,7 @@
       "demographics_diversity": 0.4,
       "median_age": 41,
       "crime_rate": 0.6,
-      "seats": 12,
+      "seats": 15,
       "description": "A major industrial center with a long history in automotive manufacturing, home to several large factories."
     },
     {
@@ -112,7 +112,7 @@
       "demographics_diversity": 0.25,
       "median_age": 45,
       "crime_rate": 0.9,
-      "seats": 3,
+      "seats": 4,
       "description": "A small town centered around a historic county seat, known for its tourism and agricultural products."
     },
     {
@@ -128,7 +128,7 @@
       "demographics_diversity": 0.1,
       "median_age": 55,
       "crime_rate": 0.95,
-      "seats": 1,
+      "seats": 4,
       "description": "A small rural community with a focus on farming, with limited infrastructure and a close-knit population."
     }
   ]
