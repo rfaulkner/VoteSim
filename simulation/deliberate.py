@@ -310,9 +310,8 @@ Cast your vote considering BOTH your party's policy position AND your \
 constituents' interests.  If the bill conflicts with your constituents' \
 needs, you may vote against your party line.
 
-Return ONLY a JSON object:
-{{"name": "{member_name}", "party": "{party}", "seat": "{seat_label}", \
-"vote": "yes" or "no"}}
+Return ONLY a JSON object with your vote FIRST:
+{{"vote": "yes" or "no", "name": "{member_name}", "party": "{party}", "seat": "{seat_label}"}}
 
 Return ONLY valid JSON — no markdown fences, no commentary."""
 
@@ -487,7 +486,8 @@ def _strip_llm_wrapping(raw: str) -> str:
   """Remove <think> blocks and markdown fences from LLM output."""
   text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
   if text.startswith("```"):
-    text = text.split("\n", 1)[1]
+    parts = text.split("\n", 1)
+    text = parts[1] if len(parts) > 1 else parts[0][3:]
     text = text.rsplit("```", 1)[0]
     text = text.strip()
   return text
@@ -515,6 +515,11 @@ def _parse_json(raw: str, context: str) -> Any:
   try:
     return json.loads(text)
   except json.JSONDecodeError as e:
+    logging.debug(
+        "JSON parse failed for %s. Raw text (500 chars): %.500s",
+        context,
+        text,
+    )
     # Try regex extraction for first complete JSON object or array.
     obj_match = re.search(r'(\{.*\}|\[.*\])', text, re.DOTALL)
     if obj_match:
@@ -522,21 +527,41 @@ def _parse_json(raw: str, context: str) -> Any:
         return json.loads(obj_match.group())
       except json.JSONDecodeError:
         pass
-    # Try truncation repair.
+    # Last resort before truncation repair: regex extract the vote key
+    # directly from the raw text.  This handles cases where the JSON
+    # is truncated after the vote value but before the closing brace.
+    vote_match = re.search(
+        r'"vote"\s*:\s*"(yes|no)"', text, re.IGNORECASE
+    )
+    if vote_match:
+      logging.info(
+          "Extracted vote via regex for %s: %s",
+          context,
+          vote_match.group(1),
+      )
+      return {"vote": vote_match.group(1).lower()}
+    # Try truncation repair — progressively trim from the end.
     idx = max(text.find('{'), text.find('['))
     if idx >= 0:
       fragment = text[idx:]
-      for suffix in ('"]}', '"}', '"]}}}', '}', ']}', ']'):
-        try:
-          result = json.loads(fragment + suffix)
-          logging.info(
-              "Repaired truncated JSON for %s (added '%s').",
-              context,
-              suffix,
-          )
-          return result
-        except json.JSONDecodeError:
-          pass
+      for trim in range(0, min(len(fragment), 300)):
+        base = fragment if trim == 0 else fragment[:-trim]
+        if not base:
+          break
+        for suffix in (
+            '}', ']}', ']}', '"]}',
+            '"}', '"}}', '"]}}}',
+        ):
+          try:
+            result = json.loads(base + suffix)
+            logging.info(
+                "Repaired truncated JSON for %s (added '%s').",
+                context,
+                suffix,
+            )
+            return result
+          except json.JSONDecodeError:
+            pass
     logging.warning(
         "Failed to parse JSON for %s. Content: %.500s",
         context,
@@ -1172,7 +1197,7 @@ def _vote_single_member(
   with user():
     lm += prompt
   with assistant():
-    lm += gen(max_tokens=512, temperature=temperature, name="vote_json")
+    lm += gen(max_tokens=2048, temperature=temperature, name="vote_json")
 
   data = _parse_json(lm["vote_json"], f"vote from {member['name']}")
 

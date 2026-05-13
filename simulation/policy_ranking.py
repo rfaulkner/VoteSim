@@ -118,7 +118,8 @@ def _strip_llm_wrapping(raw: str) -> str:
   """Remove <think> blocks and markdown fences from LLM output."""
   text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
   if text.startswith("```"):
-    text = text.split("\n", 1)[1]
+    parts = text.split("\n", 1)
+    text = parts[1] if len(parts) > 1 else parts[0][3:]
     text = text.rsplit("```", 1)[0]
     text = text.strip()
   return text

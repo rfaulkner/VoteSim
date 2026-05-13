@@ -274,6 +274,11 @@ def run_pipeline(cfg: DictConfig):
     num_districts = region_cfg.get("num_districts", 5)
     region_cache_path = region_cfg.get("cache_path")
 
+  max_seats_per_district = None  # no cap by default
+  if debug:
+    max_seats_per_district = 1
+    logging.info("DEBUG override: max_seats_per_district=%d", max_seats_per_district)
+
   # Load questions from the dataset.
   pq_sampler = PoliticalQuestionSampler(pq_path)
   all_questions = pq_sampler.questions  # list of dicts with 'question' key
@@ -327,6 +332,7 @@ def run_pipeline(cfg: DictConfig):
         max_rank=max_rank,
         results_dir=results_dir,
         dataset_name=pq_dataset or None,
+        max_seats_per_district=max_seats_per_district,
     )
     logging.info(
         "Pipeline finished (survey mode): %d question(s).",
@@ -360,6 +366,7 @@ def run_pipeline(cfg: DictConfig):
         personas_path=personas_path,
         dataset_name=pq_dataset or None,
         voting_mode=voting_mode,
+        max_seats_per_district=max_seats_per_district,
     )
     logging.info(
         "Pipeline finished (platform mode): %d question(s).",
@@ -404,6 +411,7 @@ def run_pipeline(cfg: DictConfig):
         personas_path=personas_path,
         dataset_name=pq_dataset or None,
         voting_mode=voting_mode,
+        max_seats_per_district=max_seats_per_district,
     )
     results.append(result)
 

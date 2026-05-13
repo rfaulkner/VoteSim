@@ -58,6 +58,7 @@ from simulation.voting import VoterBallot
 
 def _read_district_seats(
     districts: List[Dict[str, Any]],
+    max_seats_per_district: Optional[int] = None,
 ) -> Dict[str, int]:
   """Read seat counts from district dicts.
 
@@ -66,13 +67,19 @@ def _read_district_seats(
 
   Args:
     districts: List of district dicts from a loaded region.
+    max_seats_per_district: If set, cap each district to at most
+      this many seats.
 
   Returns:
     ``{district_name: num_seats}``
   """
   if all("seats" in d for d in districts):
-    return {d["name"]: d["seats"] for d in districts}
-  return allocate_district_seats(districts)
+    seats = {d["name"]: d["seats"] for d in districts}
+  else:
+    seats = allocate_district_seats(districts)
+  if max_seats_per_district is not None:
+    seats = {k: min(v, max_seats_per_district) for k, v in seats.items()}
+  return seats
 
 
 @dataclass
@@ -208,6 +215,7 @@ def run_voting_round(
     personas_path: Optional[str] = None,
     dataset_name: Optional[str] = None,
     voting_mode: Optional[str] = None,
+    max_seats_per_district: Optional[int] = None,
 ) -> VotingRoundResult:
   """Execute a full voting round with election.
 
@@ -327,7 +335,7 @@ def run_voting_round(
   # -- 6. Election — seat allocation --------------------------------------
   election: Optional[ElectionResult] = None
   if region and ballots:
-    district_seats = _read_district_seats(region.districts)
+    district_seats = _read_district_seats(region.districts, max_seats_per_district)
     logging.info("District seat allocation: %s", district_seats)
     election = run_election(
         ballots=ballots,
@@ -355,7 +363,7 @@ def run_voting_round(
   comparative_rankings: Optional[Dict[str, List[str]]] = None
   rankings_file: Optional[str] = None
   if voting_systems and region and ballots:
-    district_seats = _read_district_seats(region.districts)
+    district_seats = _read_district_seats(region.districts, max_seats_per_district)
     logging.info(
         "Starting comparative policy ranking across %d systems: %s",
         len(voting_systems),
@@ -452,6 +460,7 @@ def run_survey_only(
     max_rank: int = 3,
     results_dir: Optional[str] = None,
     dataset_name: Optional[str] = None,
+    max_seats_per_district: Optional[int] = None,
 ) -> List[VotingRoundResult]:
   """Run the pipeline through the voter ranking phase (phases 1-5).
 
@@ -716,6 +725,7 @@ def run_platform_mode(
     personas_path: Optional[str] = None,
     dataset_name: Optional[str] = None,
     voting_mode: Optional[str] = None,
+    max_seats_per_district: Optional[int] = None,
 ) -> List[VotingRoundResult]:
   """Run the pipeline in platform-only voting mode.
 
@@ -833,7 +843,7 @@ def run_platform_mode(
   # Pre-compute district seats for elections.
   district_seats: Optional[Dict[str, int]] = None
   if region:
-    district_seats = _read_district_seats(region.districts)
+    district_seats = _read_district_seats(region.districts, max_seats_per_district)
     logging.info("District seat allocation: %s", district_seats)
 
   # -- Per-question loop ---------------------------------------------------

@@ -443,7 +443,8 @@ def _parse_party_response(
   text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
 
   if text.startswith("```"):
-    text = text.split("\n", 1)[1]
+    parts = text.split("\n", 1)
+    text = parts[1] if len(parts) > 1 else parts[0][3:]
     text = text.rsplit("```", 1)[0]
     text = text.strip()
 
@@ -479,21 +480,35 @@ def _parse_party_response(
       data = None
 
     if data is None:
-      # Try truncation repair — find first '{' and close it.
+      # Try truncation repair — the model was cut off mid-output.
+      # Strategy: find the first '{', then progressively strip
+      # trailing characters until we can close the JSON.
       idx = text.find("{")
       if idx >= 0:
         fragment = text[idx:]
-        for suffix in ("\"}", "\"]}", "\"]}}", "}", "]}", "]}"):
-          try:
-            data = json.loads(fragment + suffix)
-            logging.info(
-                "Repaired truncated party JSON for %s (added '%s').",
-                platform.party_name,
-                suffix,
-            )
+        # Walk backwards to find a repairable truncation point.
+        for trim in range(0, min(len(fragment), 300)):
+          base = fragment if trim == 0 else fragment[:-trim]
+          if not base:
             break
-          except json.JSONDecodeError:
-            pass
+          for suffix in (
+              "}", "]}", "]}}", "]}}}", '"}', '"]}',
+              '"]}}', '"]}}}', '"}}', '"}}}',
+          ):
+            try:
+              data = json.loads(base + suffix)
+              logging.info(
+                  "Repaired truncated party JSON for %s "
+                  "(trimmed %d chars, added '%s').",
+                  platform.party_name,
+                  trim,
+                  suffix,
+              )
+              break
+            except json.JSONDecodeError:
+              pass
+          if data is not None:
+            break
 
     if data is None:
       logging.error("Failed to parse party JSON. Content: %.500s", text)
@@ -751,7 +766,8 @@ def _query_voter_ranking(
 
   # Strip markdown fences if present.
   if text.startswith("```"):
-    text = text.split("\n", 1)[1]
+    parts = text.split("\n", 1)
+    text = parts[1] if len(parts) > 1 else parts[0][3:]
     text = text.rsplit("```", 1)[0]
     text = text.strip()
 
@@ -770,9 +786,11 @@ def _query_voter_ranking(
       ranking = None
     if ranking is None:
       logging.warning(
-          "Failed to parse ranking JSON for voter %s. Raw: %.200s",
+          "Failed to parse ranking JSON for voter %s."
+          " Stripped: %.200s  |  Original raw: %.200s",
           voter_response.user_id,
           text,
+          raw,
       )
       # Fallback: use per-voter randomised order (not alphabetical,
       # which would always put 'conservative' first).
