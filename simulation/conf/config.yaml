@@ -1,3 +1,4 @@
+debug: false  # true = 10 voters, 2 parties, 2 systems, verbose LLM output
 mode: pipeline  # "pipeline" | "query" | "compare" | "judge"
 
 llm:
@@ -41,7 +42,7 @@ pipeline:
     max_rounds: 5                # maximum bill consideration attempts
 
 political_questions:
-  dataset: "diverse-12"          # one of: diverse-12, diverse-20, harm-12, harm-20, legacy
+  dataset: "divisive-12"          # one of: diverse-12, diverse-20, harm-12, harm-20, legacy
   # question_indices: [0, 3, 7]  # optional: 0-based indices to sample from; omit for all
 
 judge:
