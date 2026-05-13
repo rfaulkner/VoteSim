@@ -10,16 +10,15 @@ This module provides two pipeline stages:
    context.
 """
 
+from concurrent import futures
+from dataclasses import asdict
+from dataclasses import dataclass
 import hashlib
 import json
 import logging
 import os
 import random
 import re
-
-from concurrent import futures
-from dataclasses import asdict
-from dataclasses import dataclass
 from typing import Any
 from typing import Dict
 from typing import List
@@ -29,7 +28,6 @@ from typing import Tuple
 from pathfinder import assistant
 from pathfinder import gen
 from pathfinder import user
-
 from simulation.district_generator import Region
 from simulation.policy_generator import PartyPlatform
 from simulation.policy_generator import PolicyResponse
@@ -122,6 +120,7 @@ Return ONLY the JSON array — no other text."""
 # Data classes
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class VoterResponse:
   """A single voter's response to a social issue."""
@@ -162,7 +161,7 @@ def _format_region_block(
       f"\nYou live in the region of '{region.region_name}'"
       f" (inspired by {region.description}).\n"
       f"Specifically, you live in the district of '{district['name']}'.\n"
-      f"District Characteristics:\n"
+      "District Characteristics:\n"
       f"- Wealth: {district['wealth']} (0-1 scale)\n"
       f"- Urbanisation: {district['urbanisation']} (0-1 scale)\n"
       f"- Primary Industry: {district['industry']}\n"
@@ -175,8 +174,7 @@ def _format_demographics_block(demo: Dict[str, Any]) -> str:
   """Build a demographics bullet list from the expanded PRISM data."""
   lines = []
   _add = lambda label, key: (  # pylint: disable=unnecessary-lambda-assignment
-      lines.append(f"- {label}: {demo[key]}")
-      if demo.get(key) else None
+      lines.append(f"- {label}: {demo[key]}") if demo.get(key) else None
   )
   _add("Age", "age")
   _add("Gender", "gender")
@@ -215,7 +213,8 @@ def _format_constituency_block(
 
   if district_names:
     lines.append(
-        f"Districts represented by respondents: {', '.join(sorted(district_names))}"
+        "Districts represented by respondents:"
+        f" {', '.join(sorted(district_names))}"
     )
 
   return "\n".join(lines)
@@ -254,7 +253,7 @@ def _query_voter(
     region: Optional[Region] = None,
     district: Optional[Dict[str, Any]] = None,
 ) -> VoterResponse:
-  """Query the LLM as a single voter.  Intended to run in a thread.
+  """Query the LLM as a single voter. Intended to run in a thread.
 
   ``model`` should be a shared PathFinder model instance — this function
   calls ``model.copy()`` to obtain a thread-local conversation state while
@@ -308,10 +307,10 @@ def generate_voter_responses(
     seed: Random seed — fixes both voter sampling and LLM generation.
     temperature: Sampling temperature.
     max_workers: Maximum concurrent LLM calls.  Defaults to *k*.
-    region: Optional ``Region`` — if provided, each voter is
-      deterministically assigned a district based on their user_id.
-    voters_override: If provided, use these pre-loaded personas
-      instead of sampling from ``prism_sampler``.
+    region: Optional ``Region`` — if provided, each voter is deterministically
+      assigned a district based on their user_id.
+    voters_override: If provided, use these pre-loaded personas instead of
+      sampling from ``prism_sampler``.
 
   Returns:
     A list of ``VoterResponse`` objects, one per sampled voter.
@@ -380,6 +379,7 @@ def generate_voter_responses(
 # Party response generation
 # ---------------------------------------------------------------------------
 
+
 def _parse_party_response(
     raw: str,
     platform: PartyPlatform,
@@ -430,7 +430,7 @@ def _query_party(
     temperature: float,
     region: Optional[Region] = None,
 ) -> PolicyResponse:
-  """Generate a policy response for a single party.  Runs in a thread.
+  """Generate a policy response for a single party. Runs in a thread.
 
   ``model`` should be a shared PathFinder model instance — this function
   calls ``model.copy()`` to obtain a thread-local conversation state.
@@ -479,17 +479,16 @@ def generate_party_responses(
   Args:
     issue: The social-issue question text.
     voter_responses: Voter responses from ``generate_voter_responses``.
-    party_dir: Path to directory containing party platform JSON files
-      (e.g. ``dataset/party/``).
+    party_dir: Path to directory containing party platform JSON files (e.g.
+      ``dataset/party/``).
     model: A loaded PathFinder model instance (shared across threads).
     temperature: Sampling temperature.
-    max_workers: Maximum concurrent LLM calls.  Defaults to the number
-      of party platforms.
+    max_workers: Maximum concurrent LLM calls.  Defaults to the number of party
+      platforms.
     region: Optional ``Region`` — passed to party prompts to provide
       constituency context.
-    parties: Optional list of ideology names to include (e.g.
-      ``["liberal", "conservative"]``).  If ``None``, all platforms in
-      ``party_dir`` are used.
+    parties: Optional list of ideology names to include (e.g. ``["liberal",
+      "conservative"]``).  If ``None``, all platforms in ``party_dir`` are used.
 
   Returns:
     A dict mapping ideology string to its ``PolicyResponse``.
@@ -587,11 +586,7 @@ def _format_party_policies_block(
   lines = []
   for ideology in ideologies:
     pr = party_responses[ideology]
-    proposals = (
-        "; ".join(pr.key_proposals)
-        if pr.key_proposals
-        else "N/A"
-    )
+    proposals = "; ".join(pr.key_proposals) if pr.key_proposals else "N/A"
     lines.append(
         f"  {pr.party_name} ({pr.ideology}):\n"
         f"    Position: {pr.position_statement}\n"
@@ -663,13 +658,29 @@ def _query_voter_ranking(
   try:
     ranking = json.loads(text)
   except json.JSONDecodeError:
-    logging.warning(
-        "Failed to parse ranking JSON for voter %s. Raw: %.200s",
-        voter_response.user_id,
-        text,
-    )
-    # Fallback: use available parties in alphabetical order.
-    ranking = available_parties[:effective_rank]
+    # The model may have appended reasoning after the JSON array.
+    # Try to extract the first JSON array from the response.
+    array_match = re.search(r"\[.*?\]", text, re.DOTALL)
+    if array_match:
+      try:
+        ranking = json.loads(array_match.group())
+      except json.JSONDecodeError:
+        ranking = None
+    else:
+      ranking = None
+    if ranking is None:
+      logging.warning(
+          "Failed to parse ranking JSON for voter %s. Raw: %.200s",
+          voter_response.user_id,
+          text,
+      )
+      # Fallback: use available parties in alphabetical order.
+      ranking = available_parties[:effective_rank]
+    else:
+      logging.info(
+          "Recovered ranking from trailing text for voter %s.",
+          voter_response.user_id,
+      )
 
   # Validate and sanitise: keep only recognised ideologies.
   valid = [r for r in ranking if r in party_responses]
@@ -809,10 +820,7 @@ def _format_platforms_block(
     ordered.sort(key=lambda x: x.ideology)
   lines = []
   for p in ordered:
-    lines.append(
-        f"=== {p.party_name} ({p.ideology}) ===\n"
-        f"{p.summary()}"
-    )
+    lines.append(f"=== {p.party_name} ({p.ideology}) ===\n{p.summary()}")
   return "\n\n".join(lines)
 
 
@@ -828,8 +836,8 @@ def _query_platform_ranking(
   """Ask one voter to rank parties based on platforms only.
 
   Args:
-    voter_data: Raw PRISM voter dict with ``demographics``,
-      ``examples``, and ``user_id`` keys.
+    voter_data: Raw PRISM voter dict with ``demographics``, ``examples``, and
+      ``user_id`` keys.
     district: Optional district dict for this voter.
     platforms: List of ``PartyPlatform`` objects.
     model: A loaded PathFinder model instance.
@@ -845,14 +853,10 @@ def _query_platform_ranking(
   examples_str = _format_examples_block(voter_data["examples"])
   region_block = _format_region_block(region, district)
   voter_seed = int.from_bytes(
-      hashlib.md5(
-          f"{voter_data['user_id']}:platform_rank".encode()
-      ).digest(),
+      hashlib.md5(f"{voter_data['user_id']}:platform_rank".encode()).digest(),
       "big",
   )
-  platforms_block = _format_platforms_block(
-      platforms, voter_seed=voter_seed
-  )
+  platforms_block = _format_platforms_block(platforms, voter_seed=voter_seed)
 
   available = sorted(p.ideology for p in platforms)
   effective_rank = min(max_rank, len(available))
@@ -877,9 +881,7 @@ def _query_platform_ranking(
     )
 
   raw = lm["ranking_json"]
-  text = re.sub(
-      r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL
-  ).strip()
+  text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
   if text.startswith("```"):
     text = text.split("\n", 1)[1]
     text = text.rsplit("```", 1)[0]
@@ -888,13 +890,27 @@ def _query_platform_ranking(
   try:
     ranking = json.loads(text)
   except json.JSONDecodeError:
-    logging.warning(
-        "Failed to parse platform ranking JSON for voter %s."
-        " Raw: %.200s",
-        voter_data["user_id"],
-        text,
-    )
-    ranking = available[:effective_rank]
+    # The model may have appended reasoning after the JSON array.
+    array_match = re.search(r"\[.*?\]", text, re.DOTALL)
+    if array_match:
+      try:
+        ranking = json.loads(array_match.group())
+      except json.JSONDecodeError:
+        ranking = None
+    else:
+      ranking = None
+    if ranking is None:
+      logging.warning(
+          "Failed to parse platform ranking JSON for voter %s. Raw: %.200s",
+          voter_data["user_id"],
+          text,
+      )
+      ranking = available[:effective_rank]
+    else:
+      logging.info(
+          "Recovered platform ranking from trailing text for voter %s.",
+          voter_data["user_id"],
+      )
 
   valid = [r for r in ranking if r in set(available)]
   if len(valid) < effective_rank:
@@ -920,9 +936,7 @@ def prepare_voters(
     seed: int,
     region: Optional[Region] = None,
     voters_override: Optional[List[Dict[str, Any]]] = None,
-) -> Tuple[
-    List[Dict[str, Any]], List[Optional[Dict[str, Any]]]
-]:
+) -> Tuple[List[Dict[str, Any]], List[Optional[Dict[str, Any]]]]:
   """Sample voters from PRISM and assign districts.
 
   This is a reusable helper that separates voter sampling from
@@ -933,10 +947,10 @@ def prepare_voters(
     num_voters: Number of voters to sample.
     prism_sampler: An initialised ``PrismSampler`` instance.
     seed: Random seed for voter sampling.
-    region: Optional ``Region`` — if provided, each voter is
-      deterministically assigned a district.
-    voters_override: If provided, use these pre-loaded personas
-      instead of sampling from ``prism_sampler``.
+    region: Optional ``Region`` — if provided, each voter is deterministically
+      assigned a district.
+    voters_override: If provided, use these pre-loaded personas instead of
+      sampling from ``prism_sampler``.
 
   Returns:
     A tuple of ``(voters, voter_districts)`` where ``voters``
@@ -988,10 +1002,8 @@ def survey_voters(
   of voters to be reused across multiple questions.
 
   Args:
-    voters: List of raw PRISM voter dicts (from
-      ``prepare_voters``).
-    voter_districts: Parallel list of district dicts (from
-      ``prepare_voters``).
+    voters: List of raw PRISM voter dicts (from ``prepare_voters``).
+    voter_districts: Parallel list of district dicts (from ``prepare_voters``).
     question: The social-issue question text.
     model: A loaded PathFinder model instance.
     temperature: Sampling temperature.
@@ -1066,8 +1078,7 @@ def generate_platform_rankings(
   allocation across all issues.
 
   Args:
-    voters: List of raw PRISM voter dicts (from
-      ``prepare_voters``).
+    voters: List of raw PRISM voter dicts (from ``prepare_voters``).
     voter_districts: Parallel list of district dicts.
     platforms: List of ``PartyPlatform`` objects.
     model: A loaded PathFinder model instance.
@@ -1080,8 +1091,7 @@ def generate_platform_rankings(
     A list of ``VoterBallot`` objects, one per voter.
   """
   logging.info(
-      "Generating platform rankings for %d voters "
-      "(max_rank=%d, %d parties)...",
+      "Generating platform rankings for %d voters (max_rank=%d, %d parties)...",
       len(voters),
       max_rank,
       len(platforms),
