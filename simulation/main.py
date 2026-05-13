@@ -19,9 +19,14 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 @hydra.main(version_base=None, config_path="conf", config_name="config")
 def main(cfg: omegaconf.DictConfig):
+  debug = cfg.get("debug", False)
+  log_level = logging.DEBUG if debug else logging.INFO
   logging.basicConfig(
-      level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+      level=log_level,
+      format="%(asctime)s[%(name)s][%(levelname)s] - %(message)s",
   )
+  if debug:
+    logging.info("*** DEBUG MODE ENABLED ***")
   logging.info("Config:\n%s", omegaconf.OmegaConf.to_yaml(cfg))
 
   mode = cfg.get("mode", "pipeline")

@@ -435,6 +435,11 @@ def _parse_party_response(
     platform: PartyPlatform,
 ) -> PolicyResponse:
   """Parse a single-issue policy JSON from the LLM into a PolicyResponse."""
+  logging.debug(
+      "Raw party response for %s (first 500 chars): %.500s",
+      platform.party_name,
+      raw,
+  )
   text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
 
   if text.startswith("```"):
@@ -736,6 +741,11 @@ def _query_voter_ranking(
     lm += gen(max_tokens=512, temperature=temperature, name="ranking_json")
 
   raw = lm["ranking_json"]
+  logging.debug(
+      "Raw voter ranking for %s (first 500 chars): %.500s",
+      voter_response.user_id,
+      raw,
+  )
   # Strip <think> blocks if present.
   text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
 
@@ -978,6 +988,11 @@ def _query_platform_ranking(
     )
 
   raw = lm["ranking_json"]
+  logging.debug(
+      "Raw platform ranking for %s (first 500 chars): %.500s",
+      voter_data["user_id"],
+      raw,
+  )
   text = re.sub(r"<think>.*?(</think>|$)", "", raw, flags=re.DOTALL).strip()
   if text.startswith("```"):
     text = text.split("\n", 1)[1]

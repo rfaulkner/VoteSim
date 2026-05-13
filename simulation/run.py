@@ -209,6 +209,7 @@ def run_pipeline(cfg: DictConfig):
   is_api = cfg.llm.get("is_api", False)
   backend = cfg.llm.get("backend", "transformers")
   model_path = cfg.llm.path
+  debug = cfg.get("debug", False)
 
   # Pipeline-specific settings.
   pipe_cfg = cfg.get("pipeline", {})
@@ -232,6 +233,23 @@ def run_pipeline(cfg: DictConfig):
   delib_cfg = pipe_cfg.get("deliberation", {})
   deliberation_enabled = delib_cfg.get("enabled", True)
   deliberation_max_rounds = delib_cfg.get("max_rounds", 3)
+
+  # --- Debug overrides ---------------------------------------------------
+  if debug:
+    num_voters = min(num_voters, 10)
+    if parties and len(parties) > 2:
+      parties = parties[:2]
+    if voting_systems and len(voting_systems) > 2:
+      voting_systems = voting_systems[:2]
+    max_workers = min(max_workers or 2, 2)
+    logging.info(
+        "DEBUG overrides: num_voters=%d, parties=%s, "
+        "voting_systems=%s, max_workers=%d",
+        num_voters,
+        parties,
+        voting_systems,
+        max_workers,
+    )
 
   # Dataset paths.
   prism_dir = cfg.get("dataset_dir", DEFAULT_PRISM_DATASET_DIR)
@@ -272,6 +290,11 @@ def run_pipeline(cfg: DictConfig):
             len(all_questions),
         )
     all_questions = selected
+
+  # In debug mode, limit to first question only.
+  if debug and len(all_questions) > 1:
+    logging.info("DEBUG: limiting to first question only.")
+    all_questions = all_questions[:1]
 
   logging.info(
       "Running pipeline over %d question(s) from '%s'.",
