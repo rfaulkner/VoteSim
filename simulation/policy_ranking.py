@@ -406,7 +406,7 @@ def _query_voter_system_ranking(
     lm += prompt
   with assistant():
     lm += gen(
-        max_tokens=1024,
+        max_tokens=4096,
         temperature=temperature,
         name="system_ranking_json",
     )
@@ -414,25 +414,110 @@ def _query_voter_system_ranking(
   raw = lm["system_ranking_json"]
   text = _strip_llm_wrapping(raw)
 
+  logging.debug(
+      "Voter %s system ranking raw (first 300 chars): %.300s",
+      voter_response.user_id,
+      text,
+  )
+
   # Parse: expect {"ranking": [...], "scores": {...}}
   # Fall back to bare list for backward compat.
   ranking = system_names  # default
   scores: Dict[str, float] = {}  # default
 
+  data = None
+  ranking_match = None
   try:
     data = json.loads(text)
-  except json.JSONDecodeError:
-    logging.warning(
-        "Failed to parse system ranking JSON for voter %s."
-        " Raw: %.200s",
+    logging.debug(
+        "Voter %s parsed JSON type=%s keys=%s",
         voter_response.user_id,
-        text,
+        type(data).__name__,
+        list(data.keys())[:5] if isinstance(data, dict) else "N/A",
     )
-    data = None
+  except json.JSONDecodeError:
+    # The JSON is likely truncated mid-scores.  Try to recover.
+    # Strategy 1: try common closing suffixes.
+    for suffix in ('}}', '"}', '"}}', '}', ']}'):
+      try:
+        data = json.loads(text + suffix)
+        logging.info(
+            "Repaired truncated system ranking JSON for voter %s "
+            "(added '%s').",
+            voter_response.user_id,
+            suffix,
+        )
+        break
+      except json.JSONDecodeError:
+        pass
+
+    if data is None:
+      # Strategy 2: extract the ranking array even if the outer
+      # object is broken.  The ranking is almost always complete;
+      # only the scores dict gets truncated.
+      ranking_match = re.search(
+          r'"ranking"\s*:\s*(\[.*?\])', text, re.DOTALL
+      )
+      if ranking_match:
+        try:
+          ranking = json.loads(ranking_match.group(1))
+          logging.info(
+              "Extracted ranking array from truncated JSON for "
+              "voter %s.",
+              voter_response.user_id,
+          )
+        except json.JSONDecodeError:
+          pass
+      # Also try to salvage partial scores.
+      scores_match = re.search(
+          r'"scores"\s*:\s*\{(.*)', text, re.DOTALL
+      )
+      if scores_match:
+        partial = scores_match.group(1)
+        # Extract key-value pairs that are complete.
+        for kv in re.finditer(
+            r'"([^"]+)"\s*:\s*([\d.]+)', partial
+        ):
+          try:
+            scores[kv.group(1)] = float(kv.group(2))
+          except ValueError:
+            pass
+
+    if data is None and not ranking_match:
+      logging.warning(
+          "Failed to parse system ranking JSON for voter %s."
+          " Raw: %.200s",
+          voter_response.user_id,
+          text,
+      )
 
   if isinstance(data, dict):
-    ranking = data.get("ranking", system_names)
-    scores = data.get("scores", {})
+    if "ranking" in data or "scores" in data:
+      # Expected format: {"ranking": [...], "scores": {...}}
+      ranking = data.get("ranking", system_names)
+      scores = data.get("scores", scores)
+    else:
+      # Check if the dict keys are system names → flat scores dict.
+      # e.g. {"stv": 4.8, "dhondt": 4.5, ...}
+      system_set = set(system_names)
+      dict_keys = set(data.keys())
+      if dict_keys & system_set:
+        logging.info(
+            "Voter %s returned flat scores dict (keys: %s).",
+            voter_response.user_id,
+            sorted(dict_keys & system_set)[:4],
+        )
+        scores = data
+        # Derive ranking from scores (highest first).
+        scored = {k: v for k, v in data.items() if k in system_set}
+        if scored:
+          ranking = sorted(scored, key=lambda k: -scored[k])
+      else:
+        logging.warning(
+            "Voter %s returned dict with unrecognised keys: %s",
+            voter_response.user_id,
+            sorted(data.keys())[:5],
+        )
   elif isinstance(data, list):
     # Legacy bare-array response.
     ranking = data
@@ -443,6 +528,17 @@ def _query_voter_system_ranking(
     if s not in valid:
       valid.append(s)
   ranking = valid[: len(system_names)]
+
+  # If we have a ranking but no scores, derive scores from position.
+  # Maps rank 0 → 5.0, last → 1.0 linearly.
+  if not scores and ranking != system_names:
+    n = len(ranking)
+    for i, s in enumerate(ranking):
+      scores[s] = round(5.0 - (4.0 * i / max(n - 1, 1)), 1)
+    logging.info(
+        "Derived scores from ranking for voter %s.",
+        voter_response.user_id,
+    )
 
   # Validate scores: clamp to [1.0, 5.0], round to 0.1.
   validated_scores: Dict[str, float] = {}

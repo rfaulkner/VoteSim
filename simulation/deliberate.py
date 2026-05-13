@@ -493,19 +493,53 @@ def _strip_llm_wrapping(raw: str) -> str:
   return text
 
 
+def _rejoin_prefix(prefix: str, gen_output: str) -> str:
+  """Reconstruct JSON from gen output, handling models that echo the prefix."""
+  stripped = gen_output.lstrip()
+  if stripped.startswith(prefix):
+    return stripped
+  return prefix + gen_output
+
+
 def _parse_json(raw: str, context: str) -> Any:
   """Parse JSON from raw LLM output with stripping and error handling."""
   text = _strip_llm_wrapping(raw)
   if not text:
     logging.warning("Empty LLM output for %s", context)
     return {}
+  # Deduplicate opening braces/brackets from prefix echo.
+  while text.startswith('{{') or text.startswith('{ {'):
+    text = text.replace('{ {', '{', 1).replace('{{', '{', 1)
+  while text.startswith('[[') or text.startswith('[ ['):
+    text = text.replace('[ [', '[', 1).replace('[[', '[', 1)
   try:
     return json.loads(text)
   except json.JSONDecodeError as e:
+    # Try regex extraction for first complete JSON object or array.
+    obj_match = re.search(r'(\{.*\}|\[.*\])', text, re.DOTALL)
+    if obj_match:
+      try:
+        return json.loads(obj_match.group())
+      except json.JSONDecodeError:
+        pass
+    # Try truncation repair.
+    idx = max(text.find('{'), text.find('['))
+    if idx >= 0:
+      fragment = text[idx:]
+      for suffix in ('"]}', '"}', '"]}}}', '}', ']}', ']'):
+        try:
+          result = json.loads(fragment + suffix)
+          logging.info(
+              "Repaired truncated JSON for %s (added '%s').",
+              context,
+              suffix,
+          )
+          return result
+        except json.JSONDecodeError:
+          pass
     logging.warning(
-        "Failed to parse JSON for %s: %s. Content: %.500s",
+        "Failed to parse JSON for %s. Content: %.500s",
         context,
-        e,
         text,
     )
     return {}

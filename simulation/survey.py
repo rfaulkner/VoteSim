@@ -376,6 +376,56 @@ def generate_voter_responses(
 
 
 # ---------------------------------------------------------------------------
+# LLM output helpers
+# ---------------------------------------------------------------------------
+
+
+def _rejoin_prefix(prefix: str, gen_output: str) -> str:
+  """Reconstruct JSON from gen output, handling models that echo the prefix.
+
+  When we inject '{' or '[' as an assistant prefix, some models echo it
+  (producing '{ {' or '[ [').  This helper avoids the double-prefix problem.
+  """
+  stripped = gen_output.lstrip()
+  if stripped.startswith(prefix):
+    return stripped
+  return prefix + gen_output
+
+
+def _normalize_ranking(ranking: Any) -> list:
+  """Normalise a ranking to a flat list of ideology strings.
+
+  Models may return various formats:
+    - ["conservative", "liberal", ...]               (correct)
+    - [{"party": "conservative"}, ...]               (dict items)
+    - [["conservative"], ["liberal"], ...]            (nested lists)
+    - [{"1": "conservative", "2": "liberal"}]         (numbered dict)
+  This function flattens them all to a list of strings.
+  """
+  if not isinstance(ranking, list):
+    return []
+  result = []
+  for item in ranking:
+    if isinstance(item, str):
+      result.append(item.strip())
+    elif isinstance(item, dict):
+      # Try common keys, then fall back to first string value.
+      for key in ('ideology', 'party', 'name', 'party_ideology'):
+        if key in item and isinstance(item[key], str):
+          result.append(item[key].strip())
+          break
+      else:
+        # Use the first string value in the dict.
+        for v in item.values():
+          if isinstance(v, str):
+            result.append(v.strip())
+            break
+    elif isinstance(item, list) and item and isinstance(item[0], str):
+      result.append(item[0].strip())
+  return result
+
+
+# ---------------------------------------------------------------------------
 # Party response generation
 # ---------------------------------------------------------------------------
 
@@ -398,14 +448,54 @@ def _parse_party_response(
         f"Raw: {raw!r:.200}"
     )
 
+  # Deduplicate opening braces/brackets that occur when a model echoes
+  # the prefix constraint we injected (e.g. '{ {' or '{{').
+  while text.startswith('{{') or text.startswith('{ {'):
+    text = text.replace('{ {', '{', 1).replace('{{', '{', 1)
+  while text.startswith('[[') or text.startswith('[ ['):
+    text = text.replace('[ [', '[', 1).replace('[[', '[', 1)
+
   try:
     data = json.loads(text)
-  except json.JSONDecodeError as e:
-    logging.error("Failed to parse party JSON.  Content: %.500s", text)
-    raise ValueError(
-        f"Invalid JSON from LLM for {platform.party_name}: {e}. "
-        f"First 200 chars: {text[:200]!r}"
-    ) from e
+  except json.JSONDecodeError:
+    # Model may have appended reasoning after the JSON object.
+    # Try to extract the first complete JSON object.
+    obj_match = re.search(r"\{.*\}", text, re.DOTALL)
+    if obj_match:
+      try:
+        data = json.loads(obj_match.group())
+        logging.info(
+            "Recovered party JSON from surrounding text for %s.",
+            platform.party_name,
+        )
+      except json.JSONDecodeError:
+        data = None
+    else:
+      data = None
+
+    if data is None:
+      # Try truncation repair — find first '{' and close it.
+      idx = text.find("{")
+      if idx >= 0:
+        fragment = text[idx:]
+        for suffix in ("\"}", "\"]}", "\"]}}", "}", "]}", "]}"):
+          try:
+            data = json.loads(fragment + suffix)
+            logging.info(
+                "Repaired truncated party JSON for %s (added '%s').",
+                platform.party_name,
+                suffix,
+            )
+            break
+          except json.JSONDecodeError:
+            pass
+
+    if data is None:
+      logging.error("Failed to parse party JSON. Content: %.500s", text)
+      raise ValueError(
+          f"Invalid JSON from LLM for {platform.party_name}. "
+          f"First 200 chars: {text[:200]!r}"
+      )
 
   # Handle both bare object and wrapped list.
   if isinstance(data, list):
@@ -674,21 +764,28 @@ def _query_voter_ranking(
           voter_response.user_id,
           text,
       )
-      # Fallback: use available parties in alphabetical order.
-      ranking = available_parties[:effective_rank]
+      # Fallback: use per-voter randomised order (not alphabetical,
+      # which would always put 'conservative' first).
+      fallback = list(available_parties)
+      random.Random(voter_seed).shuffle(fallback)
+      ranking = fallback[:effective_rank]
     else:
       logging.info(
           "Recovered ranking from trailing text for voter %s.",
           voter_response.user_id,
       )
 
+  # Normalise: handle models that return dicts instead of strings.
+  ranking = _normalize_ranking(ranking)
+
   # Validate and sanitise: keep only recognised ideologies.
   valid = [r for r in ranking if r in party_responses]
   if len(valid) < effective_rank:
-    # Fill missing slots with any un-ranked parties.
-    for p in available_parties:
-      if p not in valid:
-        valid.append(p)
+    # Fill missing slots with un-ranked parties in randomised order.
+    remaining = [p for p in available_parties if p not in valid]
+    random.Random(voter_seed).shuffle(remaining)
+    for p in remaining:
+      valid.append(p)
       if len(valid) >= effective_rank:
         break
   ranking = valid[:effective_rank]
@@ -905,18 +1002,25 @@ def _query_platform_ranking(
           voter_data["user_id"],
           text,
       )
-      ranking = available[:effective_rank]
+      # Fallback: per-voter randomised order (not alphabetical).
+      fallback = list(available)
+      random.Random(voter_seed).shuffle(fallback)
+      ranking = fallback[:effective_rank]
     else:
       logging.info(
           "Recovered platform ranking from trailing text for voter %s.",
           voter_data["user_id"],
       )
 
+  # Normalise: handle models that return dicts instead of strings.
+  ranking = _normalize_ranking(ranking)
+
   valid = [r for r in ranking if r in set(available)]
   if len(valid) < effective_rank:
-    for p in available:
-      if p not in valid:
-        valid.append(p)
+    remaining = [p for p in available if p not in valid]
+    random.Random(voter_seed).shuffle(remaining)
+    for p in remaining:
+      valid.append(p)
       if len(valid) >= effective_rank:
         break
   ranking = valid[:effective_rank]
