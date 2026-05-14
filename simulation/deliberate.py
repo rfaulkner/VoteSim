@@ -887,7 +887,11 @@ def _draft_bill(
     lm += gen(max_tokens=4096, temperature=temperature, name="bill_json")
 
   data = _parse_json(lm["bill_json"], f"draft_bill round {round_number}")
-  points = data.get("points", [])
+  if isinstance(data, list):
+    # LLM returned a bare array of bill points instead of {"points": [...]}.
+    points = [str(p) for p in data] if data else []
+  else:
+    points = data.get("points", [])
   if not points:
     logging.warning(
         "LLM returned no bill points in round %d. Using placeholder.",
