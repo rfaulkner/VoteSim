@@ -217,12 +217,37 @@ def run_compare(cfg: DictConfig):
   model_slug = _sanitize_model_name(model_path)
 
   def _build_path(mode: str) -> str:
+    """Find the results file for a given mode.
+
+    First tries the exact constructed path using the configured
+    dataset_name.  If that doesn't exist, scans the results directory
+    for any file matching ``*.{mode}.{model_slug}.json`` so that
+    files saved under a different dataset prefix are still found.
+    """
     parts = []
     if dataset_name:
       parts.append(dataset_name)
     parts.append(mode)
     parts.append(model_slug)
-    return os.path.join(results_dir, ".".join(parts) + ".json")
+    exact = os.path.join(results_dir, ".".join(parts) + ".json")
+    if os.path.exists(exact):
+      return exact
+
+    # Scan for a matching file: <anything>.{mode}.{model_slug}.json
+    suffix = f".{mode}.{model_slug}.json"
+    if os.path.isdir(results_dir):
+      for fname in os.listdir(results_dir):
+        if fname.endswith(suffix):
+          logging.info(
+              "Exact path %s not found; discovered %s instead.",
+              exact,
+              fname,
+          )
+          return os.path.join(results_dir, fname)
+
+    # Nothing found — return the exact path so the downstream error
+    # message is still informative.
+    return exact
 
   issue_path = _build_path("issue")
   platform_path = _build_path("platform")
