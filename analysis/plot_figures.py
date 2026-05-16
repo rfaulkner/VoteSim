@@ -422,6 +422,242 @@ def plot_rank_choice_dist(all_data):
 
 
 # ---------------------------------------------------------------------------
+# Plot: combined 2x2 figure
+# ---------------------------------------------------------------------------
+
+def _compute_rank_choice_data(all_data):
+    """Compute rank-choice percentage matrix from all_data."""
+    rank_counts = {}
+    for model_name, model_data in all_data.items():
+        for issue_key, issue in model_data.items():
+            ballots = issue.get("ballots", {})
+            for voter_id, ballot in ballots.items():
+                ranking = ballot.get("ranking", [])
+                for i, party in enumerate(ranking):
+                    if i not in rank_counts:
+                        rank_counts[i] = Counter()
+                    rank_counts[i][party] += 1
+
+    num_ranks = min(max(rank_counts.keys()) + 1, 6)
+    pct_matrix = np.zeros((len(PARTY_ORDER), num_ranks))
+    for rank in range(num_ranks):
+        total = sum(rank_counts.get(rank, Counter()).values())
+        if total == 0:
+            continue
+        for j, party in enumerate(PARTY_ORDER):
+            pct_matrix[j, rank] = (
+                rank_counts.get(rank, Counter()).get(party, 0) / total * 100
+            )
+    return pct_matrix, num_ranks
+
+
+def _compute_seats_by_issue_data(all_data):
+    """Compute per-issue party seat share percentages."""
+    first_model_data = next(iter(all_data.values()))
+    issue_keys = list(first_model_data.keys())
+
+    party_pcts = {p: [] for p in PARTY_ORDER}
+    for issue_key in issue_keys:
+        allocations = []
+        for model_name, model_data in all_data.items():
+            issue = model_data.get(issue_key, {})
+            gov = issue.get("government", {})
+            for sys_name in SYSTEM_ORDER:
+                sys_gov = gov.get(sys_name, {})
+                seat_alloc = sys_gov.get("seat_allocation", {})
+                if seat_alloc:
+                    allocations.append(seat_alloc)
+        pcts = _compute_seat_pcts(allocations)
+        for party in PARTY_ORDER:
+            party_pcts[party].append(pcts.get(party, 0))
+
+    for p in PARTY_ORDER:
+        party_pcts[p] = np.array(party_pcts[p])
+    return party_pcts
+
+
+def _compute_seats_by_model_data(all_data):
+    """Compute per-model party seat share percentages."""
+    model_names = list(MODEL_FILES.keys())
+    party_pcts = {p: [] for p in PARTY_ORDER}
+
+    for model_name in model_names:
+        model_data = all_data[model_name]
+        allocations = []
+        for issue_key, issue in model_data.items():
+            gov = issue.get("government", {})
+            for sys_name in SYSTEM_ORDER:
+                sys_gov = gov.get(sys_name, {})
+                seat_alloc = sys_gov.get("seat_allocation", {})
+                if seat_alloc:
+                    allocations.append(seat_alloc)
+        pcts = _compute_seat_pcts(allocations)
+        for party in PARTY_ORDER:
+            party_pcts[party].append(pcts.get(party, 0))
+
+    for p in PARTY_ORDER:
+        party_pcts[p] = np.array(party_pcts[p])
+    return model_names, party_pcts
+
+
+def _compute_seats_by_system_data(all_data):
+    """Compute per-system party seat share percentages."""
+    sys_labels = [SYSTEM_DISPLAY[s] for s in SYSTEM_ORDER]
+    party_pcts = {p: [] for p in PARTY_ORDER}
+
+    for sys_name in SYSTEM_ORDER:
+        allocations = []
+        for model_name, model_data in all_data.items():
+            for issue_key, issue in model_data.items():
+                gov = issue.get("government", {})
+                sys_gov = gov.get(sys_name, {})
+                seat_alloc = sys_gov.get("seat_allocation", {})
+                if seat_alloc:
+                    allocations.append(seat_alloc)
+        pcts = _compute_seat_pcts(allocations)
+        for party in PARTY_ORDER:
+            party_pcts[party].append(pcts.get(party, 0))
+
+    for p in PARTY_ORDER:
+        party_pcts[p] = np.array(party_pcts[p])
+    return sys_labels, party_pcts
+
+
+def _draw_stacked_subplot(ax, labels, party_pcts, subtitle, xlabel,
+                          bar_width, pct_fontsize=7, min_pct=5,
+                          x_rotation=30, x_fontsize=9):
+    """Draw a stacked bar chart on a subplot axis (black outlines, no legend)."""
+    x = np.arange(len(labels))
+    bottom = np.zeros(len(labels))
+
+    for party in PARTY_ORDER:
+        vals = party_pcts.get(party, np.zeros(len(labels)))
+        color = PARTY_COLORS.get(party, "#888888")
+        ax.bar(
+            x, vals, bar_width,
+            bottom=bottom, color=color,
+            edgecolor="black", linewidth=0.6,
+        )
+        # Percentage labels inside bars.
+        for k in range(len(labels)):
+            val = vals[k]
+            if val >= min_pct:
+                ax.text(
+                    x[k], bottom[k] + val / 2,
+                    f"{val:.0f}%",
+                    ha="center", va="center",
+                    color="white", fontsize=pct_fontsize, fontweight="bold",
+                )
+        bottom += vals
+
+    ax.set_xlabel(xlabel, fontsize=10, fontweight="bold", labelpad=4)
+    ax.set_ylabel("Share (%)", fontsize=10, fontweight="bold", labelpad=4)
+    ax.set_title(subtitle, fontsize=11, fontweight="bold", pad=6)
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, fontsize=x_fontsize, rotation=x_rotation,
+                       ha="right" if x_rotation else "center")
+    ax.set_ylim(0, 100)
+    ax.tick_params(axis="y", labelsize=9)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+
+def plot_combined_2x2(all_data):
+    """Create a combined 2x2 figure with a single shared legend at the top.
+
+    Layout:
+        Top-Left:     Rank Choice Distribution
+        Top-Right:    Seats by Issue
+        Bottom-Left:  Seats by Model
+        Bottom-Right: Seats by System
+    """
+    # ── Compute all data ────────────────────────────────────────────
+    pct_matrix, num_ranks = _compute_rank_choice_data(all_data)
+    rank_labels = ["1st", "2nd", "3rd", "4th", "5th", "6th"][:num_ranks]
+
+    issue_pcts = _compute_seats_by_issue_data(all_data)
+    model_names, model_pcts = _compute_seats_by_model_data(all_data)
+    sys_labels, sys_pcts = _compute_seats_by_system_data(all_data)
+
+    # ── Create figure with GridSpec for control ─────────────────────
+    fig = plt.figure(figsize=(18, 11))
+    gs = fig.add_gridspec(
+        2, 2,
+        width_ratios=[1, 2],       # top-right is wider (12 issues)
+        hspace=0.35, wspace=0.22,
+        left=0.06, right=0.97,
+        top=0.88, bottom=0.08,
+    )
+
+    # Uniform bar_width: use 0.6 everywhere for consistent bar height
+    bar_w = 0.6
+
+    # ── Top-Left: Rank Choice ───────────────────────────────────────
+    ax_rank = fig.add_subplot(gs[0, 0])
+    rank_party_pcts = {
+        party: pct_matrix[j] for j, party in enumerate(PARTY_ORDER)
+    }
+    _draw_stacked_subplot(
+        ax_rank, rank_labels, rank_party_pcts,
+        "(a) Ranked-Choice Distribution",
+        "Rank Position",
+        bar_w, pct_fontsize=7.5, min_pct=5,
+        x_rotation=0, x_fontsize=10,
+    )
+
+    # ── Top-Right: Seats by Issue ───────────────────────────────────
+    ax_issue = fig.add_subplot(gs[0, 1])
+    _draw_stacked_subplot(
+        ax_issue, ISSUE_SHORT, issue_pcts,
+        "(b) Seat Allocation by Issue",
+        "Issue",
+        bar_w, pct_fontsize=6.5, min_pct=5,
+        x_rotation=35, x_fontsize=9,
+    )
+
+    # ── Bottom-Left: Seats by Model ─────────────────────────────────
+    ax_model = fig.add_subplot(gs[1, 0])
+    _draw_stacked_subplot(
+        ax_model, model_names, model_pcts,
+        "(c) Seat Allocation by Model",
+        "Model",
+        bar_w, pct_fontsize=7, min_pct=4,
+        x_rotation=35, x_fontsize=9,
+    )
+
+    # ── Bottom-Right: Seats by System ───────────────────────────────
+    ax_sys = fig.add_subplot(gs[1, 1])
+    _draw_stacked_subplot(
+        ax_sys, sys_labels, sys_pcts,
+        "(d) Seat Allocation by Voting System",
+        "Voting System",
+        bar_w, pct_fontsize=7.5, min_pct=4,
+        x_rotation=30, x_fontsize=10,
+    )
+
+    # ── Shared legend at top of figure ──────────────────────────────
+    from matplotlib.patches import Patch
+    legend_handles = [
+        Patch(facecolor=PARTY_COLORS[p], edgecolor="black", linewidth=0.6,
+              label=PARTY_DISPLAY[p])
+        for p in PARTY_ORDER
+    ]
+    fig.legend(
+        handles=legend_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.97),
+        ncol=6, fontsize=11, frameon=False,
+        handlelength=1.8, handleheight=1.2, handletextpad=0.5,
+        columnspacing=1.5,
+    )
+
+    out = os.path.join(DRAFT_DIR, "seats_rank_combined.png")
+    plt.savefig(out, dpi=180, bbox_inches="tight")
+    print(f"Saved {out}")
+    plt.close()
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -436,4 +672,5 @@ if __name__ == "__main__":
     plot_seats_by_model(all_data)
     plot_seats_by_system(all_data)
     plot_rank_choice_dist(all_data)
+    plot_combined_2x2(all_data)
     print("\nAll figures generated!")
