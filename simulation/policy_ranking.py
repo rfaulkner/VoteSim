@@ -661,6 +661,7 @@ def save_rankings(
     voting_mode: Optional[str] = None,
     voter_opinions: Optional[Dict[str, str]] = None,
     government_infos: Optional[Dict[str, Dict[str, Any]]] = None,
+    personas_tag: Optional[str] = None,
 ) -> str:
   """Persist voter system rankings and scores to JSON.
 
@@ -714,18 +715,23 @@ def save_rankings(
       ``"platform"``).  Included in the filename.
     voter_opinions: Optional ``{user_id: opinion_text}``.  Each
       voter's original free-text response on the issue.
+    personas_tag: Optional short tag identifying the persona file
+      used (e.g. ``"p635"``).  Inserted between the voting mode
+      and the model slug in the filename.
 
   Returns:
     The absolute path to the written JSON file.
   """
   os.makedirs(output_dir, exist_ok=True)
 
-  # Build filename: [{dataset}.][{mode}.]{model}.json
+  # Build filename: [{dataset}.][{mode}.][{personas_tag}.]{model}.json
   parts = []
   if dataset_name:
     parts.append(dataset_name)
   if voting_mode:
     parts.append(voting_mode)
+  if personas_tag:
+    parts.append(personas_tag)
   parts.append(_sanitize_model_name(model_path))
   filename = ".".join(parts) + ".json"
   filepath = os.path.join(output_dir, filename)

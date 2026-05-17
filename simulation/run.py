@@ -3,6 +3,7 @@
 import hashlib
 import logging
 import os
+from typing import Optional
 
 from omegaconf import DictConfig
 from pathfinder import assistant, gen, get_model, system, user
@@ -264,6 +265,19 @@ def run_pipeline(cfg: DictConfig):
   party_dir = cfg.get("party_dir", DEFAULT_PARTY_DIR)
   personas_path = pipe_cfg.get("personas_path", DEFAULT_PERSONAS_PATH)
 
+  # Derive a short personas tag from the file stem so that runs using
+  # different persona files write to distinct output filenames.
+  # e.g. "personas_635.json" → "p635", "personas_800.json" → "p800".
+  # The default "personas.json" produces no tag (None) so existing
+  # filenames are unchanged.
+  _personas_stem = os.path.splitext(os.path.basename(personas_path))[0]
+  if _personas_stem == "personas":
+    personas_tag: Optional[str] = None
+  else:
+    # Strip the leading "personas" / "personas_" prefix if present.
+    _suffix = _personas_stem.removeprefix("personas_").removeprefix("personas")
+    personas_tag = f"p{_suffix}" if _suffix else _personas_stem
+
   # Region settings (optional).
   region_cfg = cfg.get("region")
   region_description = None
@@ -333,6 +347,7 @@ def run_pipeline(cfg: DictConfig):
         results_dir=results_dir,
         dataset_name=pq_dataset or None,
         max_seats_per_district=max_seats_per_district,
+        personas_tag=personas_tag,
     )
     logging.info(
         "Pipeline finished (survey mode): %d question(s).",
@@ -367,6 +382,7 @@ def run_pipeline(cfg: DictConfig):
         dataset_name=pq_dataset or None,
         voting_mode=voting_mode,
         max_seats_per_district=max_seats_per_district,
+        personas_tag=personas_tag,
     )
     logging.info(
         "Pipeline finished (platform mode): %d question(s).",
@@ -412,6 +428,7 @@ def run_pipeline(cfg: DictConfig):
         dataset_name=pq_dataset or None,
         voting_mode=voting_mode,
         max_seats_per_district=max_seats_per_district,
+        personas_tag=personas_tag,
     )
     results.append(result)
 

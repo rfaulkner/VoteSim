@@ -16,7 +16,7 @@ region:
 pipeline:
   voting_mode: "issue"           # "issue" (default) or "platform" (rank by party platforms once) or "survey"
   num_voters: 120
-  personas_path: "dataset/personas/personas.json"  # cached persona set (created on first run)
+  personas_path: "dataset/personas/personas.json"  # cached persona set (created on first run); non-default files (e.g. personas_635.json) automatically tag output filenames (e.g. divisive-12.issue.p635.<model>.json)
   max_workers: 5                 # max concurrent LLM calls (keep low for API rate limits)
   topic: "social"
   parties:

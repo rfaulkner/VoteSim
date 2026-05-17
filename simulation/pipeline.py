@@ -216,6 +216,7 @@ def run_voting_round(
     dataset_name: Optional[str] = None,
     voting_mode: Optional[str] = None,
     max_seats_per_district: Optional[int] = None,
+    personas_tag: Optional[str] = None,
 ) -> VotingRoundResult:
   """Execute a full voting round with election.
 
@@ -418,6 +419,7 @@ def run_voting_round(
               vr.user_id: vr.response for vr in voter_responses
           },
           government_infos=government_infos,
+          personas_tag=personas_tag,
       )
 
   result = VotingRoundResult(
@@ -461,6 +463,7 @@ def run_survey_only(
     results_dir: Optional[str] = None,
     dataset_name: Optional[str] = None,
     max_seats_per_district: Optional[int] = None,
+    personas_tag: Optional[str] = None,
 ) -> List[VotingRoundResult]:
   """Run the pipeline through the voter ranking phase (phases 1-5).
 
@@ -632,11 +635,14 @@ def run_survey_only(
   if results_dir:
     os.makedirs(results_dir, exist_ok=True)
     model_slug = os.path.basename(model_path).replace("/", "_")
-    ds_label = f".{dataset_name}" if dataset_name else ""
-    out_path = os.path.join(
-        results_dir,
-        f"survey{ds_label}.{model_slug}.json",
-    )
+    _parts = ["survey"]
+    if dataset_name:
+      _parts.append(dataset_name)
+    if personas_tag:
+      _parts.append(personas_tag)
+    _parts.append(model_slug)
+    out_path = os.path.join(results_dir, ".".join(_parts) + ".json")
+
     output = {
         "model": model_path,
         "dataset": dataset_name,
@@ -726,6 +732,7 @@ def run_platform_mode(
     dataset_name: Optional[str] = None,
     voting_mode: Optional[str] = None,
     max_seats_per_district: Optional[int] = None,
+    personas_tag: Optional[str] = None,
 ) -> List[VotingRoundResult]:
   """Run the pipeline in platform-only voting mode.
 
@@ -930,6 +937,7 @@ def run_platform_mode(
                 vr.user_id: vr.response for vr in voter_responses
             },
             government_infos=government_infos,
+            personas_tag=personas_tag,
         )
 
     result = VotingRoundResult(
