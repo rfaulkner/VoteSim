@@ -524,8 +524,8 @@ def _compute_seats_by_system_data(all_data):
 
 
 def _draw_stacked_subplot(ax, labels, party_pcts, subtitle, xlabel,
-                          bar_width, pct_fontsize=7, min_pct=5,
-                          x_rotation=30, x_fontsize=9):
+                          bar_width, pct_fontsize=9, min_pct=5,
+                          x_rotation=30, x_fontsize=12):
     """Draw a stacked bar chart on a subplot axis (black outlines, no legend)."""
     x = np.arange(len(labels))
     bottom = np.zeros(len(labels))
@@ -550,14 +550,14 @@ def _draw_stacked_subplot(ax, labels, party_pcts, subtitle, xlabel,
                 )
         bottom += vals
 
-    ax.set_xlabel(xlabel, fontsize=10, fontweight="bold", labelpad=4)
-    ax.set_ylabel("Share (%)", fontsize=10, fontweight="bold", labelpad=4)
-    ax.set_title(subtitle, fontsize=11, fontweight="bold", pad=6)
+    ax.set_xlabel(xlabel, fontsize=14, fontweight="bold", labelpad=4)
+    ax.set_ylabel("Share (%)", fontsize=14, fontweight="bold", labelpad=4)
+    ax.set_title(subtitle, fontsize=14, fontweight="bold", pad=6)
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=x_fontsize, rotation=x_rotation,
                        ha="right" if x_rotation else "center")
     ax.set_ylim(0, 100)
-    ax.tick_params(axis="y", labelsize=9)
+    ax.tick_params(axis="y", labelsize=12)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
@@ -584,7 +584,7 @@ def plot_combined_2x2(all_data):
     gs = fig.add_gridspec(
         2, 2,
         width_ratios=[1, 2],       # top-right is wider (12 issues)
-        hspace=0.35, wspace=0.22,
+        hspace=0.45, wspace=0.22,
         left=0.06, right=0.97,
         top=0.88, bottom=0.08,
     )
@@ -601,8 +601,8 @@ def plot_combined_2x2(all_data):
         ax_rank, rank_labels, rank_party_pcts,
         "(a) Ranked-Choice Distribution",
         "Rank Position",
-        bar_w, pct_fontsize=7.5, min_pct=5,
-        x_rotation=0, x_fontsize=10,
+        bar_w, pct_fontsize=9, min_pct=5,
+        x_rotation=0, x_fontsize=13,
     )
 
     # ── Top-Right: Seats by Issue ───────────────────────────────────
@@ -611,8 +611,8 @@ def plot_combined_2x2(all_data):
         ax_issue, ISSUE_SHORT, issue_pcts,
         "(b) Seat Allocation by Issue",
         "Issue",
-        bar_w, pct_fontsize=6.5, min_pct=5,
-        x_rotation=35, x_fontsize=9,
+        bar_w, pct_fontsize=8.5, min_pct=5,
+        x_rotation=35, x_fontsize=11,
     )
 
     # ── Bottom-Left: Seats by Model ─────────────────────────────────
@@ -621,8 +621,8 @@ def plot_combined_2x2(all_data):
         ax_model, model_names, model_pcts,
         "(c) Seat Allocation by Model",
         "Model",
-        bar_w, pct_fontsize=7, min_pct=4,
-        x_rotation=35, x_fontsize=9,
+        bar_w, pct_fontsize=9, min_pct=4,
+        x_rotation=35, x_fontsize=11,
     )
 
     # ── Bottom-Right: Seats by System ───────────────────────────────
@@ -631,8 +631,8 @@ def plot_combined_2x2(all_data):
         ax_sys, sys_labels, sys_pcts,
         "(d) Seat Allocation by Voting System",
         "Voting System",
-        bar_w, pct_fontsize=7.5, min_pct=4,
-        x_rotation=30, x_fontsize=10,
+        bar_w, pct_fontsize=9, min_pct=4,
+        x_rotation=30, x_fontsize=12,
     )
 
     # ── Shared legend at top of figure ──────────────────────────────
@@ -646,7 +646,7 @@ def plot_combined_2x2(all_data):
         handles=legend_handles,
         loc="upper center",
         bbox_to_anchor=(0.5, 0.97),
-        ncol=6, fontsize=11, frameon=False,
+        ncol=6, fontsize=13, frameon=False,
         handlelength=1.8, handleheight=1.2, handletextpad=0.5,
         columnspacing=1.5,
     )

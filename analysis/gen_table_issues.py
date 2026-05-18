@@ -222,7 +222,7 @@ def generate_latex(issue_labels, table):
             mean_val, se_val = table[sys_name][i]
             is_best = (overall_best[i] == sys_name)
             val_str = f"{mean_val:.2f}"
-            se_str = f"{se_val:.2f}"
+            se_str = f"{se_val:.1f}"
             cell = val_str + r"\tiny{$\pm$}" + se_str
             if is_best:
                 cell = r"\textbf{" + val_str + "}" + r"\tiny{$\pm$}" + se_str
