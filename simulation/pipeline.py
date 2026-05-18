@@ -298,8 +298,12 @@ def run_voting_round(
       num_personas=num_voters,
       seed=seed,
   ) if personas_path else prism.sample(num_samples=num_voters, seed=seed)
+  # When loading from a cache file, the file may contain more personas than
+  # num_voters (e.g. personas_635.json with num_voters=120).  Use the full
+  # loaded set so we don't silently drop personas.
+  effective_voters = len(voters)
   voter_responses = generate_voter_responses(
-      k=num_voters,
+      k=effective_voters,
       question=question,
       prism_sampler=prism,
       model=model,
@@ -536,8 +540,10 @@ def run_survey_only(
       num_personas=num_voters,
       seed=seed,
   ) if personas_path else prism.sample(num_samples=num_voters, seed=seed)
+  # Use the full loaded set when a personas file is provided.
+  effective_voters = len(personas)
   voters, voter_districts = prepare_voters(
-      num_voters=num_voters,
+      num_voters=effective_voters,
       prism_sampler=prism,
       seed=seed,
       region=region,
@@ -810,8 +816,10 @@ def run_platform_mode(
       num_personas=num_voters,
       seed=seed,
   ) if personas_path else prism.sample(num_samples=num_voters, seed=seed)
+  # Use the full loaded set when a personas file is provided.
+  effective_voters = len(personas)
   voters, voter_districts = prepare_voters(
-      num_voters=num_voters,
+      num_voters=effective_voters,
       prism_sampler=prism,
       seed=seed,
       region=region,
