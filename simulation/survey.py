@@ -545,9 +545,15 @@ def _query_party(
   ``model`` should be a shared PathFinder model instance — this function
   calls ``model.copy()`` to obtain a thread-local conversation state.
   """
+  # Cap voter responses to avoid exceeding LLM context limits.  With large
+  # persona sets (e.g. 635 voters × ~800 chars each ≈ 126K tokens) the full
+  # voter block alone can exhaust the model's context window, causing all
+  # party response calls to fail silently and producing null policies.
+  _MAX_VOTER_BLOCK = 300
+  sampled_voters = voter_responses[:_MAX_VOTER_BLOCK]
   voter_block = "\n".join(
       f'  Voter {i + 1}: "{vr.response}"'
-      for i, vr in enumerate(voter_responses)
+      for i, vr in enumerate(sampled_voters)
   )
   if not voter_responses:
     voter_block = "  (No voter responses provided.)"
