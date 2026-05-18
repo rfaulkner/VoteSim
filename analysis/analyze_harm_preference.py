@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
 
-DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "golden_data")
 
 # ── System grouping ──────────────────────────────────────────────────
 GROUPS = {

@@ -5,7 +5,7 @@ import json
 import os
 import numpy as np
 
-DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "golden_data")
 
 JUDGES = ["gemini-flash", "gpt-4o", "llama-70b"]
 

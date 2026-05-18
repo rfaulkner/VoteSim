@@ -9,7 +9,7 @@ import json
 import os
 from itertools import combinations
 
-DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "golden_data")
 
 ALL_FILES = {
     "Llama-3.3-70B": {
