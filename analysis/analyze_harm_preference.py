@@ -60,7 +60,7 @@ SYSTEM_MARKERS = {
 }
 
 SYSTEM_LABELS = {
-    "alternative_vote": "AV",
+    "alternative_vote": "IRV",
     "baseline": "Base",
     "baseline_informed": "Oracle",
     "dhondt": "D'Hondt",

@@ -48,7 +48,7 @@ SYSTEM_ORDER = [
 SYSTEM_DISPLAY = {
     "fptp": "FPTP",
     "sntv": "PBV",
-    "alternative_vote": "Alt.\\,Vote",
+    "alternative_vote": "IRV",
     "trs": "Two-Round",
     "dhondt": "D'Hondt",
     "stv": "STV",

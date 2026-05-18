@@ -35,7 +35,7 @@ SYSTEM_MARKERS = {
     "dhondt": "p", "sainte_lague": "h", "stv": "*",
 }
 SYSTEM_LABELS = {
-    "alternative_vote": "AV", "baseline": "Base",
+    "alternative_vote": "IRV", "baseline": "Base",
     "baseline_informed": "Oracle", "dhondt": "D'Hondt",
     "fptp": "FPTP", "sainte_lague": "S-L", "sntv": "SNTV",
     "stv": "STV", "trs": "TRS",

@@ -97,7 +97,7 @@ VoteSim implements seven electoral systems in two families:
 |---|---|---|
 | **Party Block Vote (SNTV)** | `sntv` | Winner-takes-all per district; the party with the most first-choice votes receives **all** seats in that district |
 | **First Past The Post** | `fptp` | Like SNTV but each district is fixed at exactly **1 seat** regardless of population, amplifying geographic representation |
-| **Alternative Vote (IRV)** | `alternative_vote` | Iterative elimination: the candidate with the fewest votes is eliminated and their ballots redistributed to next preferences until one candidate holds an absolute majority. One seat per district |
+| **Instant-Runoff Voting (IRV)** | `alternative_vote` | Iterative elimination: the candidate with the fewest votes is eliminated and their ballots redistributed to next preferences until one candidate holds an absolute majority. One seat per district |
 | **Two-Round System** | `trs` | If a party wins >50% in round 1, it wins outright. Otherwise, a runoff between the top two determines the winner |
 
 ### Proportional Systems

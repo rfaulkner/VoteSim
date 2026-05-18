@@ -6,7 +6,7 @@ Provides six electoral systems:
 1. **Party Block Vote (SNTV)** — winner-takes-all in each district.
 2. **First Past The Post (FPTP)** — like Party Block Vote but
    fixed at one seat per district.
-3. **Alternative Vote (AV / IRV)** — iterative elimination of the
+3. **Instant-Runoff Voting (IRV)** — iterative elimination of the
    weakest candidate; the first candidate to reach an absolute majority
    wins the single district seat.
 4. **Two-Round System (TRS)** — if no party wins an outright majority
@@ -296,7 +296,7 @@ def fptp(
 
 
 # ---------------------------------------------------------------------------
-# Alternative Vote (Instant-Runoff Voting)
+# Instant-Runoff Voting (IRV)
 # ---------------------------------------------------------------------------
 
 
@@ -377,12 +377,12 @@ def alternative_vote(
     ballots: List[VoterBallot],
     district_seats: Dict[str, int],
 ) -> ElectionResult:
-  """Alternative Vote (Instant-Runoff Voting): single seat per district.
+  """Instant-Runoff Voting (IRV): single seat per district.
 
   In each district the winner is determined by iterative elimination of
   the weakest candidate and redistribution of their ballots until one
   candidate achieves an absolute majority.  Each district is awarded
-  exactly **one** seat (the AV method is inherently single-winner).
+  exactly **one** seat (the IRV method is inherently single-winner).
 
   Args:
     ballots: All voter ballots across all districts.
@@ -422,7 +422,7 @@ def alternative_vote(
 
   governing = _pick_winner(total_seats)
   logging.info(
-      "Alternative Vote election complete.  Governing party: %s", governing
+      "Instant-Runoff Voting election complete.  Governing party: %s", governing
   )
 
   return ElectionResult(
