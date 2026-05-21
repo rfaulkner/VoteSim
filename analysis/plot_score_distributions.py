@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate violin plots showing the distribution of scores for each voting system.
 
-Reads the 7-model divisive-12 issue-mode results and produces:
-  - score_dist_by_model.png (Faceted violin plot, one subplot per model)
-  - score_dist_by_system.png (Grouped box/violin plot, comparing models per system)
+Reads the 9-model divisive-12 issue-mode results and produces:
+  - score_dist_by_model_cohorts.png (Plot 1: Llama/Mistral cohorts 120 vs 635)
+  - score_dist_by_model_others.png (Plot 2: Other models N=120)
+  - score_dist_by_system.png (Grouped box plot, comparing all 9 models per system)
 """
 
 import json
@@ -26,13 +27,15 @@ DRAFT_DIR = os.path.join(
 )
 
 MODEL_FILES = {
-    "Llama-3.3-70B": "divisive-12.issue.llama-3.3-70b-instruct.json",
-    "Mistral-Med-3": "divisive-12.issue.mistral-medium-3.json",
-    "Gemma-4-31B": "divisive-12.issue.gemma-4-31b-it.json",
-    "Hermes-3-70B": "divisive-12.issue.hermes-3-llama-3.1-70b.json",
-    "Llama-3.1-8B": "divisive-12.issue.llama-3.1-8b-instruct.json",
-    "Grok-4.1-Fast": "divisive-12.issue.grok-4.1-fast.json",
-    "Mistral-Sm-24B": "divisive-12.issue.mistral-small-3.1-24b-instruct.json",
+    "Llama-3.3 (N=120)": "divisive-12.issue.llama-3.3-70b-instruct.json",
+    "Mistral-Med (N=120)": "divisive-12.issue.mistral-medium-3.json",
+    "Llama-3.3 (N=635)": "divisive-12.issue.p635.llama-3.3-70b-instruct.json",
+    "Mistral-Med (N=635)": "divisive-12.issue.p635.mistral-medium-3.json",
+    "Gemma-4 (N=120)": "divisive-12.issue.gemma-4-31b-it.json",
+    "Hermes-3 (N=120)": "divisive-12.issue.hermes-3-llama-3.1-70b.json",
+    "Llama-3.1 (N=120)": "divisive-12.issue.llama-3.1-8b-instruct.json",
+    "Grok-4.1 (N=120)": "divisive-12.issue.grok-4.1-fast.json",
+    "Mistral-Sm (N=120)": "divisive-12.issue.mistral-small-3.1-24b-instruct.json",
 }
 
 # Order matching the tables
@@ -45,7 +48,7 @@ SYSTEM_ORDER = [
 SYSTEM_DISPLAY = {
     "fptp": "FPTP",
     "sntv": "PBV",
-    "alternative_vote": "IRV",
+    "alternative_vote": "IRV",  # Updated to IRV to match gen_tables_combined.py
     "trs": "Two-Round",
     "dhondt": "D'Hondt",
     "stv": "STV",
@@ -54,22 +57,17 @@ SYSTEM_DISPLAY = {
     "baseline_informed": "Oracle Med.",
 }
 
-# Category colors for reference if needed
-SYSTEM_CATEGORY = {
-    "fptp": "maj", "sntv": "maj", "alternative_vote": "maj", "trs": "maj",
-    "dhondt": "prop", "stv": "prop", "sainte_lague": "prop",
-    "baseline": "base", "baseline_informed": "base",
-}
-
-# Distinct colors for the 7 models
+# Distinct colors for the 9 models (paired colors for cohorts)
 MODEL_COLORS = {
-    "Llama-3.3-70B": "#1f77b4",
-    "Mistral-Med-3": "#ff7f0e",
-    "Gemma-4-31B": "#2ca02c",
-    "Hermes-3-70B": "#d62728",
-    "Llama-3.1-8B": "#9467bd",
-    "Grok-4.1-Fast": "#8c564b",
-    "Mistral-Sm-24B": "#e377c2",
+    "Llama-3.3 (N=120)": "#1f77b4",      # Dark Blue
+    "Llama-3.3 (N=635)": "#aec7e8",      # Light Blue
+    "Mistral-Med (N=120)": "#ff7f0e",    # Dark Orange
+    "Mistral-Med (N=635)": "#ffbb78",    # Light Orange
+    "Gemma-4 (N=120)": "#2ca02c",        # Green
+    "Hermes-3 (N=120)": "#d62728",       # Red
+    "Llama-3.1 (N=120)": "#9467bd",      # Purple
+    "Grok-4.1 (N=120)": "#8c564b",       # Brown
+    "Mistral-Sm (N=120)": "#e377c2",     # Pink
 }
 
 # ---------------------------------------------------------------------------
@@ -104,17 +102,18 @@ def load_scores():
     return all_scores
 
 # ---------------------------------------------------------------------------
-# Plot 1: Faceted Violin Plot (one subplot per model)
+# Plot 1 & 2: Faceted Violin Plots (parameterized)
 # ---------------------------------------------------------------------------
 
-def plot_faceted_violins(all_scores):
-    """Generate a grid of violin plots, one subplot per model."""
-    models = [m for m in MODEL_FILES.keys() if m in all_scores]
+def plot_faceted_violins(all_scores, models_to_plot, out_filename, title_suffix):
+    """Generate a grid of violin plots for a specific subset of models."""
+    # Filter models that actually have data
+    models = [m for m in models_to_plot if m in all_scores]
     if not models:
-        print("No data to plot for faceted violins!")
+        print(f"No data to plot for {out_filename}!")
         return
         
-    fig, axes = plt.subplots(len(models), 1, figsize=(12, 4 * len(models)), sharex=True)
+    fig, axes = plt.subplots(len(models), 1, figsize=(12, 3.5 * len(models)), sharex=True)
     if len(models) == 1:
         axes = [axes]
         
@@ -122,7 +121,7 @@ def plot_faceted_violins(all_scores):
         ax = axes[idx]
         model_data = all_scores[model_name]
         
-        # Prepare data for violinplot: list of arrays, one for each system
+        # Prepare data for violinplot
         plot_data = []
         labels = []
         for sys_name in SYSTEM_ORDER:
@@ -131,19 +130,16 @@ def plot_faceted_violins(all_scores):
                 plot_data.append(scores)
                 labels.append(SYSTEM_DISPLAY[sys_name])
             else:
-                # Keep placeholder to maintain alignment if some data is missing
                 plot_data.append([])
                 labels.append(SYSTEM_DISPLAY[sys_name])
                 
-        # Filter out empty datasets for violinplot but keep track of positions
+        # Filter out empty datasets
         positions = []
         filtered_data = []
-        filtered_labels = []
         for i, d in enumerate(plot_data):
             if len(d) > 0:
                 positions.append(i + 1)
                 filtered_data.append(d)
-                filtered_labels.append(labels[i])
                 
         if not filtered_data:
             ax.text(0.5, 0.5, f"No data for {model_name}", ha='center', va='center')
@@ -176,57 +172,56 @@ def plot_faceted_violins(all_scores):
             ax.scatter(pos, median, color='white', edgecolor='black', s=30, zorder=3)
             ax.vlines(pos, quartile1, quartile3, color='black', linestyle='-', lw=3)
             
-        ax.set_title(f"{model_name} - Score Distribution", fontsize=14, fontweight='bold', pad=10)
-        ax.set_ylabel("Likert Score (1-5)", fontsize=11)
+        # Clean up display name for title (remove N=120 for cleaner look if desired, or keep it)
+        ax.set_title(f"{model_name} - Score Distribution", fontsize=13, fontweight='bold', pad=8)
+        ax.set_ylabel("Likert Score (1-5)", fontsize=10)
         ax.set_ylim(0.8, 5.2)
         ax.set_yticks([1, 2, 3, 4, 5])
         ax.grid(axis='y', linestyle='--', alpha=0.5)
         
-        # Draw category background zones (Majoritarian vs Proportional vs Baselines)
-        # maj: FPTP, PBV, Alt. Vote, Two-Round (indices 0, 1, 2, 3 -> positions 1, 2, 3, 4)
-        # prop: D'Hondt, STV, Sainte-Laguë (indices 4, 5, 6 -> positions 5, 6, 7)
-        # base: Baseline, Oracle Med. (indices 7, 8 -> positions 8, 9)
-        ax.axvspan(0.5, 4.5, color='red', alpha=0.05, zorder=0)
-        ax.axvspan(4.5, 7.5, color='green', alpha=0.05, zorder=0)
-        ax.axvspan(7.5, 9.5, color='blue', alpha=0.05, zorder=0)
+        # Draw category background zones
+        ax.axvspan(0.5, 4.5, color='red', alpha=0.04, zorder=0)
+        ax.axvspan(4.5, 7.5, color='green', alpha=0.04, zorder=0)
+        ax.axvspan(7.5, 9.5, color='blue', alpha=0.04, zorder=0)
         
     # Set x-ticks on the bottom subplot
     axes[-1].set_xticks(range(1, len(SYSTEM_ORDER) + 1))
-    axes[-1].set_xticklabels([SYSTEM_DISPLAY[s] for s in SYSTEM_ORDER], fontsize=12, rotation=15)
-    axes[-1].set_xlabel("Electoral System", fontsize=12, fontweight='bold', labelpad=10)
+    axes[-1].set_xticklabels([SYSTEM_DISPLAY[s] for s in SYSTEM_ORDER], fontsize=11, rotation=15)
+    axes[-1].set_xlabel("Electoral System", fontsize=12, fontweight='bold', labelpad=8)
     
+    plt.suptitle(f"Voter Score Distributions - {title_suffix}", fontsize=15, fontweight='bold', y=0.99)
     plt.tight_layout()
-    out = os.path.join(DRAFT_DIR, "score_dist_by_model.png")
+    
+    out = os.path.join(DRAFT_DIR, out_filename)
     plt.savefig(out, dpi=150, bbox_inches="tight")
     print(f"Saved {out}")
     plt.close()
 
 # ---------------------------------------------------------------------------
-# Plot 2: Grouped Box Plot (comparing models per system)
+# Plot 3: Grouped Box Plot (comparing all 9 models per system)
 # ---------------------------------------------------------------------------
 
 def plot_grouped_boxes(all_scores):
-    """Generate a grouped box plot comparing models for each system.
+    """Generate a grouped box plot comparing all 9 models for each system.
     
-    Using box plots here as they are cleaner for dense grouped comparisons.
+    Optimized for 9 models with thinner boxes and wider figure.
     """
-    models = [m for m in MODEL_FILES.keys() if m in all_scores]
+    # Maintain the order in CONFIG/MODELS
+    models_order = list(MODEL_FILES.keys())
+    models = [m for m in models_order if m in all_scores]
     if not models:
         print("No data to plot for grouped boxes!")
         return
         
-    fig, ax = plt.subplots(figsize=(16, 8))
+    fig, ax = plt.subplots(figsize=(18, 8))
     
     n_systems = len(SYSTEM_ORDER)
     n_models = len(models)
     
-    # Width of a single box and spacing
-    box_width = 0.1
-    group_spacing = 0.2
+    # Thinner boxes for 9 models to prevent overlap
+    box_width = 0.07
     
     # Calculate positions
-    # Each system group is centered at integer positions 1, 2, ..., n_systems
-    # Inside each group, boxes are offset
     offsets = np.linspace(-box_width * (n_models - 1) / 2, box_width * (n_models - 1) / 2, n_models)
     
     legend_handles = []
@@ -245,7 +240,7 @@ def plot_grouped_boxes(all_scores):
             # Draw boxplot
             bp = ax.boxplot(scores, positions=[pos], widths=box_width,
                             patch_artist=True, showfliers=False,
-                            medianprops=dict(color="black", linewidth=1.5),
+                            medianprops=dict(color="black", linewidth=1.2),
                             boxprops=dict(facecolor=color, edgecolor="black", alpha=0.8))
             
             # Collect handles for legend (only once per model)
@@ -267,15 +262,15 @@ def plot_grouped_boxes(all_scores):
     ax.axvspan(7.5, 9.5, color='blue', alpha=0.03, zorder=0)
     
     # Add labels for zones at the top
-    ax.text(2.5, 5.05, "Majoritarian", color="red", fontsize=12, fontweight="bold", ha="center")
-    ax.text(6.0, 5.05, "Proportional", color="green", fontsize=12, fontweight="bold", ha="center")
-    ax.text(8.5, 5.05, "Baselines", color="blue", fontsize=12, fontweight="bold", ha="center")
+    ax.text(2.5, 5.08, "Majoritarian", color="red", fontsize=12, fontweight="bold", ha="center")
+    ax.text(6.0, 5.08, "Proportional", color="green", fontsize=12, fontweight="bold", ha="center")
+    ax.text(8.5, 5.08, "Baselines", color="blue", fontsize=12, fontweight="bold", ha="center")
     
     # Legend
     ax.legend([h[0] for h in legend_handles], [h[1] for h in legend_handles],
-              loc="lower left", fontsize=11, frameon=True, facecolor="white", edgecolor="gray")
+              loc="lower left", fontsize=10, frameon=True, facecolor="white", edgecolor="gray", ncol=2)
     
-    ax.set_title("Comparison of Score Distributions across Models and Electoral Systems",
+    ax.set_title("Comparison of Score Distributions across All Models and Electoral Systems",
                  fontsize=16, fontweight='bold', pad=20)
     
     plt.tight_layout()
@@ -292,8 +287,27 @@ if __name__ == "__main__":
     print("Loading scores from golden results...")
     scores = load_scores()
     
-    print("Generating faceted violin plots...")
-    plot_faceted_violins(scores)
+    # Define model subsets for split plots
+    COHORT_MODELS = [
+        "Llama-3.3 (N=120)",
+        "Mistral-Med (N=120)",
+        "Llama-3.3 (N=635)",
+        "Mistral-Med (N=635)"
+    ]
+    
+    OTHER_MODELS = [
+        "Gemma-4 (N=120)",
+        "Hermes-3 (N=120)",
+        "Llama-3.1 (N=120)",
+        "Grok-4.1 (N=120)",
+        "Mistral-Sm (N=120)"
+    ]
+    
+    print("Generating faceted violin plots for cohorts...")
+    plot_faceted_violins(scores, COHORT_MODELS, "score_dist_by_model_cohorts.png", "Comparison Cohorts (N=120 vs N=635)")
+    
+    print("Generating faceted violin plots for other models...")
+    plot_faceted_violins(scores, OTHER_MODELS, "score_dist_by_model_others.png", "Other Models (N=120)")
     
     print("Generating grouped box plots...")
     plot_grouped_boxes(scores)
