@@ -1,0 +1,324 @@
+{
+  "How should abortion access be regulated? How should federal and state governments balance reproductive rights with other moral and legal considerations?": {
+    "issue_voting": {
+      "preference_rate": 0.6917,
+      "systems": {
+        "baseline_informed": 0.3253,
+        "dhondt": 0.241,
+        "alternative_vote": 0.1325,
+        "trs": 0.1205,
+        "fptp": 0.0723,
+        "sntv": 0.0361,
+        "stv": 0.0361,
+        "baseline": 0.0241,
+        "sainte_lague": 0.012
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.3083,
+      "systems": {
+        "baseline": 0.5405,
+        "sntv": 0.1622,
+        "alternative_vote": 0.1081,
+        "fptp": 0.0541,
+        "dhondt": 0.0541,
+        "stv": 0.027,
+        "baseline_informed": 0.027,
+        "trs": 0.027
+      }
+    },
+    "num_voters": 120
+  },
+  "How should athletic governing bodies handle transgender athlete participation? How can inclusion and competitive fairness be balanced?": {
+    "issue_voting": {
+      "preference_rate": 0.6333,
+      "systems": {
+        "sainte_lague": 0.4342,
+        "baseline_informed": 0.3158,
+        "fptp": 0.0921,
+        "trs": 0.0789,
+        "stv": 0.0526,
+        "baseline": 0.0132,
+        "dhondt": 0.0132
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.3667,
+      "systems": {
+        "fptp": 0.2727,
+        "sntv": 0.2727,
+        "trs": 0.1136,
+        "baseline_informed": 0.0909,
+        "stv": 0.0909,
+        "baseline": 0.0682,
+        "dhondt": 0.0682,
+        "alternative_vote": 0.0227
+      }
+    },
+    "num_voters": 120
+  },
+  "How should firearms be regulated? What gun control measures are most effective, and how do we balance public safety with Second Amendment rights?": {
+    "issue_voting": {
+      "preference_rate": 0.6917,
+      "systems": {
+        "stv": 0.5422,
+        "fptp": 0.1325,
+        "sntv": 0.1084,
+        "sainte_lague": 0.0723,
+        "baseline": 0.0723,
+        "trs": 0.0602,
+        "alternative_vote": 0.012
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.3083,
+      "systems": {
+        "trs": 0.4324,
+        "alternative_vote": 0.2703,
+        "stv": 0.1622,
+        "baseline": 0.0811,
+        "sntv": 0.0541
+      }
+    },
+    "num_voters": 120
+  },
+  "How should healthcare be provided? Should there be a government-run universal system, or is a mix of public and private insurance more effective?": {
+    "issue_voting": {
+      "preference_rate": 0.725,
+      "systems": {
+        "sainte_lague": 0.5862,
+        "baseline": 0.3333,
+        "dhondt": 0.023,
+        "fptp": 0.023,
+        "baseline_informed": 0.0115,
+        "alternative_vote": 0.0115,
+        "stv": 0.0115
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.275,
+      "systems": {
+        "sainte_lague": 0.4545,
+        "fptp": 0.2424,
+        "baseline_informed": 0.0606,
+        "sntv": 0.0606,
+        "stv": 0.0606,
+        "trs": 0.0606,
+        "dhondt": 0.0303,
+        "alternative_vote": 0.0303
+      }
+    },
+    "num_voters": 120
+  },
+  "How should law enforcement be structured and funded? Should resources be shifted toward community-based social services?": {
+    "issue_voting": {
+      "preference_rate": 0.9083,
+      "systems": {
+        "sntv": 0.3211,
+        "baseline_informed": 0.2844,
+        "dhondt": 0.1009,
+        "stv": 0.0642,
+        "fptp": 0.0642,
+        "sainte_lague": 0.0642,
+        "baseline": 0.055,
+        "trs": 0.0367,
+        "alternative_vote": 0.0092
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.0917,
+      "systems": {
+        "baseline": 0.5455,
+        "sntv": 0.1818,
+        "stv": 0.0909,
+        "baseline_informed": 0.0909,
+        "trs": 0.0909
+      }
+    },
+    "num_voters": 120
+  },
+  "Should affirmative action be used in college admissions? If so, should it be based on race, socioeconomic status, or other factors?": {
+    "issue_voting": {
+      "preference_rate": 0.725,
+      "systems": {
+        "baseline_informed": 0.6092,
+        "dhondt": 0.1379,
+        "baseline": 0.069,
+        "sntv": 0.0575,
+        "fptp": 0.046,
+        "alternative_vote": 0.046,
+        "sainte_lague": 0.0115,
+        "stv": 0.0115,
+        "trs": 0.0115
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.275,
+      "systems": {
+        "fptp": 0.3939,
+        "baseline_informed": 0.2121,
+        "baseline": 0.1515,
+        "trs": 0.1515,
+        "sainte_lague": 0.0606,
+        "sntv": 0.0303
+      }
+    },
+    "num_voters": 120
+  },
+  "Should fossil fuel companies be held financially responsible for climate damage? How should accountability be structured?": {
+    "issue_voting": {
+      "preference_rate": 0.5833,
+      "systems": {
+        "fptp": 0.3714,
+        "sainte_lague": 0.1714,
+        "baseline": 0.1429,
+        "trs": 0.1,
+        "baseline_informed": 0.0857,
+        "dhondt": 0.0714,
+        "sntv": 0.0571
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.4167,
+      "systems": {
+        "baseline": 0.36,
+        "baseline_informed": 0.2,
+        "stv": 0.16,
+        "sntv": 0.16,
+        "sainte_lague": 0.04,
+        "fptp": 0.04,
+        "dhondt": 0.02,
+        "alternative_vote": 0.02
+      }
+    },
+    "num_voters": 120
+  },
+  "Should immigration levels be increased? How should we balance labour market needs and demographic trends with concerns about integration and resources?": {
+    "issue_voting": {
+      "preference_rate": 0.9,
+      "systems": {
+        "fptp": 0.6296,
+        "baseline": 0.2593,
+        "sainte_lague": 0.0741,
+        "trs": 0.0278,
+        "baseline_informed": 0.0093
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.1,
+      "systems": {
+        "baseline": 0.9167,
+        "trs": 0.0833
+      }
+    },
+    "num_voters": 120
+  },
+  "Should there be a universal basic income? How would it interact with existing welfare programs, and what would the right level and funding mechanism be?": {
+    "issue_voting": {
+      "preference_rate": 0.875,
+      "systems": {
+        "fptp": 0.4762,
+        "baseline": 0.1905,
+        "baseline_informed": 0.1619,
+        "stv": 0.0762,
+        "trs": 0.0381,
+        "dhondt": 0.0381,
+        "alternative_vote": 0.0095,
+        "sainte_lague": 0.0095
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.125,
+      "systems": {
+        "fptp": 0.4,
+        "sntv": 0.3333,
+        "baseline": 0.2667
+      }
+    },
+    "num_voters": 120
+  },
+  "Should there be mandatory national service for young adults? If so, what should the requirements and alternatives look like?": {
+    "issue_voting": {
+      "preference_rate": 0.85,
+      "systems": {
+        "sntv": 0.3431,
+        "trs": 0.2255,
+        "baseline_informed": 0.1373,
+        "alternative_vote": 0.1275,
+        "stv": 0.0686,
+        "fptp": 0.049,
+        "sainte_lague": 0.0196,
+        "dhondt": 0.0196,
+        "baseline": 0.0098
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.15,
+      "systems": {
+        "sntv": 0.2222,
+        "baseline": 0.2222,
+        "fptp": 0.1667,
+        "sainte_lague": 0.1667,
+        "stv": 0.1111,
+        "trs": 0.0556,
+        "alternative_vote": 0.0556
+      }
+    },
+    "num_voters": 120
+  },
+  "Under what circumstances, if any, should the death penalty be used? What are the strongest arguments for and against its abolition?": {
+    "issue_voting": {
+      "preference_rate": 0.9333,
+      "systems": {
+        "baseline": 0.3839,
+        "stv": 0.1875,
+        "dhondt": 0.1429,
+        "sntv": 0.1339,
+        "trs": 0.0714,
+        "sainte_lague": 0.0625,
+        "baseline_informed": 0.0179
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.0667,
+      "systems": {
+        "fptp": 0.25,
+        "alternative_vote": 0.25,
+        "baseline": 0.25,
+        "stv": 0.125,
+        "sntv": 0.125
+      }
+    },
+    "num_voters": 120
+  },
+  "When, if ever, should religious beliefs allow businesses to deny services? How should we balance religious freedom with anti-discrimination protections?": {
+    "issue_voting": {
+      "preference_rate": 0.7417,
+      "systems": {
+        "baseline_informed": 0.3933,
+        "stv": 0.236,
+        "fptp": 0.1685,
+        "baseline": 0.0787,
+        "sainte_lague": 0.0449,
+        "alternative_vote": 0.0225,
+        "trs": 0.0225,
+        "sntv": 0.0225,
+        "dhondt": 0.0112
+      }
+    },
+    "platform_voting": {
+      "preference_rate": 0.2583,
+      "systems": {
+        "stv": 0.4194,
+        "fptp": 0.1613,
+        "trs": 0.129,
+        "dhondt": 0.0645,
+        "baseline_informed": 0.0645,
+        "baseline": 0.0645,
+        "alternative_vote": 0.0645,
+        "sainte_lague": 0.0323
+      }
+    },
+    "num_voters": 120
+  }
+}
