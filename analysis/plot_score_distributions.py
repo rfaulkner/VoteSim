@@ -40,19 +40,19 @@ MODEL_FILES = {
 
 # Order matching the tables
 SYSTEM_ORDER = [
-    "fptp", "sntv", "alternative_vote", "trs",
-    "dhondt", "stv", "sainte_lague",
+    "sntv", "fptp", "trs", "alternative_vote",
+    "stv", "dhondt", "sainte_lague",
     "baseline", "baseline_informed",
 ]
 
 SYSTEM_DISPLAY = {
     "fptp": "FPTP",
     "sntv": "PBV",
-    "alternative_vote": "IRV",  # Updated to IRV to match gen_tables_combined.py
-    "trs": "Two-Round",
+    "alternative_vote": "IRV",
+    "trs": "TRS",
     "dhondt": "D'Hondt",
     "stv": "STV",
-    "sainte_lague": "Sainte-Laguë",
+    "sainte_lague": "S-L",
     "baseline": "Baseline",
     "baseline_informed": "Oracle Med.",
 }
@@ -195,6 +195,11 @@ def plot_faceted_violins(all_scores, models_to_plot, out_filename, title_suffix)
     out = os.path.join(DRAFT_DIR, out_filename)
     plt.savefig(out, dpi=150, bbox_inches="tight")
     print(f"Saved {out}")
+    
+    # Save PDF
+    out_pdf = os.path.splitext(out)[0] + ".pdf"
+    plt.savefig(out_pdf, format="pdf", dpi=300, bbox_inches="tight")
+    print(f"Saved {out_pdf}")
     plt.close()
 
 # ---------------------------------------------------------------------------

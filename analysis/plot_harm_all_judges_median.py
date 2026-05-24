@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""Combined preference-vs-harm scatter plot for both source models.
+"""Combined preference-vs-harm scatter — median of Claude Opus, Gemini Flash, and GPT-4o.
 
-Two panels stacked vertically, one shared legend across the top,
-shared axis labels, using Claude-Opus as the harm judge.
+Per-system ellipses with prominent centroids, category-level centroids retained.
 """
 
 import json
@@ -20,7 +19,6 @@ import matplotlib.pyplot as plt
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "golden_data")
 DRAFT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "draft")
 
-# ── System grouping ──────────────────────────────────────────────────
 GROUPS = {
     "Baseline": ["baseline", "baseline_informed"],
     "Majoritarian": ["fptp", "alternative_vote", "trs", "sntv"],
@@ -34,7 +32,7 @@ for g, systems in GROUPS.items():
 SYSTEM_MARKERS = {
     "baseline": "s", "baseline_informed": "D",
     "fptp": "o", "alternative_vote": "^", "trs": "v", "sntv": ">",
-    "dhondt": "o", "sainte_lague": "^", "stv": "v",
+    "dhondt": "p", "sainte_lague": "h", "stv": "*",
 }
 SYSTEM_LABELS = {
     "alternative_vote": "IRV", "baseline": "Base Model",
@@ -58,24 +56,22 @@ MODELS = [
     {
         "key": "llama",
         "label": "Llama-3.3-70B",
-        "judge_file": os.path.join(
-            DATA_DIR,
-            "harm-12.judge.llama-3.3-70b-instruct.judged_by.claude-opus-4.7.json",
-        ),
-        "issue_file": os.path.join(
-            DATA_DIR, "harm-12.issue.llama-3.3-70b-instruct.json"
-        ),
+        "judge_files": [
+            os.path.join(DATA_DIR, "harm-12.judge.llama-3.3-70b-instruct.judged_by.claude-opus-4.7.json"),
+            os.path.join(DATA_DIR, "harm-12.judge.llama-3.3-70b-instruct.judged_by.gemini-3-flash-preview.json"),
+            os.path.join(DATA_DIR, "harm-12.judge.llama-3.3-70b-instruct.judged_by.gpt-4o-2024-11-20.json"),
+        ],
+        "issue_file": os.path.join(DATA_DIR, "harm-12.issue.llama-3.3-70b-instruct.json"),
     },
     {
         "key": "mistral",
         "label": "Mistral-Medium-3",
-        "judge_file": os.path.join(
-            DATA_DIR,
-            "harm-12.judge.mistral-medium-3.judged_by.claude-opus-4.7.json",
-        ),
-        "issue_file": os.path.join(
-            DATA_DIR, "harm-12.issue.mistral-medium-3.json"
-        ),
+        "judge_files": [
+            os.path.join(DATA_DIR, "harm-12.judge.mistral-medium-3.judged_by.claude-opus-4.7.json"),
+            os.path.join(DATA_DIR, "harm-12.judge.mistral-medium-3.judged_by.gemini-3-flash-preview.json"),
+            os.path.join(DATA_DIR, "harm-12.judge.mistral-medium-3.judged_by.gpt-4o-2024-11-20.json"),
+        ],
+        "issue_file": os.path.join(DATA_DIR, "harm-12.issue.mistral-medium-3.json"),
     },
 ]
 
@@ -97,9 +93,9 @@ def confidence_ellipse(x, y, ax, n_std=1.5, **kwargs):
     ax.add_patch(ellipse)
 
 
-def build_records(issue_data, judge_data):
-    """Build preference/harm records using Claude-Opus judge."""
-    records = []
+def build_records_median_judges(issue_data, judge_files):
+    """One record per (issue, system), harm is the median across judges."""
+    mean_prefs = {}
     for issue in issue_data:
         scores = issue_data[issue]["scores"]
         systems = list(list(scores.values())[0].keys())
@@ -107,19 +103,30 @@ def build_records(issue_data, judge_data):
         for voter_scores in scores.values():
             for s, sc in voter_scores.items():
                 pref_per_sys[s].append(sc)
-        mean_pref = {s: np.mean(v) for s, v in pref_per_sys.items()}
-
-        harm_per_sys = {}
-        if issue in judge_data:
-            for s, h in judge_data[issue]["aggregate"]["mean_harm_score"].items():
-                harm_per_sys[s] = h
-
         for s in systems:
-            if s in harm_per_sys:
-                records.append(dict(
-                    system=s, group=SYSTEM_TO_GROUP[s],
-                    preference=mean_pref[s], harm=harm_per_sys[s],
-                ))
+            mean_prefs[(issue, s)] = np.mean(pref_per_sys[s])
+
+    # Load all judge harm scores
+    harm_scores_by_issue_sys = defaultdict(list)
+    for jf in judge_files:
+        if not os.path.exists(jf):
+            continue
+        with open(jf) as f:
+            jdata = json.load(f)
+        for issue in issue_data:
+            if issue not in jdata:
+                continue
+            harm_scores = jdata[issue]["aggregate"]["mean_harm_score"]
+            for s, h in harm_scores.items():
+                harm_scores_by_issue_sys[(issue, s)].append(h)
+
+    records = []
+    for (issue, s), harms in harm_scores_by_issue_sys.items():
+        if (issue, s) in mean_prefs and harms:
+            records.append(dict(
+                system=s, group=SYSTEM_TO_GROUP[s],
+                preference=mean_prefs[(issue, s)], harm=np.median(harms),
+            ))
     return records
 
 
@@ -138,36 +145,37 @@ plt.rcParams.update({
     "axes.facecolor": "#fafafa",
 })
 
-# ── Figure: 2 rows, 1 column ────────────────────────────────────────
 fig, axes = plt.subplots(
     nrows=2, ncols=1, figsize=(8, 10),
     sharex=True, sharey=True,
     gridspec_kw={"hspace": 0.08},
 )
 
-# Compute shared axis limits across both models
+# Load all data
 all_prefs, all_harms = [], []
 all_records = {}
 for mcfg in MODELS:
-    with open(mcfg["judge_file"]) as f:
-        judge_data = json.load(f)
     with open(mcfg["issue_file"]) as f:
         issue_data = json.load(f)
-    records = build_records(issue_data, judge_data)
+    records = build_records_median_judges(issue_data, mcfg["judge_files"])
     all_records[mcfg["key"]] = records
     all_prefs.extend(r["preference"] for r in records)
     all_harms.extend(r["harm"] for r in records)
+    print(f"{mcfg['label']}: {len(records)} pts (median across active judges)")
 
-x_pad = 0.15
-y_pad = 0.15
+x_pad, y_pad = 0.15, 0.15
 x_min, x_max = min(all_prefs) - x_pad, max(all_prefs) + x_pad
 y_min, y_max = min(all_harms) - y_pad, max(all_harms) + y_pad
 
-label_offsets = {
+cat_label_offsets = {
     "Baseline":     (-65, 50),
     "Majoritarian": (-55, -50),
     "Proportional": (55, 50),
 }
+
+ALL_SYSTEMS = []
+for g in ["Baseline", "Majoritarian", "Proportional"]:
+    ALL_SYSTEMS.extend(GROUPS[g])
 
 for idx, mcfg in enumerate(MODELS):
     ax = axes[idx]
@@ -176,35 +184,51 @@ for idx, mcfg in enumerate(MODELS):
     harms = np.array([r["harm"] for r in records])
     rp, pp = stats.pearsonr(prefs, harms)
 
-    # Confidence ellipses
-    for g in ["Baseline", "Majoritarian", "Proportional"]:
-        gx = np.array([r["preference"] for r in records if r["group"] == g])
-        gy = np.array([r["harm"] for r in records if r["group"] == g])
-        confidence_ellipse(
-            gx, gy, ax, n_std=1.8,
-            facecolor=PLOT_FILL[g], edgecolor=PLOT_COLORS[g],
-            alpha=0.22, linewidth=1.5, linestyle="-", zorder=1,
-        )
+    # ── Per-system ellipses ──────────────────────────────────────────
+    for s in ALL_SYSTEMS:
+        g = SYSTEM_TO_GROUP[s]
+        sx = np.array([r["preference"] for r in records if r["system"] == s])
+        sy = np.array([r["harm"] for r in records if r["system"] == s])
+        if len(sx) >= 3:
+            confidence_ellipse(
+                sx, sy, ax, n_std=1.5,
+                facecolor=PLOT_FILL[g], edgecolor=PLOT_COLORS[g],
+                alpha=0.12, linewidth=0.8, linestyle="-", zorder=1,
+            )
 
-    # Data points
+    # ── Data points (transparent) ────────────────────────────────────
     for r in records:
         ax.scatter(
             r["preference"], r["harm"],
             c=PLOT_COLORS[r["group"]],
             marker=SYSTEM_MARKERS[r["system"]],
-            s=55, alpha=0.7,
-            edgecolors="white", linewidth=0.5, zorder=3,
+            s=22, alpha=0.45,
+            edgecolors="none", zorder=3,
         )
 
-    # Group centroids + labels
+    # ── Per-system centroids (prominent) ─────────────────────────────
+    for s in ALL_SYSTEMS:
+        g = SYSTEM_TO_GROUP[s]
+        sx = [r["preference"] for r in records if r["system"] == s]
+        sy = [r["harm"] for r in records if r["system"] == s]
+        if sx:
+            ax.scatter(
+                np.mean(sx), np.mean(sy),
+                c=PLOT_COLORS[g],
+                marker=SYSTEM_MARKERS[s],
+                s=120, alpha=1.0,
+                edgecolors="black", linewidth=1.0, zorder=5,
+            )
+
+    # ── Category centroids with labels ───────────────────────────────
     for g in ["Baseline", "Majoritarian", "Proportional"]:
         gx = np.mean([r["preference"] for r in records if r["group"] == g])
         gy = np.mean([r["harm"] for r in records if r["group"] == g])
         ax.scatter(
-            gx, gy, c=PLOT_COLORS[g], marker="o", s=160,
-            edgecolors="black", linewidth=1.4, zorder=5,
+            gx, gy, c=PLOT_COLORS[g], marker="o", s=220,
+            edgecolors="black", linewidth=1.8, zorder=6,
         )
-        dx, dy = label_offsets[g]
+        dx, dy = cat_label_offsets[g]
         ax.annotate(
             g, (gx, gy), textcoords="offset points", xytext=(dx, dy),
             fontsize=11, fontweight="bold", color=PLOT_COLORS[g],
@@ -213,26 +237,26 @@ for idx, mcfg in enumerate(MODELS):
                       ec=PLOT_COLORS[g], alpha=0.92, linewidth=0.8),
             arrowprops=dict(arrowstyle="-|>", color=PLOT_COLORS[g],
                             lw=1.0, connectionstyle="arc3,rad=0.15"),
-            zorder=6,
+            zorder=7,
         )
 
-    # OLS trend line
+    # ── OLS trend line ───────────────────────────────────────────────
     sl, ic, _, _, _ = stats.linregress(prefs, harms)
     xl = np.linspace(x_min, x_max, 100)
     ax.plot(xl, sl * xl + ic, color="#333333", linestyle="--",
             alpha=0.5, linewidth=1.2, zorder=2)
 
-    # Correlation annotation (top-right)
+    # ── Correlation annotation ───────────────────────────────────────
     ax.annotate(
         f"r = {rp:.2f},  p = {pp:.1e}",
         xy=(0.97, 0.95), xycoords="axes fraction",
         ha="right", va="top", fontsize=12, fontstyle="italic",
-        color="#444444",
+        fontweight="bold", color="#444444",
         bbox=dict(boxstyle="round,pad=0.3", fc="white",
                   ec="#cccccc", alpha=0.9),
     )
 
-    # Source model label (top-left area, below where legend will be)
+    # ── Source model label ───────────────────────────────────────────
     ax.annotate(
         mcfg["label"],
         xy=(0.03, 0.95), xycoords="axes fraction",
@@ -245,33 +269,37 @@ for idx, mcfg in enumerate(MODELS):
     ax.set_xlim(x_min, x_max)
     ax.set_ylim(y_min, y_max)
     ax.grid(True, alpha=0.15, linewidth=0.5, color="#888888")
-    ax.tick_params(labelsize=13)
+    ax.tick_params(labelsize=13, width=1.2)
 
-    # Remove x-tick labels on top panel
+    # Bold tick labels
+    for label in ax.get_xticklabels() + ax.get_yticklabels():
+        label.set_fontweight("bold")
+
     if idx == 0:
         ax.tick_params(axis="x", labelbottom=False)
 
-# ── Shared x-axis label (bottom only) ───────────────────────────────
-axes[-1].set_xlabel("Mean Preference Score (Likert)", fontsize=15, labelpad=10)
-
-# ── Shared y-axis label (centered between both) ─────────────────────
-fig.text(
-    0.02, 0.5, "Mean Harm Score (Claude-Opus judge)",
-    va="center", ha="center", rotation="vertical",
-    fontsize=15, color="#222222",
+# ── Shared x-axis label (bold) ──────────────────────────────────────
+axes[-1].set_xlabel(
+    "Mean Preference Score (Likert)",
+    fontsize=15, fontweight="bold", labelpad=10,
 )
 
-# ── Shared horizontal legend across the top ──────────────────────────
+# ── Shared y-axis label (bold, centered) ────────────────────────────
+fig.text(
+    0.02, 0.5, "Mean Harm Score (median of Claude Opus, Gemini Flash, GPT-4o)",
+    va="center", ha="center", rotation="vertical",
+    fontsize=15, fontweight="bold", color="#222222",
+)
+
+# ── Shared horizontal legend ────────────────────────────────────────
 sys_handles = []
 for g in ["Baseline", "Majoritarian", "Proportional"]:
     for s in GROUPS[g]:
         sys_handles.append(
-            Line2D(
-                [0], [0], marker=SYSTEM_MARKERS[s], color="w",
-                markerfacecolor=PLOT_COLORS[g], markersize=9,
-                markeredgecolor="#555555", markeredgewidth=0.5,
-                label=SYSTEM_LABELS[s],
-            )
+            Line2D([0], [0], marker=SYSTEM_MARKERS[s], color="w",
+                   markerfacecolor=PLOT_COLORS[g], markersize=9,
+                   markeredgecolor="black", markeredgewidth=0.8,
+                   label=SYSTEM_LABELS[s])
         )
 sys_handles.append(
     Line2D([0], [0], linestyle="--", color="#333333", alpha=0.5,
@@ -284,10 +312,11 @@ fig.legend(
     frameon=True, framealpha=0.95, edgecolor="#cccccc",
     handletextpad=0.4, columnspacing=1.0,
     bbox_to_anchor=(0.53, 1.0),
+    prop={"weight": "bold"},
 )
 
 plt.subplots_adjust(left=0.11, right=0.97, top=0.94, bottom=0.07)
-out_path = os.path.join(DRAFT_DIR, "preference_vs_harm_grouped.png")
+out_path = os.path.join(DRAFT_DIR, "preference_vs_harm_all_judges_median.png")
 plt.savefig(out_path, dpi=200, bbox_inches="tight")
 print(f"Plot saved to: {out_path}")
 plt.close()

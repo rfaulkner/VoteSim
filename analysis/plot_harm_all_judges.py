@@ -21,8 +21,8 @@ DRAFT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "draf
 
 GROUPS = {
     "Baseline": ["baseline", "baseline_informed"],
-    "Majoritarian": ["fptp", "alternative_vote", "trs", "sntv"],
-    "Proportional": ["dhondt", "sainte_lague", "stv"],
+    "Majoritarian": ["sntv", "fptp", "trs", "alternative_vote"],
+    "Proportional": ["stv", "dhondt", "sainte_lague"],
 }
 SYSTEM_TO_GROUP = {}
 for g, systems in GROUPS.items():
@@ -35,9 +35,9 @@ SYSTEM_MARKERS = {
     "dhondt": "p", "sainte_lague": "h", "stv": "*",
 }
 SYSTEM_LABELS = {
-    "alternative_vote": "IRV", "baseline": "Base",
-    "baseline_informed": "Oracle", "dhondt": "D'Hondt",
-    "fptp": "FPTP", "sainte_lague": "S-L", "sntv": "SNTV",
+    "alternative_vote": "IRV", "baseline": "Base Model",
+    "baseline_informed": "Base Med.", "dhondt": "D'Hondt",
+    "fptp": "FPTP", "sainte_lague": "S-L", "sntv": "PBV",
     "stv": "STV", "trs": "TRS",
 }
 
@@ -320,4 +320,8 @@ plt.subplots_adjust(left=0.11, right=0.97, top=0.94, bottom=0.07)
 out_path = os.path.join(DRAFT_DIR, "preference_vs_harm_all_judges.png")
 plt.savefig(out_path, dpi=200, bbox_inches="tight")
 print(f"Plot saved to: {out_path}")
+
+out_path_pdf = os.path.join(DRAFT_DIR, "preference_vs_harm_all_judges.pdf")
+plt.savefig(out_path_pdf, format="pdf", dpi=300, bbox_inches="tight")
+print(f"Plot saved to: {out_path_pdf}")
 plt.close()

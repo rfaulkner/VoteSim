@@ -62,8 +62,8 @@ PARTY_COLORS = {
 
 # Voting systems in display order.
 SYSTEM_ORDER = [
-    "fptp", "sntv", "alternative_vote", "trs",
-    "dhondt", "stv", "sainte_lague",
+    "sntv", "fptp", "trs", "alternative_vote",
+    "stv", "dhondt", "sainte_lague",
 ]
 SYSTEM_DISPLAY = {
     "fptp": "FPTP",
@@ -654,6 +654,9 @@ def plot_combined_2x2(all_data):
     out = os.path.join(DRAFT_DIR, "seats_rank_combined.png")
     plt.savefig(out, dpi=180, bbox_inches="tight")
     print(f"Saved {out}")
+    out_pdf = os.path.join(DRAFT_DIR, "seats_rank_combined.pdf")
+    plt.savefig(out_pdf, format="pdf", dpi=300, bbox_inches="tight")
+    print(f"Saved {out_pdf}")
     plt.close()
 
 

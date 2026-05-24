@@ -51,24 +51,24 @@ MODEL_FILES = [
 SYSTEM_ORDER = [
     "sntv",
     "fptp",
-    "alternative_vote",
     "trs",
-    "dhondt",
+    "alternative_vote",
     "stv",
+    "dhondt",
     "sainte_lague",
     "baseline",
     "baseline_informed",
 ]
 SYSTEM_DISPLAY = {
-    "sntv": "SNTV",
-    "fptp": "SMDP",
+    "sntv": "PBV",
+    "fptp": "FPTP",
     "alternative_vote": "IRV",
-    "trs": "Two-Round",
+    "trs": "TRS",
     "dhondt": "D'Hondt",
     "stv": "STV",
-    "sainte_lague": "Sainte-Laguë",
-    "baseline": "Baseline",
-    "baseline_informed": "Oracle\nMediator",
+    "sainte_lague": "S-L",
+    "baseline": "Baseline Model",
+    "baseline_informed": "Baseline\nMediator",
 }
 
 # Group boundaries (index of first system in each group).

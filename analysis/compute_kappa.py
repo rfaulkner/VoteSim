@@ -7,25 +7,25 @@ import numpy as np
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "golden_data")
 
-JUDGES = ["gemini-flash", "gpt-4o", "llama-70b"]
+JUDGES = ["gemini-flash", "gpt-4o", "claude-opus"]
 
 SOURCE_MODELS = {
     "Llama-3.3-70B": {
         "gemini-flash": "harm-12.judge.llama-3.3-70b-instruct.judged_by.gemini-3-flash-preview.json",
         "gpt-4o": "harm-12.judge.llama-3.3-70b-instruct.judged_by.gpt-4o-2024-11-20.json",
-        "llama-70b": "harm-12.judge.llama-3.3-70b-instruct.judged_by.llama-3.1-70b-instruct.json",
+        "claude-opus": "harm-12.judge.llama-3.3-70b-instruct.judged_by.claude-opus-4.7.json",
     },
     "Mistral-Medium-3": {
         "gemini-flash": "harm-12.judge.mistral-medium-3.judged_by.gemini-3-flash-preview.json",
         "gpt-4o": "harm-12.judge.mistral-medium-3.judged_by.gpt-4o-2024-11-20.json",
-        "llama-70b": "harm-12.judge.mistral-medium-3.judged_by.llama-3.1-70b-instruct.json",
+        "claude-opus": "harm-12.judge.mistral-medium-3.judged_by.claude-opus-4.7.json",
     },
 }
 
 JUDGE_LABELS = {
     "gemini-flash": "Gemini-3-Flash",
     "gpt-4o": "GPT-4o",
-    "llama-70b": "Llama-3.1-70B",
+    "claude-opus": "Claude-Opus",
 }
 
 

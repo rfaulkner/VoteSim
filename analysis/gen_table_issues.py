@@ -53,8 +53,8 @@ SYSTEM_DISPLAY = {
     "dhondt": "D'Hondt",
     "stv": "STV",
     "sainte_lague": "Sainte-L.",
-    "baseline": "Baseline",
-    "baseline_informed": "Oracle Med.",
+    "baseline": "Base Model",
+    "baseline_informed": "Base Med.",
 }
 SYSTEM_CATEGORY = {
     "fptp": "maj", "sntv": "maj", "alternative_vote": "maj", "trs": "maj",
