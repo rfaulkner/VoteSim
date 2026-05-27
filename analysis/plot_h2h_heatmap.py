@@ -103,7 +103,7 @@ def main():
   issue_labels = [issue_labels[i] for i in sort_idx]
 
   # --- Plot ---------------------------------------------------------------
-  fig, ax = plt.subplots(figsize=(7, 5.5))
+  fig, ax = plt.subplots(figsize=(7, 4.8))
 
   # Use a diverging colormap centered at 0.5.
   im = ax.imshow(
@@ -132,22 +132,16 @@ def main():
 
   # Axes.
   ax.set_xticks(range(n_models))
-  ax.set_xticklabels(model_names, fontsize=8, ha="center")
+  ax.set_xticklabels(model_names, fontsize=10, ha="center")
   ax.set_yticks(range(n_issues))
-  ax.set_yticklabels(issue_labels, fontsize=9)
-  ax.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False)
+  ax.set_yticklabels(issue_labels, fontsize=11)
+  ax.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False, pad=2)
 
-  # Add a 50% reference line annotation.
-  ax.set_title(
-      "Issue-Mode Win Rate vs Platform-Mode (voter preference)",
-      fontsize=11,
-      fontweight="bold",
-      pad=40,
-  )
+  # (title removed for publication)
 
   # Colorbar.
-  cbar = fig.colorbar(im, ax=ax, shrink=0.8, pad=0.02)
-  cbar.set_label("Issue-mode preference rate", fontsize=9)
+  cbar = fig.colorbar(im, ax=ax, shrink=0.9, pad=0.01)
+  cbar.set_label("Issue-mode preference rate", fontsize=10, labelpad=4)
 
   # Draw grid lines.
   ax.set_xticks(np.arange(-0.5, n_models, 1), minor=True)
@@ -155,16 +149,16 @@ def main():
   ax.grid(which="minor", color="white", linewidth=1.5)
   ax.tick_params(which="minor", size=0)
 
-  plt.tight_layout()
+  plt.tight_layout(pad=0.5)
 
   # Save as high-resolution vector PDF.
   out_path = os.path.join(DRAFT_DIR, "issue_platform_h2h.pdf")
-  fig.savefig(out_path, format="pdf", dpi=300, bbox_inches="tight")
+  fig.savefig(out_path, format="pdf", dpi=300, bbox_inches="tight", pad_inches=0.02)
   print(f"Saved: {out_path}")
 
   # Also save a PNG preview.
   png_path = os.path.join(DRAFT_DIR, "issue_platform_h2h.png")
-  fig.savefig(png_path, dpi=200, bbox_inches="tight")
+  fig.savefig(png_path, dpi=200, bbox_inches="tight", pad_inches=0.02)
   print(f"Preview: {png_path}")
   plt.close(fig)
 

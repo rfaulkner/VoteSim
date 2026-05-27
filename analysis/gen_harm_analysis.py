@@ -29,8 +29,8 @@ SYSTEMS = [
 DISPLAY = {
     "fptp": "FPTP", "sntv": "PBV", "alternative_vote": "IRV",
     "trs": "TRS", "dhondt": "D'Hondt", "stv": "STV",
-    "sainte_lague": "S-L", "baseline": "Base Model",
-    "baseline_informed": "Base Med.",
+    "sainte_lague": "S-L", "baseline": "Mod. Base.",
+    "baseline_informed": "Med. Base.",
 }
 SYSTEM_CATEGORY = {
     "fptp": "maj", "sntv": "maj", "alternative_vote": "maj", "trs": "maj",
@@ -109,7 +109,7 @@ def make_h2h_heatmap(rates):
     """Generate a clean H2H win-rate heatmap and save to PDF + PNG."""
     labels = [DISPLAY[s] for s in SYSTEMS]
 
-    fig, ax = plt.subplots(figsize=(7.2, 6.2))
+    fig, ax = plt.subplots(figsize=(7.2, 5.8))
 
     # ── Main heatmap ──
     masked = rates.copy()
@@ -120,8 +120,8 @@ def make_h2h_heatmap(rates):
 
     ax.set_xticks(range(N))
     ax.set_yticks(range(N))
-    ax.set_xticklabels(labels, fontsize=8.5, rotation=45, ha="right")
-    ax.set_yticklabels(labels, fontsize=8.5)
+    ax.set_xticklabels(labels, fontsize=10, rotation=45, ha="right")
+    ax.set_yticklabels(labels, fontsize=10)
 
     # Category separator lines
     cat_boundaries = []
@@ -141,35 +141,32 @@ def make_h2h_heatmap(rates):
         for j in range(N):
             if i == j:
                 ax.text(j, i, "—", ha="center", va="center",
-                             fontsize=7.5, color="gray")
+                             fontsize=8.5, color="gray")
             else:
                 pct = rates[i, j] * 100
                 color = "white" if pct > 70 or pct < 30 else "black"
                 ax.text(j, i, f"{pct:.0f}", ha="center", va="center",
-                             fontsize=7.5,
+                             fontsize=8.5,
                              fontweight="bold" if pct > 60 else "normal",
                              color=color)
 
-    ax.set_xlabel("Column System", fontsize=9, labelpad=6)
-    ax.set_ylabel("Row System", fontsize=9, labelpad=6)
+    ax.set_xlabel("Column System", fontsize=11, labelpad=4)
+    ax.set_ylabel("Row System", fontsize=11, labelpad=4)
 
     # Colorbar on the right
     cbar = fig.colorbar(im, ax=ax, orientation="vertical",
-                        shrink=0.8, pad=0.05, aspect=25)
+                        shrink=0.8, pad=0.01, aspect=25)
     cbar.set_label("Pairwise Win Rate (row judged less harmful than column)",
-                   fontsize=8.5, labelpad=10)
-    cbar.ax.tick_params(labelsize=7)
+                   fontsize=10, labelpad=4)
+    cbar.ax.tick_params(labelsize=8)
 
-    fig.suptitle(
-        "Head-to-Head Harm Win Rates\n"
-        "(pooled across 2 source models × 3 judges × 12 issues)",
-        fontsize=10.5, y=0.96,
-    )
+    # (title removed for publication)
+    ax.tick_params(pad=2)
 
     # Save PDF and PNG
     for ext, dpi in [("pdf", 300), ("png", 150)]:
         out = os.path.join(DRAFT_DIR, f"harm_h2h_heatmap.{ext}")
-        fig.savefig(out, dpi=dpi, bbox_inches="tight")
+        fig.savefig(out, dpi=dpi, bbox_inches="tight", pad_inches=0.02)
         print(f"Wrote {out}")
     plt.close(fig)
 

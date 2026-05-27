@@ -661,6 +661,130 @@ def plot_combined_2x2(all_data):
 
 
 # ---------------------------------------------------------------------------
+# Plot: combined 1x4 row layout (equal bar widths, tight spacing)
+# ---------------------------------------------------------------------------
+
+def plot_combined_1x4(all_data):
+    """Create a combined 1×4 figure with all bar charts in a single row.
+
+    Every bar has the same physical width.  GridSpec width_ratios are set
+    proportional to bar count so the axes scale accordingly.
+
+    Layout (left→right):
+        (a) Ranked-Choice Distribution   (6 bars)
+        (b) Seat Allocation by Issue      (12 bars)
+        (c) Seat Allocation by Model      (7 bars)
+        (d) Seat Allocation by Voting System (7 bars)
+    """
+    from matplotlib.patches import Patch
+
+    # ── Compute all data ────────────────────────────────────────────
+    pct_matrix, num_ranks = _compute_rank_choice_data(all_data)
+    rank_labels = ["1st", "2nd", "3rd", "4th", "5th", "6th"][:num_ranks]
+
+    issue_pcts = _compute_seats_by_issue_data(all_data)
+    model_names, model_pcts = _compute_seats_by_model_data(all_data)
+    sys_labels, sys_pcts = _compute_seats_by_system_data(all_data)
+
+    # ── Bar counts per panel (drive equal-width bars) ───────────────
+    n_rank = len(rank_labels)       # 6
+    n_issue = len(ISSUE_SHORT)      # 12
+    n_model = len(model_names)      # 7
+    n_sys = len(sys_labels)         # 7
+
+    # Add a small constant to each ratio to account for axis padding so
+    # bars are *approximately* equal after matplotlib adds tick/label room.
+    pad = 1.5  # extra "bar units" of padding per panel
+    ratios = [n_rank + pad, n_issue + pad, n_model + pad, n_sys + pad]
+
+    # Figure width: ~0.45 in per bar + padding → approx 20 in for 32 bars
+    total_bars = n_rank + n_issue + n_model + n_sys
+    fig_w = total_bars * 0.52 + 2.0  # extra for margins
+    fig_h = 5.2
+
+    fig = plt.figure(figsize=(fig_w, fig_h))
+    gs = fig.add_gridspec(
+        1, 4,
+        width_ratios=ratios,
+        wspace=0.18,
+        left=0.04, right=0.99,
+        top=0.78, bottom=0.22,
+    )
+
+    bar_w = 0.72   # wider bars to fill the space
+
+    # ── (a) Ranked-Choice Distribution ──────────────────────────────
+    ax_rank = fig.add_subplot(gs[0, 0])
+    rank_party_pcts = {
+        party: pct_matrix[j] for j, party in enumerate(PARTY_ORDER)
+    }
+    _draw_stacked_subplot(
+        ax_rank, rank_labels, rank_party_pcts,
+        "(a) Ranked-Choice\nDistribution",
+        "Rank Position",
+        bar_w, pct_fontsize=7.5, min_pct=5,
+        x_rotation=0, x_fontsize=12,
+    )
+    ax_rank.set_ylabel("Share (%)", fontsize=11, fontweight="bold")
+
+    # ── (b) Seat Allocation by Issue ────────────────────────────────
+    ax_issue = fig.add_subplot(gs[0, 1])
+    _draw_stacked_subplot(
+        ax_issue, ISSUE_SHORT, issue_pcts,
+        "(b) Seat Allocation\nby Issue",
+        "Issue",
+        bar_w, pct_fontsize=7, min_pct=6,
+        x_rotation=40, x_fontsize=11,
+    )
+    ax_issue.set_ylabel("")   # avoid duplicate label
+
+    # ── (c) Seat Allocation by Model ────────────────────────────────
+    ax_model = fig.add_subplot(gs[0, 2])
+    _draw_stacked_subplot(
+        ax_model, model_names, model_pcts,
+        "(c) Seat Allocation\nby Model",
+        "Model",
+        bar_w, pct_fontsize=7.5, min_pct=4,
+        x_rotation=35, x_fontsize=11,
+    )
+    ax_model.set_ylabel("")
+
+    # ── (d) Seat Allocation by Voting System ────────────────────────
+    ax_sys = fig.add_subplot(gs[0, 3])
+    _draw_stacked_subplot(
+        ax_sys, sys_labels, sys_pcts,
+        "(d) Seat Allocation\nby Voting System",
+        "Voting System",
+        bar_w, pct_fontsize=7.5, min_pct=4,
+        x_rotation=30, x_fontsize=11,
+    )
+    ax_sys.set_ylabel("")
+
+    # ── Shared legend at top of figure ──────────────────────────────
+    legend_handles = [
+        Patch(facecolor=PARTY_COLORS[p], edgecolor="black", linewidth=0.6,
+              label=PARTY_DISPLAY[p])
+        for p in PARTY_ORDER
+    ]
+    fig.legend(
+        handles=legend_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.0),
+        ncol=6, fontsize=14, frameon=False,
+        handlelength=2.0, handleheight=1.4, handletextpad=0.5,
+        columnspacing=1.5,
+    )
+
+    out = os.path.join(DRAFT_DIR, "seats_rank_combined_row.png")
+    plt.savefig(out, dpi=200, bbox_inches="tight")
+    print(f"Saved {out}")
+    out_pdf = os.path.join(DRAFT_DIR, "seats_rank_combined_row.pdf")
+    plt.savefig(out_pdf, format="pdf", dpi=300, bbox_inches="tight")
+    print(f"Saved {out_pdf}")
+    plt.close()
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -676,4 +800,5 @@ if __name__ == "__main__":
     plot_seats_by_system(all_data)
     plot_rank_choice_dist(all_data)
     plot_combined_2x2(all_data)
+    plot_combined_1x4(all_data)
     print("\nAll figures generated!")

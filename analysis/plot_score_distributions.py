@@ -53,8 +53,8 @@ SYSTEM_DISPLAY = {
     "dhondt": "D'Hondt",
     "stv": "STV",
     "sainte_lague": "S-L",
-    "baseline": "Baseline",
-    "baseline_informed": "Oracle Med.",
+    "baseline": "Mod. Base.",
+    "baseline_informed": "Med. Base.",
 }
 
 # Distinct colors for the 9 models (paired colors for cohorts)
@@ -113,7 +113,7 @@ def plot_faceted_violins(all_scores, models_to_plot, out_filename, title_suffix)
         print(f"No data to plot for {out_filename}!")
         return
         
-    fig, axes = plt.subplots(len(models), 1, figsize=(12, 3.5 * len(models)), sharex=True)
+    fig, axes = plt.subplots(len(models), 1, figsize=(12, 3.0 * len(models)), sharex=True)
     if len(models) == 1:
         axes = [axes]
         
@@ -173,10 +173,17 @@ def plot_faceted_violins(all_scores, models_to_plot, out_filename, title_suffix)
             ax.vlines(pos, quartile1, quartile3, color='black', linestyle='-', lw=3)
             
         # Clean up display name for title (remove N=120 for cleaner look if desired, or keep it)
-        ax.set_title(f"{model_name} - Score Distribution", fontsize=13, fontweight='bold', pad=8)
-        ax.set_ylabel("Likert Score (1-5)", fontsize=10)
+        # Label each subplot with model name using ylabel instead of title
+        ax.annotate(model_name, xy=(0, 0.5), xytext=(-58, 0),
+                    xycoords='axes fraction', textcoords='offset points',
+                    fontsize=13, fontweight='bold', va='center', ha='right',
+                    rotation=90)
+        ax.set_ylabel("")  # cleared; shared ylabel added below
         ax.set_ylim(0.8, 5.2)
         ax.set_yticks([1, 2, 3, 4, 5])
+        ax.tick_params(axis='y', labelsize=13, pad=2)
+        for lbl in ax.get_yticklabels():
+            lbl.set_fontweight('bold')
         ax.grid(axis='y', linestyle='--', alpha=0.5)
         
         # Draw category background zones
@@ -186,19 +193,29 @@ def plot_faceted_violins(all_scores, models_to_plot, out_filename, title_suffix)
         
     # Set x-ticks on the bottom subplot
     axes[-1].set_xticks(range(1, len(SYSTEM_ORDER) + 1))
-    axes[-1].set_xticklabels([SYSTEM_DISPLAY[s] for s in SYSTEM_ORDER], fontsize=11, rotation=15)
-    axes[-1].set_xlabel("Electoral System", fontsize=12, fontweight='bold', labelpad=8)
-    
-    plt.suptitle(f"Voter Score Distributions - {title_suffix}", fontsize=15, fontweight='bold', y=0.99)
-    plt.tight_layout()
+    axes[-1].set_xticklabels([SYSTEM_DISPLAY[s] for s in SYSTEM_ORDER],
+                             fontsize=14, fontweight='bold', rotation=15)
+    # Bold x-ticks on all axes (minor visible via sharex)
+    for ax in axes:
+        ax.tick_params(axis='x', labelsize=14)
+        for lbl in ax.get_xticklabels():
+            lbl.set_fontweight('bold')
+
+    # (suptitle removed for publication)
+    plt.subplots_adjust(hspace=0.15)
+    plt.tight_layout(rect=[0.05, 0, 1, 1.0], pad=0.4)
+
+    # Shared ylabel (placed after tight_layout so coordinates are stable)
+    fig.text(0.01, 0.5, "Likert Score (1\u20135)", va='center', rotation='vertical',
+             fontsize=15, fontweight='bold')
     
     out = os.path.join(DRAFT_DIR, out_filename)
-    plt.savefig(out, dpi=150, bbox_inches="tight")
+    plt.savefig(out, dpi=150, bbox_inches="tight", pad_inches=0.02)
     print(f"Saved {out}")
     
     # Save PDF
     out_pdf = os.path.splitext(out)[0] + ".pdf"
-    plt.savefig(out_pdf, format="pdf", dpi=300, bbox_inches="tight")
+    plt.savefig(out_pdf, format="pdf", dpi=300, bbox_inches="tight", pad_inches=0.02)
     print(f"Saved {out_pdf}")
     plt.close()
 

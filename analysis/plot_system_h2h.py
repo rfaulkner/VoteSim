@@ -67,8 +67,8 @@ SYSTEM_DISPLAY = {
     "dhondt": "D'Hondt",
     "stv": "STV",
     "sainte_lague": "S-L",
-    "baseline": "Baseline Model",
-    "baseline_informed": "Baseline\nMediator",
+    "baseline": "Mod. Base.",
+    "baseline_informed": "Med. Base.",
 }
 
 # Group boundaries (index of first system in each group).
@@ -142,7 +142,8 @@ def main():
   rates = compute_h2h(all_rankings, systems)
 
   # --- Plot ---------------------------------------------------------------
-  fig, ax = plt.subplots(figsize=(9, 7.5))
+  fig, ax = plt.subplots(figsize=(8, 7))
+  fig.subplots_adjust(left=0.10)
 
   # Mask diagonal.
   masked = np.ma.masked_where(np.eye(n, dtype=bool), rates)
@@ -176,22 +177,17 @@ def main():
 
   # Axes.
   ax.set_xticks(range(n))
-  ax.set_xticklabels(display_names, fontsize=8.5, ha="center")
+  ax.set_xticklabels(display_names, fontsize=11, fontweight="bold",
+                     ha="left", rotation=30)
   ax.set_yticks(range(n))
-  ax.set_yticklabels(display_names, fontsize=8.5)
-  ax.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False)
+  ax.set_yticklabels(display_names, fontsize=11, fontweight="bold")
+  ax.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False, pad=2)
 
-  ax.set_xlabel("Column System (opponent)", fontsize=10, labelpad=8)
-  ax.set_ylabel("Row System (wins)", fontsize=10, labelpad=8)
+  ax.set_xlabel("Column System (opponent)", fontsize=13, fontweight="bold", labelpad=4)
+  ax.set_ylabel("Row System (wins)", fontsize=13, fontweight="bold", labelpad=4)
   ax.xaxis.set_label_position("bottom")
 
-  ax.set_title(
-      "Head-to-Head Win Rate (%)\n"
-      "Row system ranked higher than column system by voters",
-      fontsize=12,
-      fontweight="bold",
-      pad=25,
-  )
+  # (title removed for publication)
 
   # Group separator lines.
   for b in GROUP_BOUNDARIES:
@@ -205,18 +201,18 @@ def main():
   ax.tick_params(which="minor", size=0)
 
   # Colorbar.
-  cbar = fig.colorbar(im, ax=ax, shrink=0.75, pad=0.02)
-  cbar.set_label("Win Rate (%)", fontsize=10)
+  cbar = fig.colorbar(im, ax=ax, shrink=0.75, pad=0.01)
+  cbar.set_label("Win Rate (%)", fontsize=11, labelpad=4)
 
-  plt.tight_layout()
+  plt.tight_layout(pad=0.5)
 
   # Save.
   pdf_path = os.path.join(DRAFT_DIR, "system_h2h.pdf")
-  fig.savefig(pdf_path, format="pdf", dpi=300, bbox_inches="tight")
+  fig.savefig(pdf_path, format="pdf", dpi=300, bbox_inches="tight", pad_inches=0.02)
   print(f"Saved: {pdf_path}")
 
   png_path = os.path.join(DRAFT_DIR, "system_h2h.png")
-  fig.savefig(png_path, dpi=200, bbox_inches="tight")
+  fig.savefig(png_path, dpi=200, bbox_inches="tight", pad_inches=0.02)
   print(f"Preview: {png_path}")
   plt.close(fig)
 
